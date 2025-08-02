@@ -589,6 +589,10 @@
             const failedAddons = [];
             for (let addonName of addons) {
                 try {
+                    if (this.addons[addonName]) {
+                        this.logger.warn(`${addonName} 애드온은 이미 로드되어 있습니다.`);
+                        continue;
+                    }
                     const addon = await loadAddon(addonName);
                     this.addons[addonName] = addon;
                     loadedAddons.push(addonName);
