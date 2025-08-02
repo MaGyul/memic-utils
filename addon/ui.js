@@ -83,7 +83,7 @@ function createAddonElement(addon) {
                     <i class="ri-information-line icon-2xl"></i>
                 </a>
                 ${addon.addonInfo.link ? 
-                    `<a href="${addon.addonInfo.link}" data-tooltip="GitHub" class="relative flex h-8 w-8 items-center justify-center">
+                    `<a href="${addon.addonInfo.link}" data-tooltip="GitHub" target="_blank" class="relative flex h-8 w-8 items-center justify-center">
                         <i class="ri-github-fill icon-2xl"></i>
                     </a>` : ''
                 }
