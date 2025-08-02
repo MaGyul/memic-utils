@@ -166,7 +166,7 @@ function openSettings(modalBody) {
         tip.style.marginTop = '5px';
         tip.style.color = 'var(--color-on-surface-variant)';
         tip.style.fontSize = '0.9em';
-        settingsContent.querySelector('#time-format').appendChild(tip);
+        settingsContent.appendChild(tip);
     }
 
     modalBody.appendChild(settingsContent);
