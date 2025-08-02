@@ -639,7 +639,7 @@
             const loadedAddons = [];
             const failedAddons = [];
             for (let addonName of this.enabledAddons) {
-                const addon = this.addons.find(val => val.addonKey === addonName);
+                const addon = this.addons[addonName];
                 if (!addon) continue;
                 try {
                     addon.ondisable();
@@ -664,7 +664,7 @@
         }
 
         enableAddon(key) {
-            const addon = this.addons.find(val => val.addonKey === key);
+            const addon = this.addons[key];
             if (!addon) {
                 throw new Error(`${key}인 애드온을 찾을 수 없습니다.`);
             }
@@ -681,7 +681,7 @@
         }
 
         disableAddon(key) {
-            const addon = this.addons.find(val => val.addonKey === key);
+            const addon = this.addons[key];
             if (!addon) {
                 throw new Error(`${key}인 애드온을 찾을 수 없습니다.`);
             }
