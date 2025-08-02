@@ -84,13 +84,7 @@ function createControlPanel() {
     return panel;
 }
 
-/**
- * 
- * @param {HTMLAnchorElement} button 
- */
-function toggleControlPanel(button) {
-    const rect = button.getBoundingClientRect();
-    
+function setPanelLocation(rect) {
     // 화면을 벗어나지 않도록 조정
     const panelWidth = controlPanel.offsetWidth;
     const panelHeight = controlPanel.offsetHeight;
@@ -119,6 +113,16 @@ function toggleControlPanel(button) {
     // 패널 위치 설정
     controlPanel.style.left = left + 'px';
     controlPanel.style.top = top + 'px';
+}
+
+/**
+ * 
+ * @param {HTMLAnchorElement} button 
+ */
+function toggleControlPanel(button) {
+    const rect = button.getBoundingClientRect();
+
+    setPanelLocation(rect);
 
     controlPanel.classList.toggle('show');
 }
@@ -129,11 +133,10 @@ function closeControlPanel() {
 
 function onresize() {
     if (controlPanel && controlPanel.classList.contains('show')) {
-        // 패널이 화면을 벗어나면 닫기
-        const rect = controlPanel.getBoundingClientRect();
-        if (rect.left + 360 > window.innerWidth || rect.top + 460 > window.innerHeight) {
-            closeControlPanel();
-            logger.log('패널이 화면을 벗어나 닫혔습니다.');
+        const controlButton = document.getElementById('memic-utils-control-button');
+        if (controlButton) {
+            const rect = controlButton.getBoundingClientRect();
+            setPanelLocation(rect);
         }
     }
 }
