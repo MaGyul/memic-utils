@@ -56,7 +56,7 @@
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://raw.githubusercontent.com/MaGyul/memic-utils/main/addon/addons.json`,
+                url: `https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/addon/addons.json`,
                 onload: function(response) {
                     if (response.status === 200) {
                         resolve(JSON.parse(response.responseText));
@@ -555,7 +555,6 @@
         /** @type {AddonStorage} */
         #systemStorage;
         /** @type {string} */
-        #enabledAddons;
         #errorAddons = [];
 
         /** @type {MemicAPI} */
@@ -564,18 +563,11 @@
         uiAddon;
         /** @type {Addon[]} */
         addons = [];
+        enabledAddons = [];
         logger = Logger.getLogger('스크립트 관리자');
 
-        get errorAddon() {
+        get errorAddons() {
             return this.#errorAddons;
-        }
-
-        get enabledAddons() {
-            return this.#enabledAddons.split(';');
-        }
-
-        set enabledAddons(value) {
-            this.#systemStorage.set('enabledAddons', (this.#enabledAddons = value.join(';')));
         }
 
         constructor() {
@@ -586,7 +578,9 @@
                 addon.onenable();
             });
             
-            this.#systemStorage.get('enabledAddons', '').then(val => this.#enabledAddons = val);
+            this.#systemStorage.get('enabledAddons', '').then(val => {
+                this.enabledAddons.push(...val.split(";"));
+            });
         }
 
         async loadAddons() {
@@ -638,6 +632,7 @@
             this.#errorAddons = failedAddons;
             if (forge) {
                 this.enabledAddons = loadedAddons;
+                this.#systemStorage.set('enabledAddons', loadedAddons.join(";"));
             }
         }
 
@@ -666,6 +661,7 @@
             this.#errorAddons = failedAddons;
             if (forge) {
                 this.enabledAddons = [];
+                this.#systemStorage.set('enabledAddons', '');
             }
         }
 
@@ -683,6 +679,7 @@
                 return;
             }
             this.enabledAddons.push(addon.addonKey);
+            this.#systemStorage.set('enabledAddons', this.enabledAddons.join(";"));
             this.logger.log(`${key}(${addon.addonInfo.name}@${addon.addonInfo.version}) 활성화 완료`);
         }
 
@@ -700,6 +697,7 @@
                 return;
             }
             removeArray(this.enabledAddons, addon.addonKey);
+            this.#systemStorage.set('enabledAddons', this.enabledAddons.join(";"));
             this.logger.log(`${key}(${addon.addonInfo.name}@${addon.addonInfo.version}) 비활성화 완료`);
         }
 
