@@ -23,6 +23,8 @@ function addControlButton(retryCount = 0) {
     controlButton.innerHTML = '<i class="ri-edit-box icon-2xl"></i>';
     controlButton.setAttribute('data-tooltip', '미밐 유저 스크립트 컨트롤 패널');
     controlButton.addEventListener('click', openControlPanel);
+
+    header.appendChild(controlButton);
 }
 
 function removeControlButton(retryCount = 0) {
