@@ -11,7 +11,7 @@
 // @require      https://raw.githubusercontent.com/MaGyul/memic-utils/main/memic-utils.js
 // @updateURL    https://raw.githubusercontent.com/MaGyul/memic-utils/main/main.user.js
 // @downloadURL  https://raw.githubusercontent.com/MaGyul/memic-utils/main/main.user.js
-// @grant        none
+// @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
 (function() {

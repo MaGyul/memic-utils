@@ -1,4 +1,21 @@
 (() => {
+    function loadScript(file) {
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: `https://github.com/MaGyul/memic-utils/raw/refs/heads/main/${file}`,
+                onload: function(/** @type {Response} */ response) {
+                    if (response.status === 200) {
+                        resolve(eval(`(() => {const exports = {};((exports) => {${response.responseText}})(exports);return exports;})();`));
+                    } else {
+                        reject(new Error("스크립트 불러오기 실패"));
+                    }
+                }
+            });
+        });
+    }
+    window.loadScript = loadScript;
+
     class MemicAPI {
         constructor() {
             this.baseURL = 'https://memic.at/v2';
@@ -374,7 +391,7 @@
         }
 
         test() {
-            import("https://github.com/MaGyul/memic-utils/raw/refs/heads/main/test.js").then(console.log)
+            
         }
     }
 
