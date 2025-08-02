@@ -676,7 +676,7 @@
                 this.#errorAddons.push({ addonName: addon.addonKey, err });
                 return;
             }
-            this.#enabledAddons.push(addon.addonKey);
+            this.enabledAddons.push(addon.addonKey);
             this.logger.log(`${key}(${addon.addonInfo.name}@${addon.addonInfo.version}) 활성화 완료`);
         }
 
