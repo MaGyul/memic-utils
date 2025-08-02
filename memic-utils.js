@@ -731,6 +731,8 @@
 
     }
 
-    window.Logger = Logger;
-    window.memicUtils = new MemicUtils();
+    const safeWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
+
+    safeWindow.Logger = Logger;
+    safeWindow.memicUtils = new MemicUtils();
 })();

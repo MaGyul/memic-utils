@@ -20,5 +20,9 @@
 (function() {
     'use strict';
 
-    
+    document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
+    async function init() {
+        await memicUtils.loadAddons();
+        memicUtils.enableAddons();
+    }
 })();
