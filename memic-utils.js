@@ -562,7 +562,7 @@
         /** @type {Addon} */
         uiAddon;
         /** @type {Addon[]} */
-        addons = [];
+        addons = {};
         enabledAddons = [];
         logger = Logger.getLogger('스크립트 관리자');
 
@@ -614,11 +614,9 @@
         
         enableAddons(forge = false) {
             const filteredEA = forge ? this.addons : this.addons.filter(addon => this.enabledAddons.includes(addon.addonKey));
-            this.logger.log(filteredEA);
             const loadedAddons = [];
             const failedAddons = [];
             for (let addon of filteredEA) {
-                this.logger.log(addon);
                 if (this.enabledAddons.includes(addon.addonKey)) continue;
                 try {
                     addon.onenable();
