@@ -311,6 +311,7 @@
         }
 
         constructor() {
+            super();
             this.#systemStorage = new AddonStorage('system');
             this.api = new MemicAPI();
             
