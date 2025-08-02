@@ -374,7 +374,7 @@
         }
 
         test() {
-            import("file:///C:/Users/Administrator/Desktop/o/memic-utils/test.js").then(console.log)
+            import("https://github.com/MaGyul/memic-utils/raw/refs/heads/main/test.js").then(console.log)
         }
     }
 
