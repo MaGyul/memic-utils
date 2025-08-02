@@ -97,7 +97,7 @@ function createAddonElement(addon) {
         </div>
     `;
 
-    div.querySelector('#addon-info').setAttribute('data-tooltip', `버전: ${addon.addonInfo.version}\n설명: ${addon.addonInfo.description}`);
+    div.querySelector('#addon-info').setAttribute('data-tooltip', `버전: ${addon.addonInfo.version}\n제작자: ${addon.addonInfo.author}\n설명: ${addon.addonInfo.description}`);
 
     div.querySelector(`#${addon.addonKey}-switch`).addEventListener('change', () => {
         if (memicUtils.enabledAddons.includes(addon.addonKey)) {
