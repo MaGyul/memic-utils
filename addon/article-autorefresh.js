@@ -6,7 +6,7 @@ const addonInfo = {
     link: "https://github.com/isnoa/memic-advanced"
 }
 
-let autoRefreshEnabled = addonStorage.get("autoRefreshEnabled", false);
+let autoRefreshEnabled = await addonStorage.get("autoRefreshEnabled", false);
 let intervalId = null;
 let currentUrl = window.location.href;
 
@@ -89,9 +89,7 @@ function createToggleButton(retryCount = 0) {
     header.insertBefore(btn, header.firstChild);
 
     // 저장된 상태에 따라 초기화
-    logger.log("자동 새로고침 상태:", autoRefreshEnabled);
     if (autoRefreshEnabled) {
-        logger.log("자동 새로고침 상태:a", autoRefreshEnabled);
         intervalId = setInterval(clickRefreshButton, 5000);
     }
     updateToggleButton();
@@ -128,7 +126,6 @@ const observer = new MutationObserver(() => {
 });
 
 function onenable() {
-    addonStorage.get("autoRefreshEnabled", false).then(v => logger.log("자동 새로고침 상태:", v));
     createToggleButton();
     document.addEventListener('visibilitychange', onvisibilitychange);
     observer.observe(document, { subtree: true, childList: true });

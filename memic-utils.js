@@ -77,13 +77,14 @@
             GM_xmlhttpRequest({
                 method: "GET",
                 url: `https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/addon/${name}.js`,
-                onload: function(response) {
+                onload: async function(response) {
                     if (response.status === 200) {
                         if (hasGlobalReturnWithBabel(response.responseText)) {
                             reject(new Error(`애드온(${name}) 전역에 반환이 있습니다!`));
                         }
                         try {
-                            resolve(eval(`((addonKey, logger, addonStorage) => {${response.responseText}\nif (typeof addonInfo !== "object") throw new Error("addonInfo이(가) 없거나 올바르지 않습니다."); else {if (typeof addonInfo.name !== "string") throw new Error("addonInfo.name이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.description !== "string") throw new Error("addonInfo.description이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.author !== "string") throw new Error("addonInfo.author이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.version !== "string") throw new Error("addonInfo.version이(가) 없거나 올바르지 않습니다.");}if (typeof onenable !== "function") throw new Error("onenable이(가) 없거나 함수가 아닙니다.");if (typeof ondisable !== "function") throw new Error("ondisable이(가) 없거나 함수가 아닙니다.");return {addonKey,addonInfo,onenable,ondisable};})(name, Logger.getLogger(name), AddonStorage.getStorage(name));`));
+                            const result = await eval(`(async (addonKey, logger, addonStorage) => {${response.responseText}\nif (typeof addonInfo !== "object") throw new Error("addonInfo이(가) 없거나 올바르지 않습니다."); else {if (typeof addonInfo.name !== "string") throw new Error("addonInfo.name이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.description !== "string") throw new Error("addonInfo.description이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.author !== "string") throw new Error("addonInfo.author이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.version !== "string") throw new Error("addonInfo.version이(가) 없거나 올바르지 않습니다.");}if (typeof onenable !== "function") throw new Error("onenable이(가) 없거나 함수가 아닙니다.");if (typeof ondisable !== "function") throw new Error("ondisable이(가) 없거나 함수가 아닙니다.");return {addonKey,addonInfo,onenable,ondisable};})(name, Logger.getLogger(name), AddonStorage.getStorage(name));`);
+                            resolve(result);
                         } catch (err) {
                             reject(new Error(`애드온(${name}) ${err.message}`));
                         }
