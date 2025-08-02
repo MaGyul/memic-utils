@@ -626,6 +626,10 @@
                     failedAddons.push({ addonName: addon.addonKey, err });
                 }
             }
+            if (loadedAddons.length === 0 && failedAddons.length === 0) {
+                this.logger.warn('활성화할 애드온이 없습니다.');
+                return;
+            }
 
             this.logger.log(`애드온 (${loadedAddons.length}개) 활성화 완료`);
             if (failedAddons.length > 0) {
@@ -636,7 +640,7 @@
                 } 
             }
             this.#errorAddons = failedAddons;
-            if (forge) {
+            if (forge && loadedAddons.length > 0) {
                 this.enabledAddons = loadedAddons;
                 this.#systemStorage.set('enabledAddons', loadedAddons.join(";"));
             }
@@ -655,6 +659,10 @@
                     failedAddons.push({ addonName, err });
                 }
             }
+            if (loadedAddons.length === 0 && failedAddons.length === 0) {
+                this.logger.warn('비활성화할 애드온이 없습니다.');
+                return;
+            }
 
             this.logger.log(`애드온 (${loadedAddons.length}개) 비활성화 완료`);
             if (failedAddons.length > 0) {
@@ -665,10 +673,8 @@
                 } 
             }
             this.#errorAddons = failedAddons;
-            if (forge) {
-                this.enabledAddons = [];
-                this.#systemStorage.set('enabledAddons', '');
-            }
+            this.enabledAddons = [];
+            this.#systemStorage.set('enabledAddons', '');
         }
 
         enableAddon(key) {
