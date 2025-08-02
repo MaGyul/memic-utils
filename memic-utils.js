@@ -555,9 +555,9 @@
         /** @type {MemicAPI} */
         api;
         /** @type {Addon} */
-        systemAddon;
+        uiAddon;
         /** @type {Addon[]} */
-        addons;
+        addons = [];
         logger = Logger.getLogger('스크립트 관리자');
 
         get errorAddon() {
@@ -573,10 +573,10 @@
         }
 
         constructor() {
-            this.#systemStorage = new AddonStorage('system');
+            this.#systemStorage = new AddonStorage('memic-utils-system');
             this.api = new MemicAPI();
-            loadAddon('system').then(addon => {
-                this.systemAddon = addon;
+            loadAddon('ui').then(addon => {
+                this.uiAddon = addon;
                 addon.onenable();
             });
             
@@ -602,7 +602,7 @@
                 this.logger.log(`애드온 (${failedAddons.length}개) 로드 실패`);
                 this.logger.log('사유 ↓');
                 for (let { addonName, err } of failedAddons) {
-                    this.logger.log(` - ${addonName}: ${err.message}`);
+                    this.logger.log(` - ${addonName}:`, err);
                 } 
             }
             this.#errorAddons = failedAddons;
@@ -626,7 +626,7 @@
                 this.logger.log(`애드온 (${failedAddons.length}개) 활성화 실패`);
                 this.logger.log('사유 ↓');
                 for (let { addonName, err } of failedAddons) {
-                    this.logger.log(` - ${addonName}: ${err.message}`);
+                    this.logger.log(` - ${addonName}:`, err);
                 } 
             }
             this.#errorAddons = failedAddons;
@@ -654,7 +654,7 @@
                 this.logger.log(`애드온 (${failedAddons.length}개) 비활성화 실패`);
                 this.logger.log('사유 ↓');
                 for (let { addonName, err } of failedAddons) {
-                    this.logger.log(` - ${addonName}: ${err.message}`);
+                    this.logger.log(` - ${addonName}:`, err);
                 } 
             }
             this.#errorAddons = failedAddons;
