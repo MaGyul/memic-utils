@@ -11,7 +11,7 @@ const BLOCK_URL = "https://rest.memic.at/v2/ads/display-board/random";
 const originalFetch = window.fetch;
 
 // XHR 차단
-Object.defineProperty(window, "XMLHttpRequest", {
+Object.defineProperty(unsafeWindow, "XMLHttpRequest", {
     value: class extends XMLHttpRequest {
         open(method, url) {
             if (enabled && url === BLOCK_URL) {
@@ -26,7 +26,7 @@ Object.defineProperty(window, "XMLHttpRequest", {
 });
 
 // Fetch 차단
-window.fetch = function (input, init) {
+unsafeWindow.fetch = function (input, init) {
     if (!enabled) return originalFetch.call(this, input, init);
     const url = typeof input === "string" ? input : input.url;
     return url === BLOCK_URL
