@@ -610,6 +610,7 @@
         
         enableAddons(forge = false) {
             const filteredEA = forge ? this.addons : this.addons.filter(addon => this.enabledAddons.includes(addon.addonKey));
+            this.logger.log(filteredEA);
             const loadedAddons = [];
             const failedAddons = [];
             for (let addon of filteredEA) {
