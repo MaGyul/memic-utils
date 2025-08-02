@@ -578,7 +578,7 @@
         }
 
         constructor() {
-            this.#systemStorage = new AddonStorage('memic-utils-system');
+            this.#systemStorage = new AddonStorage('system');
             this.api = new MemicAPI();
             loadAddon('ui').then(addon => {
                 this.uiAddon = addon;
