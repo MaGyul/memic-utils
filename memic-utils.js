@@ -76,7 +76,7 @@
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://raw.githubusercontent.com/MaGyul/memic-utils/main/addon/${name}.js`,
+                url: `https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/addon/${name}.js`,
                 onload: function(response) {
                     if (response.status === 200) {
                         if (hasGlobalReturnWithBabel(response.responseText)) {
