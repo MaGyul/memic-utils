@@ -10,7 +10,7 @@ function onenable() {
     addonStorage.set('test', 1);
 }
 
-function ondisabled() {
+function ondisable() {
     logger.log('disable');
     logger.log(addonStorage.get('test', 2));
 }

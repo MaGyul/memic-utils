@@ -131,7 +131,7 @@ function onenable() {
     observer.observe(document, { subtree: true, childList: true });
 }
 
-function ondisabled() {
+function ondisable() {
     clearInterval(intervalId);
     document.removeEventListener('visibilitychange', onvisibilitychange);
     observer.disconnect();

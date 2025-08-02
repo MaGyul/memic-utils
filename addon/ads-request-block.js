@@ -38,6 +38,6 @@ function onenable() {
     enabled = true;
 }
 
-function ondisabled() {
+function ondisable() {
     enabled = false;
 }
