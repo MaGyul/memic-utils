@@ -52,10 +52,12 @@
 .addon-info-container {
     display: flex;
     align-items: center;
+    flex: 1;
 }
 
 .addon-name {
     margin-right: 5px;
+    flex: 1;
 }
 
 .addon-bottom {
