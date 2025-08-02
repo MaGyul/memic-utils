@@ -122,6 +122,20 @@ function onfocus() {
     setTimeout(updateTimestamps, 500);
 }
 
+function refreshRender() {
+    const articles = document.querySelectorAll('app-shelter-board-page > app-pull-to-refresh div.article-list-container > app-article-list-item[script-apply]');
+
+    for (const article of articles) {
+        const timeElem = article.querySelector('[itemprop="dateCreated"]');
+        if (timeElem) {
+            timeElem.classList.remove('fixed-time-format');
+            timeElem.textContent = timeElem.title; // 원래 시간으로 되돌리기
+        }
+        article.removeAttribute('script-apply');
+    }
+    updateTimestamps();
+}
+
 /**
  * @param {HTMLDivElement} modalBody
  */
@@ -138,6 +152,7 @@ function openSettings(modalBody) {
         option.value = key;
         option.textContent = formatType[key].name;
         option.title = formatType[key].description;
+        option.style.backgroundColor = 'var(--color-surface)';
         settingsContent.querySelector('#time-format').appendChild(option);
         addonStorage.get('timeFormat', 'normal').then((selectedFormat) => {
             if (selectedFormat === key) {
@@ -151,7 +166,7 @@ function openSettings(modalBody) {
     return () => {
         const selectedFormat = settingsContent.querySelector('#time-format').value;
         addonStorage.set('timeFormat', selectedFormat);
-        updateTimestamps();
+        refreshRender();
     };
 }
 
