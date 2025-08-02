@@ -115,7 +115,7 @@ function toggleControlPanel(button) {
     }
     
     // 패널 위치 설정
-    controlPanel.style.left = left + 'px';
+    controlPanel.style.left = (left - 70) + 'px';
     controlPanel.style.top = top + 'px';
 
     controlPanel.classList.toggle('show');
@@ -139,6 +139,7 @@ function onresize() {
 function onenable() {
     controlPanel = createControlPanel();
     addControlButton();
+    document.addEventListener('resize', onresize);
 }
 
 function ondisable() {
@@ -147,4 +148,5 @@ function ondisable() {
         controlPanel.remove();
         controlPanel = null;
     }
+    document.removeEventListener('resize', onresize);
 }
