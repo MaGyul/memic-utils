@@ -154,6 +154,7 @@ declare class MemicUtils {
 
     get errorAddons(): { addonName: string, err: Error }[];
 
+    async loadUIAddon(): Promise<void>;
     async loadAddons(): Promise<void>;
     enableAddons(forge = false): Promise<void>;
     disableAddons(): Promise<void>;

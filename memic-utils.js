@@ -313,14 +313,24 @@
         constructor() {
             this.#systemStorage = new AddonStorage('system');
             this.api = new MemicAPI();
-            loadAddon('ui').then(addon => {
-                this.uiAddon = addon;
-                addon.onenable();
-            });
             
             this.#systemStorage.get('enabledAddons', '').then(val => {
                 this.#enabledAddons = val;
             });
+        }
+
+        async loadUIAddon() {
+            if (this.uiAddon) {
+                this.logger.warn('UI 애드온은 이미 로드되어 있습니다.');
+                return;
+            }
+            try {
+                this.uiAddon = await loadAddon('ui');
+                this.uiAddon.onenable();
+                this.logger.log('UI 애드온 로드 완료');
+            } catch (err) {
+                this.logger.error('UI 애드온 로드 실패:', err);
+            }
         }
 
         async loadAddons() {

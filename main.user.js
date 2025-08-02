@@ -23,6 +23,7 @@
     document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
     async function init() {
         await memicUtils.loadAddons();
+        await memicUtils.loadUIAddon();
         memicUtils.enableAddons();
     }
 })();
