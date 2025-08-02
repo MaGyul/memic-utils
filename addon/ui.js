@@ -132,10 +132,11 @@ function closeControlPanel() {
 
 function onresize() {
     if (controlPanel && controlPanel.classList.contains('show')) {
-        const controlButton = document.getElementById('memic-utils-control-button');
-        if (controlButton) {
-            const rect = controlButton.getBoundingClientRect();
-            setPanelLocation(rect);
+        // 패널이 화면을 벗어나면 닫기
+        const rect = controlPanel.getBoundingClientRect();
+        if (rect.left + 360 > window.innerWidth || rect.top + 460 > window.innerHeight) {
+            closeControlPanel();
+            logger.log('패널이 화면을 벗어나 닫혔습니다.');
         }
     }
 }
