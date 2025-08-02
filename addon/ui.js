@@ -131,7 +131,7 @@ function createControlPanel() {
             <div id="addon-content"></div>
             <div class="addon-bottom">
                 <button onclick="memicUtils.enableAddons(true)" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap bg-primary text-primary-variant">모두 켜기</button>
-                <button onclick="memicUtils.disableAddons()" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap bg-primary text-primary-variant">모두 끄기</button>
+                <button onclick="memicUtils.disableAddons()" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface">모두 끄기</button>
             </div>
         </div>
     `;
