@@ -133,6 +133,7 @@ function onenable() {
 
 function ondisable() {
     clearInterval(intervalId);
+    removeToggleButton();
     document.removeEventListener('visibilitychange', onvisibilitychange);
     observer.disconnect();
 }
