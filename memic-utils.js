@@ -1,23 +1,121 @@
 (() => {
-    function loadScript(file) {
+    function hasGlobalReturnWithBabel(code) {
+        try {
+            const ast = Babel.packages.parser.parse(code, {
+                sourceType: 'module',
+                allowImportExportEverywhere: true,
+                allowReturnOutsideFunction: true
+            });
+            
+            let hasGlobalReturn = false;
+            
+            Babel.packages.traverse.default(ast, {
+                ReturnStatement(path) {
+                    // 함수 부모가 없으면 전역 return
+                    if (!path.getFunctionParent()) {
+                        hasGlobalReturn = true;
+                        path.stop(); // 더 이상 탐색하지 않음
+                    }
+                }
+            });
+            
+            return hasGlobalReturn;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function loadAddon(name) {
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://github.com/MaGyul/memic-utils/raw/refs/heads/main/${file}`,
-                onload: function(/** @type {Response} */ response) {
+                url: `https://raw.githubusercontent.com/MaGyul/memic-utils/main/addon/${name}.js`,
+                onload: function(response) {
                     if (response.status === 200) {
-                        resolve(eval(`(() => {const exports = {};((exports) => {${response.responseText}})(exports);return exports;})();`));
+                        if (hasGlobalReturnWithBabel(response.responseText)) {
+                            reject(new Error(`애드온(${name}) 전역에 반환이 있습니다!`));
+                        }
+                        try {
+                            resolve(eval(`((logger, addonStorage) => {${response.responseText}\nif (typeof addonInfo !== "object") throw new Error("addonInfo이(가) 없거나 올바르지 않습니다."); else {if (typeof addonInfo.name !== "string") throw new Error("addonInfo.name이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.description !== "string") throw new Error("addonInfo.description이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.author !== "string") throw new Error("addonInfo.author이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.version !== "string") throw new Error("addonInfo.version이(가) 없거나 올바르지 않습니다.");}if (typeof onenable !== "function") throw new Error("onenable이(가) 없거나 함수가 아닙니다.");if (typeof ondisable !== "function") throw new Error("ondisable이(가) 없거나 함수가 아닙니다.");return {addonInfo,onenable,ondisable};})(Logger.getLogger(name), AddonStorage.getStorage(name));`));
+                        } catch (err) {
+                            reject(new Error(`애드온(${name}) ${err.message}`));
+                        }
                     } else {
-                        reject(new Error("스크립트 불러오기 실패"));
+                        reject(new Error(`애드온(${name}) 불러오기 실패 (네트워크 오류 ${response.status})`));
                     }
                 }
             });
         });
     }
 
+    class AddonStorage {
+        static storageCache = {};
+        
+        static getStorage(name) {
+            if (!AddonStorage.storageCache[name]) {
+                return AddonStorage.storageCache[name] = new AddonStorage(name);
+            }
+            return AddonStorage.storageCache[name];
+        }
+
+        constructor(name) {
+            this.name = name;
+        }
+
+        get(key, defaultValue) {
+            if (typeof localStorage === "undefined") return defaultValue;
+            const value = localStorage.getItem(`${this.name}_${key}`);
+            if (!value) return defaultValue;
+            if (typeof defaultValue === 'boolean') {
+                return value === 'true' ? true : false;
+            }
+            if (typeof defaultValue === 'number') {
+                return Number(value);
+            }
+            return value;
+        }
+
+        set(key, value) {
+            if (typeof localStorage === "undefined") return;
+            localStorage.setItem(`${this.name}_${key}`, value);
+        }
+
+    }
+
+    class Logger {
+        static loggerCache = {};
+
+        static getLogger(name) {
+            if (!Logger.loggerCache[name]) {
+                return Logger.loggerCache[name] = new Logger(name);
+            }
+            return Logger.loggerCache[name];
+        }
+
+        constructor(name) {
+            this.name = name;
+        }
+
+        log(...msg) {
+            console.log.call(console, `[mu-${this.name}]`, ...msg);
+        }
+
+        info(...msg) {
+            console.info.call(console, `[mu-${this.name}]`, ...msg);
+        }
+
+        warn(...msg) {
+            console.warn.call(console, `[mu-${this.name}]`, ...msg);
+        }
+
+        error(...msg) {
+            console.error.call(console, `[mu-${this.name}]`, ...msg);
+        }
+    }
+
     class MemicAPI {
         constructor() {
-            this.baseURL = 'https://memic.at/v2';
+            this.baseURL = 'https://rest.memic.at/v2';
             this.defaultHeaders = {
                 'Content-Type': 'application/json',
             };
@@ -390,9 +488,10 @@
         }
 
         test() {
-            return loadScript('test.js');
+            return loadAddon('test');
         }
     }
 
+    window.Logger = Logger;
     window.memicUtils = new MemicUtils();
 })();
