@@ -9,7 +9,6 @@
     background-color: var(--color-surface);
 
     border: 1px solid rgba(80, 80, 80, 0.8);
-    box-shadow: inset 0px 0px 6px 0px rgba(80, 80, 80, 1);
     
     /* 애니메이션 설정 */
     transform: translateY(-25%);
@@ -61,7 +60,7 @@
 
 .addon-bottom {
     display: flex;
-    flex-direction: column;
+    flex-direction: row-reverse;
     gap: 8px;
     padding-top: 15px;
 }
