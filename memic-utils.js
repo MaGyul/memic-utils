@@ -111,7 +111,8 @@
             this.name = name;
             if (typeof localforage !== 'undefined') {
                 this.#store = localforage.createInstance({ 
-                    name,
+                    name: 'memic-utils',
+                    storeName: name,
                     driver: [localforage.INDEXEDDB, localforage.LOCALSTORAGE, localforage.WEBSQL],
                     version: 1
                 });
