@@ -60,7 +60,7 @@ function updateToggleButton() {
                 </clipPath>
             </defs>
         </svg>`;
-        }
+    }
 }
 
 function createToggleButton(retryCount = 0) {
@@ -126,6 +126,7 @@ const observer = new MutationObserver(() => {
 });
 
 function onenable() {
+    logger.log(addonStorage.get("autoRefreshEnabled", false));
     createToggleButton();
     document.addEventListener('visibilitychange', onvisibilitychange);
     observer.observe(document, { subtree: true, childList: true });
