@@ -13,7 +13,8 @@ addUIStyle();
 function addUIStyle() {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/style/ui.css';
+    link.href = 'https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/style/ui.style';
+    link.type = 'text/css';
     link.onload = () => {
         logger.log('UI 스타일이 성공적으로 추가되었습니다.');
     };
