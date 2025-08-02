@@ -81,13 +81,13 @@ function createAddonElement(addon) {
                     <i class="ri-information-line icon-2xl"></i>
                 </a>
                 ${addon.addonInfo.link ? 
-                    `<a href="${addon.addonInfo.link}" class="relative flex h-8 w-8 items-center justify-center">
+                    `<a href="${addon.addonInfo.link}" data-tooltip="GitHub" class="relative flex h-8 w-8 items-center justify-center">
                         <i class="ri-github-fill icon-2xl"></i>
                     </a>` : ''
                 }
             </div>
             <div class="switch-wrapper">
-                <input type="checkbox" id="${addon.addonKey}-switch" class="switch_input" ${memicUtils.enabledAddons.includes(addon.addonKey) ? 'checked' : ''}>
+                <input type="checkbox" id="${addon.addonKey}-switch" class="switch_input">
                 <label for="${addon.addonKey}-switch" class="switch_label">
                     <span class="onf_btn"></span>
                 </label>
@@ -98,7 +98,6 @@ function createAddonElement(addon) {
     div.querySelector('#addon-info').setAttribute('data-tooltip', `버전: ${addon.addonInfo.version}\n설명: ${addon.addonInfo.description}`);
 
     div.querySelector(`#${addon.addonKey}-switch`).addEventListener('change', () => {
-        logger.log(`토글: ${addon.addonInfo.name} (${addon.addonKey})`);
         if (memicUtils.enabledAddons.includes(addon.addonKey)) {
             memicUtils.disableAddon(addon.addonKey);
         } else {
@@ -106,6 +105,8 @@ function createAddonElement(addon) {
         }
         div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
     });
+
+    div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
 
     return div;
 }
