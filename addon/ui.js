@@ -40,7 +40,7 @@ function addControlButton(retryCount = 0) {
     }
 
     const controlButton = document.createElement('a');
-    controlButton.className = 'relative flex h-8 w-8 items-center justify-center';
+    controlButton.className = 'relative flex h-8 w-8 items-center justify-center panel-button';
     controlButton.id = 'memic-utils-control-button';
     controlButton.innerHTML = '<i class="ri-edit-box-line icon-2xl"></i>';
     controlButton.setAttribute('data-tooltip', '미밐 유저 스크립트 컨트롤 패널');
@@ -201,8 +201,15 @@ function ondocumentClick(event) {
     // 패널이 열려있는지 확인
     if (!controlPanel.classList.contains('show')) return;
 
+    // 버튼 클릭인지 확인
+    const isButton = event.target.classList.contains('panel-button') || 
+                   event.target.closest('.panel-button');
+    
     // 패널 내부 클릭인지 확인
-    if (!controlPanel.contains(event.target)) {
+    const isInsidePanel = controlPanel.contains(event.target);
+    
+    // 둘 다 아니면 패널 닫기
+    if (!isButton && !isInsidePanel) {
         // 패널 외부 클릭 시 닫기
         closeControlPanel();
     }
