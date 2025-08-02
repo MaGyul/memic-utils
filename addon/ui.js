@@ -56,7 +56,7 @@ function createControlPanel() {
         </div>
     `;
 
-    panel.getElementById('close-panel').addEventListener('click', () => {
+    panel.querySelector('#close-panel').addEventListener('click', () => {
         logger.log('close panel');
     });
 
