@@ -8,6 +8,21 @@ const addonInfo = {
 /** @type {HTMLDivElement} */
 var controlPanel;
 
+addUIStyle();
+
+function addUIStyle() {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/style/ui.css';
+    link.onload = () => {
+        logger.log('UI 스타일이 성공적으로 추가되었습니다.');
+    };
+    link.onerror = () => {
+        logger.error('UI 스타일을 추가하는데 실패했습니다.');
+    };
+    document.head.appendChild(link);
+}
+
 function addControlButton(retryCount = 0) {
     const header = document.querySelector('a[data-tooltip="탐색"]')?.parentElement;
 
@@ -25,7 +40,9 @@ function addControlButton(retryCount = 0) {
     controlButton.id = 'memic-utils-control-button';
     controlButton.innerHTML = '<i class="ri-edit-box-line icon-2xl"></i>';
     controlButton.setAttribute('data-tooltip', '미밐 유저 스크립트 컨트롤 패널');
-    controlButton.addEventListener('click', openControlPanel);
+    controlButton.addEventListener('click', () => {
+        toggleControlPanel(controlButton);
+    });
 
     header.appendChild(controlButton);
 }
@@ -48,7 +65,6 @@ function removeControlButton(retryCount = 0) {
 function createControlPanel() {
     const panel = document.createElement('div');
     panel.id = 'memic-utils-control-panel';
-    panel.className = 'fixed top-0 right-0 w-64 h-full bg-white shadow-lg z-50';
     panel.innerHTML = `
         <div class="p-4">
             <h2 class="text-lg font-bold mb-4">미밐 유저 스크립트 관리자</h2>
@@ -57,15 +73,63 @@ function createControlPanel() {
     `;
 
     panel.querySelector('#close-panel').addEventListener('click', () => {
-        logger.log('close panel');
+        closeControlPanel();
     });
 
     document.body.appendChild(panel);
     return panel;
 }
 
-function openControlPanel() {
-    logger.log('open panel');
+/**
+ * 
+ * @param {HTMLAnchorElement} button 
+ */
+function toggleControlPanel(button) {
+    const rect = button.getBoundingClientRect();
+            
+    // 패널 위치 계산 (버튼 바로 아래)
+    let left = rect.left;
+    let top = rect.bottom + 5;
+    
+    // 화면을 벗어나지 않도록 조정
+    const panelWidth = controlPanel.offsetWidth;
+    const panelHeight = controlPanel.offsetHeight;
+    
+    // 오른쪽으로 벗어나는 경우
+    if (left + panelWidth > window.innerWidth) {
+        left = window.innerWidth - panelWidth - 10;
+    }
+    
+    // 왼쪽으로 벗어나는 경우
+    if (left < 10) {
+        left = 10;
+    }
+    
+    // 아래로 벗어나는 경우 (버튼 위쪽에 표시)
+    if (top + panelHeight > window.innerHeight) {
+        top = rect.top - panelHeight - 5;
+    }
+    
+    // 패널 위치 설정
+    controlPanel.style.left = left + 'px';
+    controlPanel.style.top = top + 'px';
+
+    controlPanel.classList.toggle('show');
+}
+
+function closeControlPanel() {
+    controlPanel.classList.remove('show');
+}
+
+function onresize() {
+    if (controlPanel && controlPanel.classList.contains('show')) {
+        // 패널이 화면을 벗어나면 닫기
+        const rect = controlPanel.getBoundingClientRect();
+        if (rect.left + 360 > window.innerWidth || rect.top + 460 > window.innerHeight) {
+            closeControlPanel();
+            logger.log('패널이 화면을 벗어나 닫혔습니다.');
+        }
+    }
 }
 
 function onenable() {

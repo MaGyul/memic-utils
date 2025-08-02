@@ -1,0 +1,22 @@
+#memic-utils-control-panel {
+    position: fixed;
+    width: 360px;
+    height: 460px;
+    border-radius: 12px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    
+    /* 애니메이션 설정 */
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#memic-utils-control-panel.show {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
