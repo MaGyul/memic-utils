@@ -290,7 +290,7 @@
         };
     }
 
-    class MemicUtils {
+    class MemicUtils extends EventTarget {
         /** @type {AddonStorage} */
         #systemStorage;
         #enabledAddons = '';
@@ -360,6 +360,7 @@
                 } 
             }
             this.#errorAddons = failedAddons;
+            this.dispatchEvent(new CustomEvent('addonsLoaded', { detail: loadedAddons }));
         }
         
         enableAddons(forge = false) {
@@ -392,6 +393,7 @@
             this.#errorAddons = failedAddons;
             this.enabledAddons = loadedAddons;
             this.#systemStorage.set('enabledAddons', loadedAddons.join(";"));
+            this.dispatchEvent(new CustomEvent('addonsEnabled', { detail: loadedAddons }));
         }
 
         disableAddons() {
@@ -423,6 +425,7 @@
             this.#errorAddons = failedAddons;
             this.enabledAddons = [];
             this.#systemStorage.set('enabledAddons', '');
+            this.dispatchEvent(new CustomEvent('addonsDisabled', { detail: loadedAddons }));
         }
 
         enableAddon(key) {
@@ -449,6 +452,7 @@
             this.enabledAddons.push(addon.addonKey);
             this.#systemStorage.set('enabledAddons', this.enabledAddons.join(";"));
             this.logger.log(`${key}(${addon.addonInfo.name}@${addon.addonInfo.version}) 활성화 완료`);
+            this.dispatchEvent(new CustomEvent('addonEnabled', { detail: addon.addonKey }));
         }
 
         disableAddon(key) {
@@ -475,6 +479,7 @@
             removeArray(this.enabledAddons, addon.addonKey);
             this.#systemStorage.set('enabledAddons', this.enabledAddons.join(";"));
             this.logger.log(`${key}(${addon.addonInfo.name}@${addon.addonInfo.version}) 비활성화 완료`);
+            this.dispatchEvent(new CustomEvent('addonDisabled', { detail: addon.addonKey }));
         }
 
     }

@@ -141,7 +141,7 @@ declare class MemicAPI {
     }
 }
 
-declare class MemicUtils {
+declare class MemicUtils extends EventTarget {
     #systemStorage: AddonStorage;
     #enabledAddons: string;
     #errorAddons: { addonName: string, err: Error }[];

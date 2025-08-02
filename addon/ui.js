@@ -106,8 +106,6 @@ function createAddonElement(addon) {
         div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
     });
 
-    div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
-
     return div;
 }
 
@@ -214,11 +212,49 @@ function ondocumentClick(event) {
     }
 }
 
+function onaddonsEnabled() {
+    for (const addonKey of memicUtils.enabledAddons) {
+        const checkbox = document.querySelector(`#${addonKey}-switch`);
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+    }
+}
+
+function onaddonsDisabled() {
+    for (const addonKey of memicUtils.addons) {
+        const checkbox = document.querySelector(`#${addonKey}-switch`);
+        if (checkbox) {
+            checkbox.checked = false;
+        }
+    }
+}
+
+function onaddonEnabled(event) {
+    const addonKey = event.detail;
+    const checkbox = document.querySelector(`#${addonKey}-switch`);
+    if (checkbox) {
+        checkbox.checked = true;
+    }
+}
+
+function onaddonDisabled(event) {
+    const addonKey = event.detail;
+    const checkbox = document.querySelector(`#${addonKey}-switch`);
+    if (checkbox) {
+        checkbox.checked = false;
+    }
+}
+
 function onenable() {
     controlPanel = createControlPanel();
     addControlButton();
     window.addEventListener('resize', onresize);
     document.addEventListener('click', ondocumentClick);
+    memicUtils.addEventListener('addonsEnabled', onaddonsEnabled);
+    memicUtils.addEventListener('addonsDisabled', onaddonsDisabled);
+    memicUtils.addEventListener('addonEnabled', onaddonEnabled);
+    memicUtils.addEventListener('addonDisabled', onaddonDisabled);
 }
 
 function ondisable() {
@@ -229,4 +265,8 @@ function ondisable() {
     }
     window.removeEventListener('resize', onresize);
     document.removeEventListener('click', ondocumentClick);
+    memicUtils.removeEventListener('addonsEnabled', onaddonsEnabled);
+    memicUtils.removeEventListener('addonsDisabled', onaddonsDisabled);
+    memicUtils.removeEventListener('addonEnabled', onaddonEnabled);
+    memicUtils.removeEventListener('addonDisabled', onaddonDisabled);
 }
