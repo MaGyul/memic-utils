@@ -614,6 +614,8 @@
             const loadedAddons = [];
             const failedAddons = [];
             for (let addon of filteredEA) {
+                this.logger.log(addon);
+                if (this.enabledAddons.includes(addon.addonKey)) continue;
                 try {
                     addon.onenable();
                     loadedAddons.push(addon.addonKey);
@@ -667,6 +669,14 @@
         }
 
         enableAddon(key) {
+            if (this.enabledAddons.includes(key)) {
+                this.logger.warn(`${key} 애드온은 이미 활성화되어 있습니다.`);
+                return;
+            }
+            if (this.#errorAddons.some(val => val.addonName === key)) {
+                this.logger.warn(`${key} 애드온은 오류로 인해 활성화되지 않았습니다. 오류를 확인해주세요.`);
+                return;
+            }
             const addon = this.addons[key];
             if (!addon) {
                 throw new Error(`${key}인 애드온을 찾을 수 없습니다.`);
@@ -685,6 +695,14 @@
         }
 
         disableAddon(key) {
+            if (!this.enabledAddons.includes(key)) {
+                this.logger.warn(`${key} 애드온은 이미 비활성화되어 있습니다.`);
+                return;
+            }
+            if (this.#errorAddons.some(val => val.addonName === key)) {
+                this.logger.warn(`${key} 애드온은 오류로 인해 비활성화되지 않았습니다. 오류를 확인해주세요.`);
+                return;
+            }
             const addon = this.addons[key];
             if (!addon) {
                 throw new Error(`${key}인 애드온을 찾을 수 없습니다.`);
