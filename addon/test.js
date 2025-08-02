@@ -6,11 +6,11 @@ const addonInfo = {
 }
 
 function onenable() {
-    console.log('enable');
+    logger.log('enable');
+    addonStorage.set('test', 1);
 }
 
 function ondisabled() {
-    console.log('disable');
+    logger.log('disable');
+    logger.log(addonStorage.get('test', 2));
 }
-
-return "wa";
