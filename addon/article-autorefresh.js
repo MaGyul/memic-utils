@@ -126,7 +126,7 @@ const observer = new MutationObserver(() => {
 });
 
 function onenable() {
-    addonStorage.get("autoRefreshEnabled", false).then(logger.log);
+    addonStorage.get("autoRefreshEnabled", false).then(v => logger.log("자동 새로고침 상태:", v));
     createToggleButton();
     document.addEventListener('visibilitychange', onvisibilitychange);
     observer.observe(document, { subtree: true, childList: true });
