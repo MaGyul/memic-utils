@@ -116,7 +116,9 @@ function createAddonElement(addon) {
 
     div.querySelector('#open-settings')?.addEventListener('click', () => {
         if (typeof addon.openSettings === 'function') {
-            const confirmFunc = addon.openSettings(modalPanel.querySelector('#modal-body'));
+            const modalBody = modalPanel.querySelector('#modal-body');
+            modalBody.innerHTML = ''; // 기존 내용 제거
+            const confirmFunc = addon.openSettings(modalBody);
             if (typeof confirmFunc === 'function') {
                 modalPanel.querySelector('#modal-confirm').addEventListener('click', () => {
                     confirmFunc();
@@ -232,12 +234,12 @@ function createModalPanel() {
                 내용
             </div>
             <div class="modal-footer">
-                <button id="modal-cancel">취소</button>
-                <button id="modal-confirm">확인</button>
+                <button id="modal-cancel" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface">취소</button>
+                <button id="modal-confirm" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap bg-primary text-primary-variant">확인</button>
             </div>
         </div>
     `;
-    modalPanel.className = 'modal-panel';
+    modalPanel.className = 'modal-overlay';
 
     modalPanel.querySelector('#modal-close').addEventListener('click', () => {
         closeModal();
