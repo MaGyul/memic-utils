@@ -42,13 +42,14 @@ function change9under(i) {
     return i;
 }
 
-function formatDateTgd(date) {
-    let year = ('' + date.getFullYear()).substring(2);
-    let month = change9under(date.getMonth() + 1);
-    let date = change9under(date.getDate());
-    let hours = change9under(date.getHours());
-    let minutes = change9under(date.getMinutes());
-    let seconds = change9under(date.getSeconds());
+function formatDateTgd(createDate) {
+    let currentDate = new Date();
+    let year = ('' + createDate.getFullYear()).substring(2);
+    let month = change9under(createDate.getMonth() + 1);
+    let date = change9under(createDate.getDate());
+    let hours = change9under(createDate.getHours());
+    let minutes = change9under(createDate.getMinutes());
+    let seconds = change9under(createDate.getSeconds());
     // 생성된 날자가 오늘일 경우
     if (currentDate.getDate() == date) {
         return `${hours}:${minutes}:${seconds}`;
@@ -128,10 +129,20 @@ function openSettings(modalBody) {
     settingsContent.innerHTML = `
         <label for="time-format">시간 형식 선택:</label>
         <select id="time-format">
-            <option value="tgd">트게더 형식</option>
-            <option value="normal">일반 형식</option>
         </select>
     `;
+
+    for (const key in formatType) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = formatType[key].name;
+        option.title = formatType[key].description;
+        settingsContent.querySelector('#time-format').appendChild(option);
+        if (key === addonStorage.get('timeFormat', 'normal')) {
+            option.selected = true;
+        }
+    }
+
     settingsContent.querySelector('#time-format').addEventListener('change', (event) => {
         const selectedFormat = event.target.value;
         addonStorage.set('timeFormat', selectedFormat);
