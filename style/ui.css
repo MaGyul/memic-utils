@@ -54,6 +54,12 @@
     margin-right: 5px;
 }
 
+.addon-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .switch-wrapper {
     width: 50px;
     height: 32px;

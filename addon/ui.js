@@ -73,6 +73,8 @@ function removeControlButton(retryCount = 0) {
  */
 function createAddonElement(addon) {
     const div = document.createElement('div');
+    div.style.borderBottom = '1px solid var(--color-surface-variant)';
+    div.style.paddingBottom = '4px';
     div.innerHTML = `
         <div class="addon-control">
             <div class="addon-info-container">
@@ -103,7 +105,6 @@ function createAddonElement(addon) {
         } else {
             memicUtils.enableAddon(addon.addonKey);
         }
-        div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
     });
 
     return div;
@@ -114,11 +115,15 @@ function createControlPanel() {
     panel.id = 'memic-utils-control-panel';
     panel.innerHTML = `
         <div class="p-2">
-            <h2 class="text-lg font-bold mb-4">미밐 추가 기능 제어판</h2>
+            <h2 class="text-lg font-bold mb-4" style="font-size: larger;">미밐 추가 기능 제어판</h2>
             <a id="close-panel" data-tooltip="닫기">
                 <i class="ri-close-line icon-2xl"></i>
             </a>
             <div id="addon-content"></div>
+            <div class="addon-bottom">
+                <button onclick="memicUtils.enableAddons(true)" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap bg-primary text-primary-variant">모두 켜기</button>
+                <button onclick="memicUtils.disableAddons()" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap bg-primary text-primary-variant">모두 끄기</button>
+            </div>
         </div>
     `;
 
@@ -212,8 +217,9 @@ function ondocumentClick(event) {
     }
 }
 
-function onaddonsEnabled() {
-    for (const addonKey of memicUtils.enabledAddons) {
+function onaddonsEnabled(event) {
+    const enabledAddons = event.detail;
+    for (const addonKey of enabledAddons) {
         const checkbox = document.querySelector(`#${addonKey}-switch`);
         if (checkbox) {
             checkbox.checked = true;
@@ -221,8 +227,9 @@ function onaddonsEnabled() {
     }
 }
 
-function onaddonsDisabled() {
-    for (const addonKey of memicUtils.addons) {
+function onaddonsDisabled(event) {
+    const disabledAddons = event.detail;
+    for (const addonKey of disabledAddons) {
         const checkbox = document.querySelector(`#${addonKey}-switch`);
         if (checkbox) {
             checkbox.checked = false;
