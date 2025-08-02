@@ -143,7 +143,7 @@ function openSettings(modalBody) {
     const settingsContent = document.createElement('div');
     settingsContent.innerHTML = `
         <label for="time-format">시간 형식 선택:</label>
-        <select id="time-format">
+        <select id="time-format" style="margin-bottom: 10px;">
         </select>
     `;
 
@@ -161,7 +161,7 @@ function openSettings(modalBody) {
         });
 
         const tip = document.createElement('span');
-        tip.textContent = formatType[key].description;
+        tip.textContent = `* ${formatType[key].name} - ${formatType[key].description}`;
         tip.style.display = 'block';
         tip.style.marginTop = '5px';
         tip.style.color = 'var(--color-on-surface-variant)';
