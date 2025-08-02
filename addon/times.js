@@ -67,9 +67,10 @@ function formatDate(date) {
         String(date.getSeconds()).padStart(2, '0');
 }
 
-function updateTimestamps() {
+async function updateTimestamps() {
     const articles = document.querySelectorAll('app-shelter-board-page > app-pull-to-refresh div.article-list-container > app-article-list-item:not([script-apply])');
-    
+    const selectedFormat = await addonStorage.get('timeFormat', 'normal');
+
     for (const article of articles) {
         const aTag = article.querySelector('& > a');
         const articleId = aTag.href.match(/\/articles\/(\d+)/)[1];
@@ -77,7 +78,7 @@ function updateTimestamps() {
         const timeElem = article.querySelector('[itemprop="dateCreated"]');
         const originalTime = timeElem.textContent.trim();
 
-        const formatDate = formatType[addonStorage.get('timeFormat', 'normal')].formatFunction;
+        const formatDate = formatType[selectedFormat].formatFunction;
 
         if (timeElem.hasAttribute('datetime')) {
             const datetime = timeElem.getAttribute('datetime');
@@ -138,9 +139,11 @@ function openSettings(modalBody) {
         option.textContent = formatType[key].name;
         option.title = formatType[key].description;
         settingsContent.querySelector('#time-format').appendChild(option);
-        if (key === addonStorage.get('timeFormat', 'normal')) {
-            option.selected = true;
-        }
+        addonStorage.get('timeFormat', 'normal').then((selectedFormat) => {
+            if (selectedFormat === key) {
+                option.selected = true;
+            }
+        });
     }
 
     settingsContent.querySelector('#time-format').addEventListener('change', (event) => {
