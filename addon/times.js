@@ -146,11 +146,13 @@ function openSettings(modalBody) {
         });
     }
 
-    settingsContent.querySelector('#time-format').addEventListener('change', (event) => {
-        const selectedFormat = event.target.value;
-        addonStorage.set('timeFormat', selectedFormat);
-    });
     modalBody.appendChild(settingsContent);
+
+    return () => {
+        const selectedFormat = settingsContent.querySelector('#time-format').value;
+        addonStorage.set('timeFormat', selectedFormat);
+        updateTimestamps();
+    };
 }
 
 function onenable() {
