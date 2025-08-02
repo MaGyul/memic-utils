@@ -75,7 +75,7 @@ function createAddonElement(addon) {
     const div = document.createElement('div');
     div.innerHTML = `
         <div class="addon-control">
-            <div class=".addon-info-container">
+            <div class="addon-info-container">
                 <span class="addon-name">${addon.addonInfo.name}</span>
                 <a id="addon-info" class="relative flex h-8 w-8 items-center justify-center">
                     <i class="ri-information-line icon-2xl"></i>
@@ -87,7 +87,7 @@ function createAddonElement(addon) {
                 }
             </div>
             <div class="switch-wrapper">
-                <input type="checkbox" id="${addon.addonKey}-switch">
+                <input type="checkbox" id="${addon.addonKey}-switch" class="switch_input" ${memicUtils.enabledAddons.includes(addon.addonKey) ? 'checked' : ''}>
                 <label for="${addon.addonKey}-switch" class="switch_label">
                     <span class="onf_btn"></span>
                 </label>
@@ -106,8 +106,6 @@ function createAddonElement(addon) {
         }
         div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
     });
-
-    div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
 
     return div;
 }
@@ -207,7 +205,7 @@ function ondocumentClick(event) {
     
     // 패널 내부 클릭인지 확인
     const isInsidePanel = controlPanel.contains(event.target);
-    
+
     // 둘 다 아니면 패널 닫기
     if (!isButton && !isInsidePanel) {
         // 패널 외부 클릭 시 닫기
