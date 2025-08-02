@@ -554,6 +554,7 @@
     class MemicUtils {
         /** @type {AddonStorage} */
         #systemStorage;
+        #enabledAddons = '';
         /** @type {string} */
         #errorAddons = [];
 
@@ -579,7 +580,7 @@
             });
             
             this.#systemStorage.get('enabledAddons', '').then(val => {
-                this.enabledAddons.push(...val.split(";"));
+                this.#enabledAddons = val;
             });
         }
 
@@ -614,7 +615,7 @@
         
         enableAddons(forge = false) {
             const addons = Object.values(this.addons);
-            const filteredEA = forge ? addons : addons.filter(addon => this.enabledAddons.includes(addon.addonKey));
+            const filteredEA = forge ? addons : addons.filter(addon => this.#enabledAddons.includes(addon.addonKey));
             const loadedAddons = [];
             const failedAddons = [];
             for (let addon of filteredEA) {
