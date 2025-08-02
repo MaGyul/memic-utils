@@ -86,6 +86,8 @@ async function updateTimestamps() {
             if (!isNaN(parsedDate.getTime())) {
                 timeElem.textContent = formatDate(parsedDate);
                 timeElem.title = originalTime;
+                if (!timeElem.getAttribute('data-original-title'))
+                    timeElem.setAttribute('data-original-title', originalTime);
                 timeElem.classList.add('fixed-time-format');
                 article.setAttribute('script-apply', 'true');
             }
@@ -96,6 +98,8 @@ async function updateTimestamps() {
                     if (!isNaN(createdAt.getTime())) {
                         timeElem.textContent = formatDate(createdAt);
                         timeElem.title = originalTime;
+                        if (!timeElem.getAttribute('data-original-title'))
+                            timeElem.setAttribute('data-original-title', originalTime);
                         timeElem.classList.add('fixed-time-format');
                         article.setAttribute('script-apply', 'true');
                     }
@@ -129,7 +133,7 @@ function refreshRender() {
         const timeElem = article.querySelector('[itemprop="dateCreated"]');
         if (timeElem) {
             timeElem.classList.remove('fixed-time-format');
-            timeElem.textContent = timeElem.title; // 원래 시간으로 되돌리기
+            timeElem.textContent = timeElem.getAttribute('data-original-title'); // 원래 시간으로 되돌리기
         }
         article.removeAttribute('script-apply');
     }
@@ -143,7 +147,7 @@ function openSettings(modalBody) {
     const settingsContent = document.createElement('div');
     settingsContent.innerHTML = `
         <label for="time-format">시간 형식 선택:</label>
-        <select id="time-format" style="margin-bottom: 10px;">
+        <select id="time-format">
         </select>
     `;
 
@@ -194,7 +198,7 @@ function ondisable() {
         const timeElem = article.querySelector('[itemprop="dateCreated"]');
         if (timeElem) {
             timeElem.classList.remove('fixed-time-format');
-            timeElem.textContent = timeElem.title; // 원래 시간으로 되돌리기
+            timeElem.textContent = timeElem.getAttribute('data-original-title'); // 원래 시간으로 되돌리기
         }
         article.removeAttribute('script-apply');
     }
