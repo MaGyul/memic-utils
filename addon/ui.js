@@ -282,9 +282,10 @@ function ondocumentClick(event) {
     
     // 패널 내부 클릭인지 확인
     const isInsidePanel = controlPanel.contains(event.target);
+    const isInsideModal = modalPanel.contains(event.target);
 
     // 둘 다 아니면 패널 닫기
-    if (!isButton && !isInsidePanel) {
+    if (!isButton && !isInsidePanel && !isInsideModal) {
         // 패널 외부 클릭 시 닫기
         closeControlPanel();
     }
