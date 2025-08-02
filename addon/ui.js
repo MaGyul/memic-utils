@@ -111,11 +111,20 @@ function createAddonElement(addon) {
 }
 
 function createControlPanel() {
+    const addon = memicUtils.uiAddon;
     const panel = document.createElement('div');
     panel.id = 'memic-utils-control-panel';
     panel.innerHTML = `
         <div class="p-2">
-            <h2 class="text-lg font-bold mb-4" style="font-size: larger;">미밐 추가 기능 제어판</h2>
+            <div style="display: flex;">
+                <h2 class="text-lg font-bold mb-4" style="font-size: larger;">미밐 추가 기능 제어판</h2>
+                <a id="ui-addon-info" class="relative flex h-8 w-8 items-center justify-center">
+                    <i class="ri-information-line icon-2xl"></i>
+                </a>
+                <a href="${addon.addonInfo.link}" data-tooltip="GitHub" target="_blank" style="padding-bottom: calc(var(--spacing) * 1.5);" class="relative flex h-8 w-8 items-center justify-center">
+                    <i class="ri-github-fill icon-2xl"></i>
+                </a>
+            </div>
             <a id="close-panel" data-tooltip="닫기">
                 <i class="ri-close-line icon-2xl"></i>
             </a>
@@ -126,6 +135,8 @@ function createControlPanel() {
             </div>
         </div>
     `;
+
+    panel.querySelector('#ui-addon-info').setAttribute('data-tooltip', `버전: ${addon.addonInfo.version}\n제작자: ${addon.addonInfo.author}\n설명: ${addon.addonInfo.description}`);
 
     const content = panel.querySelector('#addon-content');
 

@@ -33,6 +33,11 @@
     top: 28px;
 }
 
+#ui-addon-info {
+    padding-bottom: calc(var(--spacing) * 1.5);
+    margin-left: 5px;
+}
+
 #addon-content {
     display: flex;
     flex-direction: column;
