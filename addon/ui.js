@@ -131,7 +131,7 @@ function onresize() {
     if (controlPanel && controlPanel.classList.contains('show')) {
         // 패널이 화면을 벗어나면 닫기
         const rect = controlPanel.getBoundingClientRect();
-        if (rect.left + 360 > window.innerWidth || rect.top + 460 > window.innerHeight) {
+        if (rect.left + controlPanel.offsetWidth > window.innerWidth || rect.top + controlPanel.offsetHeight > window.innerHeight) {
             closeControlPanel();
             logger.log('패널이 화면을 벗어나 닫혔습니다.');
         }
