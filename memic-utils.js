@@ -1,4 +1,28 @@
 (() => {
+    function removeArray(arr) {
+        var what, a = arguments, L = a.length, ax;
+        while (L > 1 && arr.length) {
+            what = a[--L];
+            while ((ax = arr.indexOf(what)) !== -1) {
+                arr.splice(ax, 1);
+            }
+        }
+        return arr;
+    }
+
+    /**
+     * @param {any[]} arr 
+     * @param {*} by 
+     * @returns 
+     */
+    function removeArrayBy(arr, by) {
+        var ax;
+        while ((ax = arr.findIndex(by)) !== -1) {
+            arr.splice(ax, 1);
+        }
+        return arr;
+    }
+
     function hasGlobalReturnWithBabel(code) {
         try {
             const ast = Babel.packages.parser.parse(code, {
@@ -25,6 +49,29 @@
         }
     }
 
+    /**
+     * @returns {string[]} 
+     */
+    function getAddonList() {
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: `https://raw.githubusercontent.com/MaGyul/memic-utils/main/addon/addons.json`,
+                onload: function(response) {
+                    if (response.status === 200) {
+                        resolve(JSON.parse(response.responseText));
+                    } else {
+                        reject(new Error(`애드온 리스트 불러오기 실패 (네트워크 오류 ${response.status})`));
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * @param {string} name 
+     * @returns {Promise<Addon>} 
+     */
     function loadAddon(name) {
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
@@ -36,7 +83,7 @@
                             reject(new Error(`애드온(${name}) 전역에 반환이 있습니다!`));
                         }
                         try {
-                            resolve(eval(`((logger, addonStorage) => {${response.responseText}\nif (typeof addonInfo !== "object") throw new Error("addonInfo이(가) 없거나 올바르지 않습니다."); else {if (typeof addonInfo.name !== "string") throw new Error("addonInfo.name이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.description !== "string") throw new Error("addonInfo.description이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.author !== "string") throw new Error("addonInfo.author이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.version !== "string") throw new Error("addonInfo.version이(가) 없거나 올바르지 않습니다.");}if (typeof onenable !== "function") throw new Error("onenable이(가) 없거나 함수가 아닙니다.");if (typeof ondisable !== "function") throw new Error("ondisable이(가) 없거나 함수가 아닙니다.");return {addonInfo,onenable,ondisable};})(Logger.getLogger(name), AddonStorage.getStorage(name));`));
+                            resolve(eval(`((addonKey, logger, addonStorage) => {${response.responseText}\nif (typeof addonInfo !== "object") throw new Error("addonInfo이(가) 없거나 올바르지 않습니다."); else {if (typeof addonInfo.name !== "string") throw new Error("addonInfo.name이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.description !== "string") throw new Error("addonInfo.description이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.author !== "string") throw new Error("addonInfo.author이(가) 없거나 올바르지 않습니다.");if (typeof addonInfo.version !== "string") throw new Error("addonInfo.version이(가) 없거나 올바르지 않습니다.");}if (typeof onenable !== "function") throw new Error("onenable이(가) 없거나 함수가 아닙니다.");if (typeof ondisable !== "function") throw new Error("ondisable이(가) 없거나 함수가 아닙니다.");return {addonKey,addonInfo,onenable,ondisable};})(name, Logger.getLogger(name), AddonStorage.getStorage(name));`));
                         } catch (err) {
                             reject(new Error(`애드온(${name}) ${err.message}`));
                         }
@@ -50,6 +97,8 @@
 
     class AddonStorage {
         static storageCache = {};
+        /** @type {import("./localforage").LocalForage} */
+        #store;
         
         static getStorage(name) {
             if (!AddonStorage.storageCache[name]) {
@@ -60,24 +109,37 @@
 
         constructor(name) {
             this.name = name;
+            if (typeof localforage !== 'undefined') {
+                this.#store = localforage.createInstance({ name });
+            }
         }
 
-        get(key, defaultValue) {
-            if (typeof localStorage === "undefined") return defaultValue;
-            const value = localStorage.getItem(`${this.name}_${key}`);
-            if (!value) return defaultValue;
-            if (typeof defaultValue === 'boolean') {
-                return value === 'true' ? true : false;
+        async get(key, defaultValue) {
+            if (typeof this.#store === "undefined") {
+                if (typeof localStorage === "undefined") return defaultValue;
+                const value = localStorage.getItem(`${this.name}_${key}`);
+                if (!value) return defaultValue;
+                if (typeof defaultValue === 'boolean') {
+                    return value === 'true' ? true : false;
+                }
+                if (typeof defaultValue === 'number') {
+                    return Number(value);
+                }
+                return value;
+            } else {
+                const value = await this.#store.getItem(key);
+                if (!value) return defaultValue;
+                return value;
             }
-            if (typeof defaultValue === 'number') {
-                return Number(value);
-            }
-            return value;
         }
 
         set(key, value) {
-            if (typeof localStorage === "undefined") return;
-            localStorage.setItem(`${this.name}_${key}`, value);
+            if (typeof this.#store === "undefined") {
+                if (typeof localStorage === "undefined") return;
+                localStorage.setItem(`${this.name}_${key}`, value);
+            } else {
+                this.#store.setItem(key, value);
+            }
         }
 
     }
@@ -85,6 +147,10 @@
     class Logger {
         static loggerCache = {};
 
+        /**
+         * @param {string} name 
+         * @returns {Logger} 
+         */
         static getLogger(name) {
             if (!Logger.loggerCache[name]) {
                 return Logger.loggerCache[name] = new Logger(name);
@@ -97,19 +163,19 @@
         }
 
         log(...msg) {
-            console.log.call(console, `[mu-${this.name}]`, ...msg);
+            setTimeout(console.log.bind(console, `[mu-${this.name}]`, ...msg));
         }
 
         info(...msg) {
-            console.info.call(console, `[mu-${this.name}]`, ...msg);
+            setTimeout(console.info.bind(console, `[mu-${this.name}]`, ...msg));
         }
 
         warn(...msg) {
-            console.warn.call(console, `[mu-${this.name}]`, ...msg);
+            setTimeout(console.warn.bind(console, `[mu-${this.name}]`, ...msg));
         }
 
         error(...msg) {
-            console.error.call(console, `[mu-${this.name}]`, ...msg);
+            setTimeout(console.error.bind(console, `[mu-${this.name}]`, ...msg));
         }
     }
 
@@ -480,16 +546,157 @@
     }
 
     class MemicUtils {
+        /** @type {AddonStorage} */
+        #systemStorage;
+        /** @type {string} */
+        #enabledAddons;
+        #errorAddons = [];
+
         /** @type {MemicAPI} */
         api;
+        /** @type {Addon} */
+        systemAddon;
+        /** @type {Addon[]} */
+        addons;
+        logger = Logger.getLogger('스크립트 관리자');
+
+        get errorAddon() {
+            return this.#errorAddons;
+        }
+
+        get enabledAddons() {
+            return this.#enabledAddons.split(';');
+        }
+
+        set enabledAddons(value) {
+            this.#systemStorage.set('enabledAddons', (this.#enabledAddons = value.join(';')));
+        }
 
         constructor() {
+            this.#systemStorage = new AddonStorage('system');
             this.api = new MemicAPI();
+            loadAddon('system').then(addon => {
+                this.systemAddon = addon;
+                addon.onenable();
+            });
+            
+            this.#systemStorage.get('enabledAddons', '').then(val => this.#enabledAddons = val);
         }
 
-        test() {
-            return loadAddon('test');
+        async loadAddons() {
+            const addons = await getAddonList();
+            const loadedAddons = [];
+            const failedAddons = [];
+            for (let addonName of addons) {
+                try {
+                    const addon = await loadAddon(addonName);
+                    this.addons[addonName] = addon;
+                    loadedAddons.push(addonName);
+                } catch (err) {
+                    failedAddons.push({ addonName, err });
+                }
+            }
+
+            this.logger.log(`애드온 (${loadedAddons.length}개) 로드 완료`);
+            if (failedAddons.length > 0) {
+                this.logger.log(`애드온 (${failedAddons.length}개) 로드 실패`);
+                this.logger.log('사유 ↓');
+                for (let { addonName, err } of failedAddons) {
+                    this.logger.log(` - ${addonName}: ${err.message}`);
+                } 
+            }
+            this.#errorAddons = failedAddons;
         }
+        
+        enableAddons(forge = false) {
+            const filteredEA = forge ? this.addons : this.addons.filter(addon => this.enabledAddons.includes(addon.addonKey));
+            const loadedAddons = [];
+            const failedAddons = [];
+            for (let addon of filteredEA) {
+                try {
+                    addon.onenable();
+                    loadedAddons.push(addon.addonKey);
+                } catch (err) {
+                    failedAddons.push({ addonName: addon.addonKey, err });
+                }
+            }
+
+            this.logger.log(`애드온 (${loadedAddons.length}개) 활성화 완료`);
+            if (failedAddons.length > 0) {
+                this.logger.log(`애드온 (${failedAddons.length}개) 활성화 실패`);
+                this.logger.log('사유 ↓');
+                for (let { addonName, err } of failedAddons) {
+                    this.logger.log(` - ${addonName}: ${err.message}`);
+                } 
+            }
+            this.#errorAddons = failedAddons;
+            if (forge) {
+                this.enabledAddons = loadedAddons;
+            }
+        }
+
+        disableAddons() {
+            const loadedAddons = [];
+            const failedAddons = [];
+            for (let addonName of this.enabledAddons) {
+                const addon = this.addons.find(val => val.addonKey === addonName);
+                if (!addon) continue;
+                try {
+                    addon.ondisable();
+                    loadedAddons.push(addonName);
+                } catch (err) {
+                    failedAddons.push({ addonName, err });
+                }
+            }
+
+            this.logger.log(`애드온 (${loadedAddons.length}개) 비활성화 완료`);
+            if (failedAddons.length > 0) {
+                this.logger.log(`애드온 (${failedAddons.length}개) 비활성화 실패`);
+                this.logger.log('사유 ↓');
+                for (let { addonName, err } of failedAddons) {
+                    this.logger.log(` - ${addonName}: ${err.message}`);
+                } 
+            }
+            this.#errorAddons = failedAddons;
+            if (forge) {
+                this.enabledAddons = [];
+            }
+        }
+
+        enableAddon(key) {
+            const addon = this.addons.find(val => val.addonKey === key);
+            if (!addon) {
+                throw new Error(`${key}인 애드온을 찾을 수 없습니다.`);
+            }
+            try {
+                addon.onenable();
+                removeArrayBy(this.#errorAddons, val => val.addonName === key);
+            } catch (err) {
+                this.logger.error(`${key}(${addon.addonInfo.name}@${addon.addonInfo.version}) 활성화 실패`);
+                this.#errorAddons.push({ addonName: addon.addonKey, err });
+                return;
+            }
+            this.#enabledAddons.push(addon.addonKey);
+            this.logger.log(`${key}(${addon.addonInfo.name}@${addon.addonInfo.version}) 활성화 완료`);
+        }
+
+        disableAddon(key) {
+            const addon = this.addons.find(val => val.addonKey === key);
+            if (!addon) {
+                throw new Error(`${key}인 애드온을 찾을 수 없습니다.`);
+            }
+            try {
+                addon.ondisable();
+                removeArrayBy(this.#errorAddons, val => val.addonName === key);
+            } catch (err) {
+                this.logger.error(`${key}(${addon.addonInfo.name}@${addon.addonInfo.version}) 비활성화 실패`);
+                this.#errorAddons.push({ addonName: addon.addonKey, err });
+                return;
+            }
+            removeArray(this.enabledAddons, addon.addonKey);
+            this.logger.log(`${key}(${addon.addonInfo.name}@${addon.addonInfo.version}) 비활성화 완료`);
+        }
+
     }
 
     window.Logger = Logger;

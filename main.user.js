@@ -9,6 +9,7 @@
 // @match        *://shelter.id/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=memic.at
 // @require      https://unpkg.com/@babel/standalone@7.28.2/babel.min.js
+// @require      https://unpkg.com/localforage@1.10.0/dist/localforage.min.js
 // @require      https://raw.githubusercontent.com/MaGyul/memic-utils/main/memic-utils.js
 // @updateURL    https://raw.githubusercontent.com/MaGyul/memic-utils/main/main.user.js
 // @downloadURL  https://raw.githubusercontent.com/MaGyul/memic-utils/main/main.user.js
