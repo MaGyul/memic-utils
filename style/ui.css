@@ -1,7 +1,6 @@
 #memic-utils-control-panel {
     position: fixed;
-    width: 400px;
-    height: 460px;
+    min-width: 360px;
     border-radius: 12px;
     box-shadow: 0 15px 50px rgba(0,0,0,0.3);
     z-index: 1000;
@@ -32,6 +31,12 @@
     position: absolute;
     right: 20px;
     top: 28px;
+}
+
+#addon-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .addon-control {
