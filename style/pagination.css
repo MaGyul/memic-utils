@@ -1,0 +1,93 @@
+/* Targeting post containers only */
+.app-shelter-board-paging-star-inserted {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Display only post items in column 1 */
+.app-shelter-board-paging-star-inserted .app-article-list-item,
+.app-shelter-board-paging-star-inserted [data-userscript-generated="true"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    float: none !important;
+    clear: both !important;
+    margin: 0 0 6px 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Improve the style of posts read */
+.article-read {
+    background: #2e2e2e !important;
+    border-color: #404040 !important;
+    opacity: 0.75 !important;
+}
+
+.article-read .article-title {
+    color: #999 !important;
+    font-weight: normal !important;
+}
+
+.article-read .article-meta {
+    color: #777 !important;
+}
+
+.article-read .category-tag {
+    opacity: 0.8 !important;
+}
+
+/* Emphasis on a clear post */
+.article-unread {
+    background: #1a1a1a !important;
+    border-color: #2a4a5a !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
+}
+
+.article-unread .article-title {
+    color: #f0f0e0 !important;
+    font-weight: 500 !important;
+}
+
+/* Improve Timing Style */
+.article-time {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    color: #ccc !important;
+}
+
+.article-read .article-time {
+    color: #888 !important;
+}
+
+/* Page Bar Style */
+.userscript-pagination {
+    display: block !important;
+    width: 100% !important;
+    clear: both !important;
+    text-align: center !important;
+    margin: 1em 0 !important;
+}
+
+/* Page Bar Button Style */
+.userscript-pagination button {
+    margin: 0 4px !important;
+    padding: 4px 8px !important;
+    border: 1px solid #555 !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+.userscript-pagination button:hover {
+    background: #3a3a3a !important;
+}
+
+.userscript-pagination button.active {
+    background: #4FC3F7 !important;
+    color: #fff !important;
+    font-weight: bold !important;
+    border-color: #4FC3F7 !important;
+}

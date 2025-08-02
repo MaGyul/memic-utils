@@ -1,5 +1,7 @@
 [
     "ads-request-block",
     "article-autorefresh",
-    "category-color"
+    "category-color",
+    "pagination",
+    "times"
 ]
