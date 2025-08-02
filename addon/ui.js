@@ -143,7 +143,7 @@ function onresize() {
 function onenable() {
     controlPanel = createControlPanel();
     addControlButton();
-    document.addEventListener('resize', onresize);
+    window.addEventListener('resize', onresize);
 }
 
 function ondisable() {
@@ -152,5 +152,5 @@ function ondisable() {
         controlPanel.remove();
         controlPanel = null;
     }
-    document.removeEventListener('resize', onresize);
+    window.removeEventListener('resize', onresize);
 }
