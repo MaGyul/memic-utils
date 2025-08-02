@@ -122,7 +122,8 @@ function createControlPanel() {
 
     const content = panel.querySelector('#addon-content');
 
-    for (const addon of memicUtils.addons) {
+    for (const addonKey in memicUtils.addons) {
+        const addon = memicUtils.addons[addonKey];
         const addonElement = createAddonElement(addon);
         content.appendChild(addonElement);
     }
