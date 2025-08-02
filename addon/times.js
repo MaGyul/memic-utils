@@ -159,6 +159,14 @@ function openSettings(modalBody) {
                 option.selected = true;
             }
         });
+
+        const tip = document.createElement('span');
+        tip.textContent = formatType[key].description;
+        tip.style.display = 'block';
+        tip.style.marginTop = '5px';
+        tip.style.color = 'var(--color-on-surface-variant)';
+        tip.style.fontSize = '0.9em';
+        settingsContent.querySelector('#time-format').appendChild(tip);
     }
 
     modalBody.appendChild(settingsContent);
