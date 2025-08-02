@@ -90,17 +90,19 @@ function createControlPanel() {
  */
 function toggleControlPanel(button) {
     const rect = button.getBoundingClientRect();
-            
-    // 패널 위치 계산 (버튼 바로 아래)
-    let left = rect.left;
-    let top = rect.bottom + 5;
     
     // 화면을 벗어나지 않도록 조정
     const panelWidth = controlPanel.offsetWidth;
     const panelHeight = controlPanel.offsetHeight;
+            
+    // 버튼 중앙에 패널 중앙이 오도록 계산
+    const buttonCenter = rect.left + rect.width / 2;
+    let left = buttonCenter - panelWidth / 2;
+    let top = rect.bottom + 5;
     
+    // 화면을 벗어나지 않도록 조정
     // 오른쪽으로 벗어나는 경우
-    if (left + panelWidth > window.innerWidth) {
+    if (left + panelWidth > window.innerWidth - 10) {
         left = window.innerWidth - panelWidth - 10;
     }
     
@@ -110,12 +112,12 @@ function toggleControlPanel(button) {
     }
     
     // 아래로 벗어나는 경우 (버튼 위쪽에 표시)
-    if (top + panelHeight > window.innerHeight) {
+    if (top + panelHeight > window.innerHeight - 10) {
         top = rect.top - panelHeight - 5;
     }
     
     // 패널 위치 설정
-    controlPanel.style.left = (left - 70) + 'px';
+    controlPanel.style.left = left + 'px';
     controlPanel.style.top = top + 'px';
 
     controlPanel.classList.toggle('show');
