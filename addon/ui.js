@@ -121,7 +121,6 @@ function setPanelLocation(rect) {
  */
 function toggleControlPanel(button) {
     const rect = button.getBoundingClientRect();
-
     setPanelLocation(rect);
 
     controlPanel.classList.toggle('show');
