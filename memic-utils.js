@@ -14,7 +14,6 @@
             });
         });
     }
-    window.loadScript = loadScript;
 
     class MemicAPI {
         constructor() {
@@ -391,7 +390,7 @@
         }
 
         test() {
-            
+            return loadScript('test.js');
         }
     }
 
