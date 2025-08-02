@@ -24,3 +24,69 @@
     opacity: 1;
     visibility: visible;
 }
+
+.addon-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.switch-wrapper {
+  width: 50px;
+  height: 32px;
+  text-align: center;
+  margin-left: 10px;
+}
+
+.switch-wrapper #switch {
+  position: absolute;
+  /* hidden */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.switch-wrapper .switch_label {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  width: 58px;
+  height: 28px;
+  background: #fff;
+  border: 2px solid #daa;
+  border-radius: 20px;
+  transition: 0.2s;
+}
+
+.switch-wrapper .switch_label:hover {
+  background: #efefef;
+}
+
+.switch-wrapper .onf_btn {
+  position: absolute;
+  top: 4px;
+  left: 3px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  background: #daa;
+  transition: 0.2s;
+}
+
+/* checking style */
+.switch-wrapper #switch:checked+.switch_label {
+  background: #c44;
+  border: 2px solid #c44;
+}
+
+.switch-wrapper #switch:checked+.switch_label:hover {
+  background: #e55;
+}
+
+/* move */
+.switch-wrapper #switch:checked+.switch_label .onf_btn {
+  left: 34px;
+  background: #fff;
+  box-shadow: 1px 2px 3px #00000020;
+}

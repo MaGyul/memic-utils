@@ -153,6 +153,12 @@ declare class MemicUtils {
     logger: Logger;
 
     get errorAddons(): { addonName: string, err: Error }[];
+
+    async loadAddons(): Promise<void>;
+    enableAddons(forge = false): Promise<void>;
+    disableAddons(): Promise<void>;
+    enableAddon(addonKey: string): Promise<void>;
+    disableAddon(addonKey: string): Promise<void>;
 }
 
 declare interface Addon {

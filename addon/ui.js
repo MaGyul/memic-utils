@@ -66,15 +66,66 @@ function removeControlButton(retryCount = 0) {
     }
 }
 
+/**
+ * 
+ * @param {Addon} addon 
+ * @returns 
+ */
+function createAddonElement(addon) {
+    const div = document.createElement('div');
+    div.innerHTML = `
+        <div class="addon-control">
+            <span class="addon-name">${addon.addonInfo.name}</span>
+            <a id="addon-info" class="relative flex h-8 w-8 items-center justify-center">
+                <i class="ri-information-line icon-2xl"></i>
+            </a>
+            ${addon.addonInfo.link ? 
+                `<a href="${addon.addonInfo.link}" class="relative flex h-8 w-8 items-center justify-center">
+                    <i class="ri-github-fill icon-2xl"></i>
+                </a>` : ''
+            }
+            <div class="switch-wrapper">
+                <input type="checkbox" id="switch">
+                <label for="switch" class="switch_label">
+                    <span class="onf_btn"></span>
+                </label>
+            </div>
+        </div>
+    `;
+
+    div.querySelector('#addon-info').setAttribute('data-tooltip', `버전: ${addon.addonInfo.version}\n설명: ${addon.addonInfo.description}`);
+
+    div.querySelector('#switch').addEventListener('change', () => {
+        if (memicUtils.enabledAddons.includes(addon.addonKey)) {
+            memicUtils.disableAddon(addon.addonKey);
+        } else {
+            memicUtils.enableAddon(addon.addonKey);
+        }
+        div.querySelector('#switch').checked = memicUtils.enabledAddons.includes(addon.addonKey);
+    });
+
+    return div;
+}
+
 function createControlPanel() {
     const panel = document.createElement('div');
     panel.id = 'memic-utils-control-panel';
     panel.innerHTML = `
-        <div class="p-4">
-            <h2 class="text-lg font-bold mb-4">미밐 유저 스크립트 관리자</h2>
-            <button id="close-panel" class="bg-red-500 text-white px-4 py-2 rounded">닫기</button>
+        <div class="p-2">
+            <h2 class="text-lg font-bold mb-4">미밐 추가 기능 제어판</h2>
+            <a id="close-panel" class="relative flex h-8 w-8 items-center justify-center">
+                <i class="ri-close-line icon-2xl"></i>
+            </a>
+            <div id="addon-content"></div>
         </div>
     `;
+
+    const content = panel.querySelector('#addon-content');
+
+    for (const addon of memicUtils.addons) {
+        const addonElement = createAddonElement(addon);
+        content.appendChild(addonElement);
+    }
 
     panel.querySelector('#close-panel').addEventListener('click', () => {
         closeControlPanel();
@@ -140,10 +191,22 @@ function onresize() {
     }
 }
 
+function ondocumentClick(event) {
+    // 패널이 열려있는지 확인
+    if (!controlPanel.classList.contains('show')) return;
+
+    // 패널 내부 클릭인지 확인
+    if (!controlPanel.contains(event.target)) {
+        // 패널 외부 클릭 시 닫기
+        closePanel();
+    }
+}
+
 function onenable() {
     controlPanel = createControlPanel();
     addControlButton();
     window.addEventListener('resize', onresize);
+    document.addEventListener('click', ondocumentClick);
 }
 
 function ondisable() {
@@ -153,4 +216,5 @@ function ondisable() {
         controlPanel = null;
     }
     window.removeEventListener('resize', onresize);
+    document.removeEventListener('click', ondocumentClick);
 }
