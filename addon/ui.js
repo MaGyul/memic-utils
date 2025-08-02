@@ -11,17 +11,20 @@ var controlPanel;
 addUIStyle();
 
 function addUIStyle() {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/style/ui.style';
-    link.type = 'text/css';
-    link.onload = () => {
-        logger.log('UI 스타일이 성공적으로 추가되었습니다.');
-    };
-    link.onerror = () => {
-        logger.error('UI 스타일을 추가하는데 실패했습니다.');
-    };
-    document.head.appendChild(link);
+    GM_xmlhttpRequest({
+        method: 'GET',
+        url: 'https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/style/ui.css',
+        onload: function(response) {
+            if (response.status === 200) {
+                const style = document.createElement('style');
+                style.textContent = response.responseText;
+                document.head.appendChild(style);
+                logger.log('UI 스타일이 성공적으로 추가되었습니다.');
+            } else {
+                console.error('UI 스타일을 불러오는 데 실패했습니다:', response.statusText);
+            }
+        },
+    });
 }
 
 function addControlButton(retryCount = 0) {
