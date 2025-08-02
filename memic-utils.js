@@ -641,10 +641,8 @@
                 } 
             }
             this.#errorAddons = failedAddons;
-            if (forge && loadedAddons.length > 0) {
-                this.enabledAddons = loadedAddons;
-                this.#systemStorage.set('enabledAddons', loadedAddons.join(";"));
-            }
+            this.enabledAddons = loadedAddons;
+            this.#systemStorage.set('enabledAddons', loadedAddons.join(";"));
         }
 
         disableAddons() {

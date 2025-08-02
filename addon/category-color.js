@@ -25,7 +25,7 @@ const categoryColors = {
 };
 
 // Apply post tags color
-function colorizePostPrefixes() {
+function colorizePostPrefixes(off = false) {
     const postLinks = document.querySelectorAll('a.border-b-on-background-variant2');
 
     postLinks.forEach(link => {
@@ -35,14 +35,19 @@ function colorizePostPrefixes() {
         const text = prefix.textContent.trim();
         const color = categoryColors[text];
         if (color) {
-            prefix.style.color = color;
-            prefix.style.fontWeight = 'bold';
+            if (off) {
+                prefix.style.color = '';
+                prefix.style.fontWeight = '';
+            } else {
+                prefix.style.color = color;
+                prefix.style.fontWeight = 'bold';
+            }
         }
     });
 }
 
 // Apply sidebar categories color
-function colorizeSidebarCategories() {
+function colorizeSidebarCategories(off = false) {
     const anchors = document.querySelectorAll('a.truncate');
 
     anchors.forEach(a => {
@@ -52,30 +57,41 @@ function colorizeSidebarCategories() {
         const text = span.textContent.trim();
 
         if (categoryColors[text]) {
-            span.style.color = categoryColors[text];
-            span.style.fontWeight = 'bold';
+            if (off) {
+                span.style.color = '';
+                span.style.fontWeight = '';
+            } else {
+                span.style.color = categoryColors[text];
+                span.style.fontWeight = 'bold';
+            }
         }
     });
 }
 
 // 게시글의 span.bg-background 말머리에도 색상 배경 적용
-function colorizePostSpanTags() {
+function colorizePostSpanTags(off = false) {
     const spans = document.querySelectorAll('span.bg-background');
     spans.forEach(span => {
         const text = span.textContent.trim();
         const color = categoryColors[text];
         if (color) {
-            span.style.backgroundColor = color;
-            span.style.color = '#ffffff';
-            span.style.fontWeight = 'bold';
+            if (off) {
+                span.style.backgroundColor = '';
+                span.style.color = '';
+                span.style.fontWeight = '';
+            } else {
+                span.style.backgroundColor = color;
+                span.style.color = '#ffffff';
+                span.style.fontWeight = 'bold';
+            }
         }
     });
 }
 
-function applyAll() {
-    colorizePostSpanTags();
-    colorizePostPrefixes();
-    colorizeSidebarCategories();
+function applyAll(off = false) {
+    colorizePostSpanTags(off);
+    colorizePostPrefixes(off);
+    colorizeSidebarCategories(off);
 }
 
 const observer = new MutationObserver(() => {
@@ -92,4 +108,5 @@ function onenable() {
 
 function ondisable() {
     observer.disconnect();
+    applyAll(true);
 }
