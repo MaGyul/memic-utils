@@ -166,7 +166,7 @@ function openSettings(modalBody) {
     return () => {
         const selectedFormat = settingsContent.querySelector('#time-format').value;
         addonStorage.set('timeFormat', selectedFormat);
-        refreshRender();
+        setTimeout(refreshRender, 500);
     };
 }
 
