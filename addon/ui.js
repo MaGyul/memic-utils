@@ -75,18 +75,20 @@ function createAddonElement(addon) {
     const div = document.createElement('div');
     div.innerHTML = `
         <div class="addon-control">
-            <span class="addon-name">${addon.addonInfo.name}</span>
-            <a id="addon-info" class="relative flex h-8 w-8 items-center justify-center">
-                <i class="ri-information-line icon-2xl"></i>
-            </a>
-            ${addon.addonInfo.link ? 
-                `<a href="${addon.addonInfo.link}" class="relative flex h-8 w-8 items-center justify-center">
-                    <i class="ri-github-fill icon-2xl"></i>
-                </a>` : ''
-            }
+            <div class=".addon-info-container">
+                <span class="addon-name">${addon.addonInfo.name}</span>
+                <a id="addon-info" class="relative flex h-8 w-8 items-center justify-center">
+                    <i class="ri-information-line icon-2xl"></i>
+                </a>
+                ${addon.addonInfo.link ? 
+                    `<a href="${addon.addonInfo.link}" class="relative flex h-8 w-8 items-center justify-center">
+                        <i class="ri-github-fill icon-2xl"></i>
+                    </a>` : ''
+                }
+            </div>
             <div class="switch-wrapper">
-                <input type="checkbox" id="switch">
-                <label for="switch" class="switch_label">
+                <input type="checkbox" id="${addon.addonKey}-switch">
+                <label for="${addon.addonKey}-switch" class="switch_label">
                     <span class="onf_btn"></span>
                 </label>
             </div>
@@ -95,14 +97,17 @@ function createAddonElement(addon) {
 
     div.querySelector('#addon-info').setAttribute('data-tooltip', `버전: ${addon.addonInfo.version}\n설명: ${addon.addonInfo.description}`);
 
-    div.querySelector('#switch').addEventListener('change', () => {
+    div.querySelector(`#${addon.addonKey}-switch`).addEventListener('change', () => {
+        logger.log(`토글: ${addon.addonInfo.name} (${addon.addonKey})`);
         if (memicUtils.enabledAddons.includes(addon.addonKey)) {
             memicUtils.disableAddon(addon.addonKey);
         } else {
             memicUtils.enableAddon(addon.addonKey);
         }
-        div.querySelector('#switch').checked = memicUtils.enabledAddons.includes(addon.addonKey);
+        div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
     });
+
+    div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
 
     return div;
 }
@@ -113,7 +118,7 @@ function createControlPanel() {
     panel.innerHTML = `
         <div class="p-2">
             <h2 class="text-lg font-bold mb-4">미밐 추가 기능 제어판</h2>
-            <a id="close-panel" class="relative flex h-8 w-8 items-center justify-center">
+            <a id="close-panel" data-tooltip="닫기">
                 <i class="ri-close-line icon-2xl"></i>
             </a>
             <div id="addon-content"></div>
@@ -199,7 +204,7 @@ function ondocumentClick(event) {
     // 패널 내부 클릭인지 확인
     if (!controlPanel.contains(event.target)) {
         // 패널 외부 클릭 시 닫기
-        closePanel();
+        closeControlPanel();
     }
 }
 

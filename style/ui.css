@@ -1,6 +1,6 @@
 #memic-utils-control-panel {
     position: fixed;
-    width: 360px;
+    width: 400px;
     height: 460px;
     border-radius: 12px;
     box-shadow: 0 15px 50px rgba(0,0,0,0.3);
@@ -25,68 +25,86 @@
     visibility: visible;
 }
 
+#close-panel {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    right: 20px;
+    top: 28px;
+}
+
 .addon-control {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.addon-info-container {
+    display: flex;
+    align-items: center;
+}
+
+.addon-name {
+    margin-right: 5px;
 }
 
 .switch-wrapper {
-  width: 50px;
-  height: 32px;
-  text-align: center;
-  margin-left: 10px;
+    width: 50px;
+    height: 32px;
+    text-align: center;
+    margin-left: 10px;
 }
 
 .switch-wrapper #switch {
-  position: absolute;
-  /* hidden */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+    position: absolute;
+    /* hidden */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 .switch-wrapper .switch_label {
-  position: relative;
-  cursor: pointer;
-  display: inline-block;
-  width: 58px;
-  height: 28px;
-  background: #fff;
-  border: 2px solid #daa;
-  border-radius: 20px;
-  transition: 0.2s;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    width: 58px;
+    height: 28px;
+    background: #fff;
+    border: 2px solid var(--color-primary);
+    border-radius: 20px;
+    transition: 0.2s;
 }
 
 .switch-wrapper .switch_label:hover {
-  background: #efefef;
+    background: #efefef;
 }
 
 .switch-wrapper .onf_btn {
-  position: absolute;
-  top: 4px;
-  left: 3px;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border-radius: 20px;
-  background: #daa;
-  transition: 0.2s;
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    background: var(--color-primary);
+    transition: 0.2s;
 }
 
 /* checking style */
 .switch-wrapper #switch:checked+.switch_label {
-  background: #c44;
-  border: 2px solid #c44;
+    background: var(--color-primary);
+    border: 2px solid var(--color-primary-dark);
 }
 
 .switch-wrapper #switch:checked+.switch_label:hover {
-  background: #e55;
+    background: var(--color-primary2);
 }
 
 /* move */
 .switch-wrapper #switch:checked+.switch_label .onf_btn {
-  left: 34px;
-  background: #fff;
-  box-shadow: 1px 2px 3px #00000020;
+    left: 32px;
+    background: #fff;
+    box-shadow: 1px 2px 3px #00000020;
 }
