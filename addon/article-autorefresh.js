@@ -89,7 +89,9 @@ function createToggleButton(retryCount = 0) {
     header.insertBefore(btn, header.firstChild);
 
     // 저장된 상태에 따라 초기화
+    logger.log("자동 새로고침 상태:", autoRefreshEnabled);
     if (autoRefreshEnabled) {
+        logger.log("자동 새로고침 상태:a", autoRefreshEnabled);
         intervalId = setInterval(clickRefreshButton, 5000);
     }
     updateToggleButton();
@@ -128,11 +130,8 @@ const observer = new MutationObserver(() => {
 function onenable() {
     addonStorage.get("autoRefreshEnabled", false).then(v => logger.log("자동 새로고침 상태:", v));
     createToggleButton();
-    addonStorage.get("autoRefreshEnabled", false).then(v => logger.log("자동 새로고침 상태:", v));
     document.addEventListener('visibilitychange', onvisibilitychange);
-    addonStorage.get("autoRefreshEnabled", false).then(v => logger.log("자동 새로고침 상태:", v));
     observer.observe(document, { subtree: true, childList: true });
-    addonStorage.get("autoRefreshEnabled", false).then(v => logger.log("자동 새로고침 상태:", v));
 }
 
 function ondisable() {
