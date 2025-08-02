@@ -171,6 +171,7 @@ declare interface Addon {
         author: string;
         link?: string;
     }
+    openSettings: (modalBody: HTMLDivElement) => () => void;
     onenable: () => void;
     ondisable: () => void;
 }

@@ -7,6 +7,8 @@ const addonInfo = {
 
 /** @type {HTMLDivElement} */
 var controlPanel;
+/** @type {HTMLDivElement} */
+var modalPanel;
 
 addUIStyle();
 
@@ -82,6 +84,11 @@ function createAddonElement(addon) {
                 <a id="addon-info" class="relative flex h-8 w-8 items-center justify-center">
                     <i class="ri-information-line icon-2xl"></i>
                 </a>
+                ${typeof addon.openSettings === 'function' ?
+                    `<a id="open-settings" data-tooltip="설정" class="relative flex h-8 w-8 items-center justify-center">
+                        <i class="ri-settings-2-line icon-2xl"></i>
+                    </a>` : ''
+                }
                 ${addon.addonInfo.link ? 
                     `<a href="${addon.addonInfo.link}" data-tooltip="GitHub" target="_blank" class="relative flex h-8 w-8 items-center justify-center">
                         <i class="ri-github-fill icon-2xl"></i>
@@ -104,6 +111,19 @@ function createAddonElement(addon) {
             memicUtils.disableAddon(addon.addonKey);
         } else {
             memicUtils.enableAddon(addon.addonKey);
+        }
+    });
+
+    div.querySelector('#open-settings')?.addEventListener('click', () => {
+        if (typeof addon.openSettings === 'function') {
+            const confirmFunc = addon.openSettings(modalPanel.querySelector('#modal-body'));
+            if (typeof confirmFunc === 'function') {
+                modalPanel.querySelector('#modal-confirm').addEventListener('click', () => {
+                    confirmFunc();
+                    closeModal();
+                });
+            }
+            openModal(`${addon.addonInfo.name} 설정`, 'medium');
         }
     });
 
@@ -200,6 +220,46 @@ function closeControlPanel() {
     controlPanel.classList.remove('show');
 }
 
+function createModalPanel() {
+    const modalPanel = document.createElement('div');
+    modalPanel.innerHTML = `
+        <div id="modal-panel">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">제목</h3>
+                <button class="modal-close" id="modal-close">×</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                내용
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel">취소</button>
+                <button id="modal-confirm">확인</button>
+            </div>
+        </div>
+    `;
+    modalPanel.className = 'modal-panel';
+
+    modalPanel.querySelector('#modal-close').addEventListener('click', () => {
+        closeModal();
+    });
+    modalPanel.querySelector('#modal-cancel').addEventListener('click', () => { 
+        closeModal();
+    });
+    
+    document.body.appendChild(modalPanel);
+    return modalPanel;
+}
+
+function openModal(title, size = 'medium') {
+    modalPanel.querySelector('#modal-title').textContent = title;
+    modalPanel.querySelector('#modal-panel').className = `modal ${size}`;
+    modalPanel.classList.add('show');
+}
+
+function closeModal() {
+    modalPanel.classList.remove('show');
+}
+
 function onresize() {
     if (controlPanel && controlPanel.classList.contains('show')) {
         const controlButton = document.getElementById('memic-utils-control-button');
@@ -266,6 +326,7 @@ function onaddonDisabled(event) {
 
 function onenable() {
     controlPanel = createControlPanel();
+    modalPanel = createModalPanel();
     addControlButton();
     window.addEventListener('resize', onresize);
     document.addEventListener('click', ondocumentClick);
@@ -280,6 +341,10 @@ function ondisable() {
     if (controlPanel) {
         controlPanel.remove();
         controlPanel = null;
+    }
+    if (modalPanel) {
+        modalPanel.remove();
+        modalPanel = null;
     }
     window.removeEventListener('resize', onresize);
     document.removeEventListener('click', ondocumentClick);

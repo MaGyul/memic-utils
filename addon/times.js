@@ -5,6 +5,19 @@ const addonInfo = {
     version: "1.0.0"
 }
 
+const formatType = {
+    tgd: {
+        name: '트게더 형식',
+        description: '오늘 날짜는 시:분:초로 표시하고, 다른 날짜는 YY-MM-DD 형식으로 표시합니다.',
+        formatFunction: formatDateTgd
+    },
+    normal: {
+        name: '일반 형식',
+        description: 'YYYY-MM-DD HH:mm:ss 형식으로 표시합니다.',
+        formatFunction: formatDate
+    }
+}
+
 addStyle();
 
 function addStyle() {
@@ -20,6 +33,28 @@ function addStyle() {
         }
     `;
     document.head.appendChild(style);
+}
+
+function change9under(i) {
+    if (i <= 9) {
+        i = '0' + i;
+    }
+    return i;
+}
+
+function formatDateTgd(date) {
+    let year = ('' + date.getFullYear()).substring(2);
+    let month = change9under(date.getMonth() + 1);
+    let date = change9under(date.getDate());
+    let hours = change9under(date.getHours());
+    let minutes = change9under(date.getMinutes());
+    let seconds = change9under(date.getSeconds());
+    // 생성된 날자가 오늘일 경우
+    if (currentDate.getDate() == date) {
+        return `${hours}:${minutes}:${seconds}`;
+    } else {
+        return `${year}-${month}-${date}`;
+    }
 }
 
 function formatDate(date) {
@@ -40,6 +75,8 @@ function updateTimestamps() {
 
         const timeElem = article.querySelector('[itemprop="dateCreated"]');
         const originalTime = timeElem.textContent.trim();
+
+        const formatDate = formatType[addonStorage.get('timeFormat', 'normal')].formatFunction;
 
         if (timeElem.hasAttribute('datetime')) {
             const datetime = timeElem.getAttribute('datetime');
@@ -81,6 +118,25 @@ const observer = new MutationObserver((mutations) => {
 
 function onfocus() {
     setTimeout(updateTimestamps, 500);
+}
+
+/**
+ * @param {HTMLDivElement} modalBody
+ */
+function openSettings(modalBody) {
+    const settingsContent = document.createElement('div');
+    settingsContent.innerHTML = `
+        <label for="time-format">시간 형식 선택:</label>
+        <select id="time-format">
+            <option value="tgd">트게더 형식</option>
+            <option value="normal">일반 형식</option>
+        </select>
+    `;
+    settingsContent.querySelector('#time-format').addEventListener('change', (event) => {
+        const selectedFormat = event.target.value;
+        addonStorage.set('timeFormat', selectedFormat);
+    });
+    modalBody.appendChild(settingsContent);
 }
 
 function onenable() {
