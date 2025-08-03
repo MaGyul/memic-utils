@@ -306,9 +306,7 @@ function clearArticles(c) {
 function cloneBarEvents(bar, clone) {
     clone.addEventListener('click', e => {
         if (e.target.tagName === 'BUTTON') {
-            logger.log(`클론된 페이지네이션 바에서 버튼 클릭: ${e.target.id}`);
-            logger.log(bar.querySelector(e.target.id));
-            bar.querySelector(e.target.id)?.click(); // Trigger the same button click on the original bar
+            bar.querySelector(`#${e.target.id}`)?.click(); // Trigger the same button click on the original bar
         }
     });
 }
