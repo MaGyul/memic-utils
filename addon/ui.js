@@ -114,6 +114,7 @@ function createAddonElement(addon) {
             memicUtils.enableAddon(addon.addonKey);
         }
     });
+    div.querySelector(`#${addon.addonKey}-switch`).checked = memicUtils.enabledAddons.includes(addon.addonKey);
 
     div.querySelector('#open-settings')?.addEventListener('click', () => {
         if (typeof addon.openSettings === 'function') {
