@@ -116,6 +116,7 @@ function captureRefrashButton(off = false) {
             clearArticles(container);
             renderArticles(container, list);
             syncPaginationBars();
+            captureRefrashButton();
         }
     }
 }
