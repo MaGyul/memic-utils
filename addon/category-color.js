@@ -26,7 +26,7 @@ const defaultCategoryColors = {
 // Color definition
 const categoryColors = {};
 
-for (const key in categoryColors) {
+for (const key in defaultCategoryColors) {
     categoryColors[key] = await addonStorage.get(key, defaultCategoryColors[key]);
 }
 
