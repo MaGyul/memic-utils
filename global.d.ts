@@ -11,6 +11,8 @@
 // declare function onenable(): void;
 // declare function ondisable(): void;
 
+declare const addonStorage: AddonStorage;
+
 // === global ===
 
 declare const localforage: import("./localforage").LocalForage;

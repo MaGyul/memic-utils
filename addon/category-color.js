@@ -24,6 +24,10 @@ const categoryColors = {
     '이벤트': '#FFD54F'
 };
 
+for (const key in categoryColors) {
+    categoryColors[key] = addonStorage.get(key, categoryColors[key]);
+}
+
 // Apply post tags color
 function colorizePostPrefixes(off = false) {
     const postLinks = document.querySelectorAll('a.border-b-on-background-variant2');
@@ -96,7 +100,42 @@ function applyAll(off = false) {
 
 const observer = new MutationObserver(() => {
     applyAll();
-})
+});
+
+function openSettings(modalBody) {
+    const settingsContent = document.createElement('div');
+    settingsContent.innerHTML = `
+        <label for="category-colors">카테고리 색상 설정:</label>
+        <div id="category-colors"></div>
+    `;
+
+    const colorsContainer = settingsContent.querySelector('#category-colors');
+
+    const colorInputs = {};
+
+    for (const key in categoryColors) {
+        const colorInput = document.createElement('input');
+        colorInput.type = 'color';
+        colorInput.value = categoryColors[key];
+        colorInputs[key] = colorInput;
+
+        const label = document.createElement('label');
+        label.textContent = key;
+        label.appendChild(colorInput);
+        colorsContainer.appendChild(label);
+    }
+
+    modalBody.appendChild(settingsContent);
+
+    return () => {
+        // 설정 저장
+        for (const key in colorInputs) {
+            categoryColors[key] = colorInputs[key].value;
+            addonStorage.set(key, categoryColors[key]);
+        }
+        applyAll();
+    }
+}
 
 function onenable() {
     setTimeout(applyAll, 500);
