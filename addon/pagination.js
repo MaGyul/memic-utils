@@ -9,6 +9,7 @@ const addonInfo = {
 const shelter_id_pattern = /shelter\.id\/([^?]+)/;
 const memic_at_pattern = /memic\.at\/([^?]+)/;
 
+var isBoard = '';
 var currentUrl = location.href;
 var personalId = getPersonalId();
 var article_per_page = await addonStorage.get('article-per-page', 100);
@@ -522,14 +523,25 @@ const removeOriginal = new MutationObserver(muts => {
         });
     }
     if (hasBoardIdInUrl()) {
+        const currentBoardId = getBoardIdFromUrl();
+        if (isBoard != currentBoardId) {
+            isBoard = currentBoardId;
+            currentPage = 0;
+            loadPagesSequentially(currentPage).then(list => {
+                if (list.length === 0) return; // No articles to render
+                clearArticles(container);
+                renderArticles(container, list);
+            });
+        }
+        return;
+    } else if (isBoard) {
+        isBoard = '';
         currentPage = 0;
         loadPagesSequentially(currentPage).then(list => {
             if (list.length === 0) return; // No articles to render
             clearArticles(container);
             renderArticles(container, list);
         });
-        //clearPaginationBars();
-        return;
     }
 
     muts.forEach(m => {
