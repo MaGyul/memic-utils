@@ -440,12 +440,11 @@ async function onpopstate(e) {
         renderArticles(container, list);
 
         clearPaginationBars();
-        const top = createPaginationBar();
-        const bottom = createPaginationBar();
+        const bar = createPaginationBar();
 
         if (container.parentElement) {
-            container.parentElement.insertBefore(top, container);
-            container.parentElement.appendChild(bottom);
+            container.parentElement.insertBefore(bar, container);
+            container.parentElement.appendChild(bar);
         }
 
         if (savedScroll) {
@@ -644,12 +643,11 @@ async function onenable() {
     }
 
     clearPaginationBars();
-    const top = createPaginationBar();
-    const bottom = createPaginationBar();
+    const bar = createPaginationBar();
 
     if (container.parentElement) {
-        container.parentElement.insertBefore(top, container);
-        container.parentElement.appendChild(bottom);
+        container.parentElement.insertBefore(bar, container);
+        container.parentElement.appendChild(bar);
     }
 
     removeOriginal.observe(document.body, { childList: true, subtree: true });
