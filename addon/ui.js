@@ -292,7 +292,7 @@ function ondocumentClick(event) {
     }
 }
 
-function onaddonLoaded(event) {
+function onaddonsLoaded(event) {
     /** @type {Addon[]} */
     const addons = event.detail;
     const content = controlPanel.querySelector('#addon-content');
@@ -349,6 +349,7 @@ function onenable() {
     addControlButton();
     window.addEventListener('resize', onresize);
     document.addEventListener('click', ondocumentClick);
+    memicUtils.addEventListener('addonsLoaded', onaddonsLoaded);
     memicUtils.addEventListener('addonsEnabled', onaddonsEnabled);
     memicUtils.addEventListener('addonsDisabled', onaddonsDisabled);
     memicUtils.addEventListener('addonEnabled', onaddonEnabled);
@@ -367,6 +368,7 @@ function ondisable() {
     }
     window.removeEventListener('resize', onresize);
     document.removeEventListener('click', ondocumentClick);
+    memicUtils.removeEventListener('addonsLoaded', onaddonsLoaded);
     memicUtils.removeEventListener('addonsEnabled', onaddonsEnabled);
     memicUtils.removeEventListener('addonsDisabled', onaddonsDisabled);
     memicUtils.removeEventListener('addonEnabled', onaddonEnabled);
