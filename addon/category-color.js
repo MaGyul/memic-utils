@@ -105,8 +105,8 @@ const observer = new MutationObserver(() => {
 function openSettings(modalBody) {
     const settingsContent = document.createElement('div');
     settingsContent.innerHTML = `
-        <label for="category-colors">카테고리 색상 설정:</label>
-        <div id="category-colors"></div>
+        <label for="category-colors" style="margin-bottom: 4px;">카테고리 색상 설정</label>
+        <div id="category-colors" style="display: flex; flex-direction: column; gap: 2px;"></div>
     `;
 
     const colorsContainer = settingsContent.querySelector('#category-colors');
@@ -115,8 +115,11 @@ function openSettings(modalBody) {
 
     for (const key in categoryColors) {
         const colorInput = document.createElement('input');
+        colorInput.id = `color-${key}`;
+        colorInput.style.marginLeft = '4px';
         colorInput.type = 'color';
         colorInput.value = categoryColors[key];
+        logger.log(`카테고리 ${key}의 색상: ${categoryColors[key]}`);
         colorInputs[key] = colorInput;
 
         const label = document.createElement('label');

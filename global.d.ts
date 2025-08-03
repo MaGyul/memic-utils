@@ -12,6 +12,7 @@
 // declare function ondisable(): void;
 
 declare const addonStorage: AddonStorage;
+declare const logger: Logger;
 
 // === global ===
 
