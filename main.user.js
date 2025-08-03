@@ -16,7 +16,7 @@
 // @require      https://mu.magyul.kr/memic-utils.js
 // @updateURL    https://mu.magyul.kr/main.user.js
 // @downloadURL  https://mu.magyul.kr/main.user.js
-// @connect      raw.githubusercontent.com
+// @connect      mu.magyul.kr
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
@@ -25,8 +25,8 @@
 
     document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
     async function init() {
-        await memicUtils.loadAddons();
         await memicUtils.loadUIAddon();
+        await memicUtils.loadAddons();
         memicUtils.enableAddons();
     }
 })();
