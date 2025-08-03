@@ -278,6 +278,7 @@ function renderArticles(container, articles) {
  * @returns {Promise<ArticleInfo[]>}
  */
 async function loadPagesSequentially(idx) {
+    logger.error(new Error());
     let last = null, res = [];
     for (let i = 0; i <= idx; i++) {
         const page = await fetchArticles(last);
