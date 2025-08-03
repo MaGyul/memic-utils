@@ -18,8 +18,7 @@ var container = null,
     currentPage = 0, 
     /** @type {ArticleInfo[]} */
     articleList = [], 
-    scrollPosition = 0,
-    isScriptActive = false;
+    scrollPosition = 0;
 
 function clickRefreshButton() {
     const btn =
@@ -82,19 +81,20 @@ function hasBoardIdInUrl() {
     return urlParams.has('boardId');
 }
 
+function getBoardIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('boardId');
+}
+
 // page script activation check
 function shouldRunPagination() {
     return !hasBoardIdInUrl();
 }
 
-// refreshkey create
-function getRefreshKey() {
-    return `refresh_${window.location.pathname}_${window.location.search}`;
-}
 
 // Organize all Page script related elements
 function cleanupPagination() {
-    console.log('페이지네이션 정리 시작');
+    logger.log('페이지네이션 정리 시작');
 
     // page bar delete
     clearPaginationBars();
@@ -115,31 +115,15 @@ function cleanupPagination() {
     });
 
     // initialize script state
-    isScriptActive = false;
     container = null;
     currentPage = 0;
     articleList = [];
 
-    console.log('페이지네이션 정리 완료');
+    logger.log('페이지네이션 정리 완료');
 }
 
-  // restoreoriginalpage (one time)
+// restoreoriginalpage (one time)
 function restoreOriginalPage() {
-    const refreshKey = getRefreshKey();
-    const hasRefreshed = sessionStorage.getItem(refreshKey);
-
-    if (hasRefreshed === 'true') {
-        console.log('이미 이 페이지에서 새로고침했으므로 건너뜀');
-        cleanupPagination();
-        return;
-    }
-
-    console.log('원본 페이지 복원을 위한 1회 새로고침 시작');
-
-    // refresh flag set
-    sessionStorage.setItem(refreshKey, 'true');
-
-    //  Clear and Refresh Page
     cleanupPagination();
     location.reload();
 }
@@ -147,12 +131,23 @@ function restoreOriginalPage() {
 async function fetchArticles(offsetId = null) {
     try {
         const shelterId = await getShelterId();
-        const page = await memicUtils.api.articles.getList(
-            shelterId,
-            false,
-            article_per_page,
-            offsetId
-        );
+        let page;
+        if (hasBoardIdInUrl()) {
+            const boardId = getBoardIdFromUrl();
+            page = await memicUtils.api.articles.getListByBoard(
+                boardId,
+                false,
+                article_per_page,
+                offsetId
+            );
+        } else {
+            page = await memicUtils.api.articles.getList(
+                shelterId,
+                false,
+                article_per_page,
+                offsetId
+            );
+        }
         return page.list || [];
     } catch (error) {
         logger.error('게시글을 가져오는 데 실패했습니다.', error);
@@ -288,9 +283,14 @@ function renderArticles(container, articles) {
     });
 }
 
+/**
+ * 페이지를 순차적으로 로드합니다.
+ * @param {number} idx 
+ * @returns {Promise<ArticleInfo[]>}
+ */
 async function loadPagesSequentially(idx) {
     let last = null, res = [];
-    for (let i = 0; i < idx; i++) {
+    for (let i = 0; i <= idx; i++) {
         const page = await fetchArticles(last);
         if (!page.length) break;
         res = page;
@@ -616,5 +616,5 @@ function ondisable() {
     document.removeEventListener('keydown', onkeydown);
     window.removeEventListener('pageshow', onpageshow);
 
-    clickRefreshButton();
+    restoreOriginalPage();
 }
