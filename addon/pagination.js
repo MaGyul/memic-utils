@@ -9,9 +9,10 @@ const addonInfo = {
 const shelter_id_pattern = /shelter\.id\/([^?]+)/;
 const memic_at_pattern = /memic\.at\/([^?]+)/;
 
+var currentUrl = location.href;
 var personalId = getPersonalId();
-var per_page = await addonStorage.get('per-page', 100);
-var max_page = await addonStorage.get('max-page', 10);
+var article_per_page = await addonStorage.get('article-per-page', 100);
+var max_pages = await addonStorage.get('max-pages', 10);
 /** @type {HTMLDivElement} */
 var container = null, 
     currentPage = 0, 
@@ -53,7 +54,7 @@ function addStyle() {
     });
 }
 
-function getPersonalId(url = location.href) {
+function getPersonalId(url = currentUrl) {
     let match = url.match(shelter_id_pattern);
     if (match) {
         return match[1];
@@ -65,9 +66,14 @@ function getPersonalId(url = location.href) {
     return null;
 }
 
-async function getShelterId() {
-    const info = await memicUtils.api.personal.getShelter(personalId);
-    return info.id;
+async function getShelterId(pId = personalId) {
+    try {
+        const info = await memicUtils.api.personal.getShelter(pId);
+        return info.id;
+    } catch (error) {
+        logger.error('Shelter ID를 가져오는 데 실패했습니다.', error);
+        return null;
+    }
 }
 
 // boardId parameter check in url
@@ -144,7 +150,7 @@ async function fetchArticles(offsetId = null) {
         const page = await memicUtils.api.articles.getList(
             shelterId,
             false,
-            per_page,
+            article_per_page,
             offsetId
         );
         return page.list || [];
@@ -436,6 +442,17 @@ function onpageshow(e) {
 }
 
 const removeOriginal = new MutationObserver(muts => {
+    if (currentUrl !== location.href) {
+        // 현재 URL이 변경되었으므로 personalId와 currentUrl을 업데이트
+        const pId = getPersonalId(location.href);
+        getShelterId(pId).then(sId => {
+            if (sId) {
+                personalId = pId;
+                currentUrl = location.href;
+            }
+        });
+    }
+
     muts.forEach(m => {
         if (m.addedNodes.length && container) {
             // Remove only the original post elements (except those created by the user script)
@@ -443,6 +460,60 @@ const removeOriginal = new MutationObserver(muts => {
         }
     });
 });
+
+/**
+ * @param {HTMLDivElement} modalBody 
+ */
+function openSettings(modalBody) {
+    const settingsHtml = `
+        <div class="settings-container" style="display: flex; flex-direction: row; gap: 16px;">
+            <h2>페이지네이션 설정</h2>
+            <div class="setting-item" style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                <label for="article-per-page">
+                    페이지당 게시글 수:
+                    <input type="number" id="article-per-page" value="${article_per_page}" min="1" max="100">
+                </label>
+                <button class="reset-button" id="reset-article-per-page" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface">초기화</button>
+            </div>
+            <div class="setting-item" style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                <label for="max-pages">
+                    최대 페이지 수:
+                    <input type="number" id="max-pages" value="${max_pages}" min="1" max="10">
+                </label>
+                <button class="reset-button" id="reset-max-pages" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface">초기화</button>
+            </div>
+        </div>
+    `;
+
+    modalBody.innerHTML = settingsHtml;
+
+    const resetArticlePerPageBtn = modalBody.querySelector('#reset-article-per-page');
+    resetArticlePerPageBtn.addEventListener('click', () => {
+        const defaultArticlePerPage = 100;
+        modalBody.querySelector('#article-per-page').value = defaultArticlePerPage;
+        logger.log(`페이지당 게시글 수가 ${defaultArticlePerPage}로 초기화되었습니다.`);
+    });
+
+    const resetMaxPagesBtn = modalBody.querySelector('#reset-max-pages');
+    resetMaxPagesBtn.addEventListener('click', () => {
+        const defaultMaxPages = 10;
+        modalBody.querySelector('#max-pages').value = defaultMaxPages;
+        logger.log(`최대 페이지 수가 ${defaultMaxPages}로 초기화되었습니다.`);
+    });
+
+    return () => {
+        const newArticlePerPage = parseInt(modalBody.querySelector('#article-per-page').value);
+        const newMaxPages = parseInt(modalBody.querySelector('#max-pages').value);
+
+        if (!isNaN(newArticlePerPage) && !isNaN(newMaxPages)) {
+            article_per_page = newArticlePerPage;
+            max_pages = newMaxPages;
+
+            addonStorage.set('article-per-page', article_per_page);
+            addonStorage.set('max-pages', max_pages);
+        }
+    };
+}
 
 async function onenable() {
     container = await findContainer();
