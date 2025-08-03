@@ -586,7 +586,7 @@ async function onenable() {
     const bottom = createPaginationBar();
 
     if (container.parentElement) {
-        container.parentBefore(top, container);
+        container.parentElement.insertBefore(top, container);
         container.parentElement.appendChild(bottom);
     }
 
