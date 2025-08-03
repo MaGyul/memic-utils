@@ -486,8 +486,9 @@ function openSettings(modalBody) {
 
     modalBody.innerHTML = settingsHtml;
 
+    /** @type {HTMLInputElement} */
     const articlePerPageInput = modalBody.querySelector('#article-per-page');
-    articlePerPageInput.addEventListener('input', () => {
+    articlePerPageInput.addEventListener('change', () => {
         let value = parseInt(articlePerPageInput.value);
         if (isNaN(value)) {
             if (value < articlePerPageInput.min) {
@@ -498,7 +499,7 @@ function openSettings(modalBody) {
         }
         articlePerPageInput.value = value;
     });
-    articlePerPageInput.addEventListener('mousescroll', (e) => {
+    articlePerPageInput.addEventListener('wheel', (e) => {
         e.preventDefault();
         let value = parseInt(articlePerPageInput.value);
         if (e.deltaY < 0) {
@@ -506,11 +507,12 @@ function openSettings(modalBody) {
         } else {
             articlePerPageInput.value = Math.max(value - 1, 1);
         }
-        articlePerPageInput.dispatchEvent(new Event('input')); // Trigger input event
+        articlePerPageInput.dispatchEvent(new Event('change')); // Trigger change event
     });
 
+    /** @type {HTMLInputElement} */
     const maxPagesInput = modalBody.querySelector('#max-pages');
-    maxPagesInput.addEventListener('input', () => {
+    maxPagesInput.addEventListener('change', () => {
         let value = parseInt(maxPagesInput.value);
         if (isNaN(value)) {
             if (value < maxPagesInput.min) {
@@ -521,7 +523,7 @@ function openSettings(modalBody) {
         }
         maxPagesInput.value = value;
     });
-    maxPagesInput.addEventListener('mousescroll', (e) => {
+    maxPagesInput.addEventListener('wheel', (e) => {
         e.preventDefault();
         let value = parseInt(maxPagesInput.value);
         if (e.deltaY < 0) {
@@ -529,7 +531,7 @@ function openSettings(modalBody) {
         } else {
             maxPagesInput.value = Math.max(value - 1, 1);
         }
-        maxPagesInput.dispatchEvent(new Event('input')); // Trigger input event
+        maxPagesInput.dispatchEvent(new Event('change')); // Trigger change event
     });
 
     const resetArticlePerPageBtn = modalBody.querySelector('#reset-article-per-page');
