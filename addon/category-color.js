@@ -136,7 +136,7 @@ function openSettings(modalBody) {
         const resetBtn = document.createElement('button');
         resetBtn.className = 'flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface';
         resetBtn.textContent = '초기화';
-        resetBtn.style.marginLeft = '4px';
+        resetBtn.style.marginLeft = '12px';
         resetBtn.addEventListener('click', () => {
             colorInput.value = defaultCategoryColors[key];
             categoryColors[key] = defaultCategoryColors[key];

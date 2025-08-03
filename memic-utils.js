@@ -120,6 +120,24 @@
             }
         }
 
+        async keys() {
+            if (typeof this.#store === "undefined") {
+                if (typeof localStorage === "undefined") return [];
+                return Object.keys(localStorage).filter(key => key.startsWith(`${this.name}_`)).map(key => key.replace(`${this.name}_`, ''));
+            } else {
+                return this.#store.keys();
+            }
+        }
+
+        async remove(key) {
+            if (typeof this.#store === "undefined") {
+                if (typeof localStorage === "undefined") return;
+                localStorage.removeItem(`${this.name}_${key}`);
+            } else {
+                return this.#store.removeItem(key);
+            }
+        }
+
         async get(key, defaultValue) {
             if (typeof this.#store === "undefined") {
                 if (typeof localStorage === "undefined") return defaultValue;
@@ -139,12 +157,12 @@
             }
         }
 
-        set(key, value) {
+        async set(key, value) {
             if (typeof this.#store === "undefined") {
                 if (typeof localStorage === "undefined") return;
                 localStorage.setItem(`${this.name}_${key}`, value);
             } else {
-                this.#store.setItem(key, value);
+                return this.#store.setItem(key, value);
             }
         }
 

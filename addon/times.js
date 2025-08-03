@@ -2,7 +2,8 @@ const addonInfo = {
     name: "미밐 정확한 시간 표시",
     description: "미밐 게시판에 정확한 시간 표시 기능을 추가합니다.",
     author: "NoonDaL, MaGyul",
-    version: "1.0.0"
+    version: "1.0.0",
+    link: "https://github.com/NoonDaL/memic-utils"
 }
 
 const formatType = {

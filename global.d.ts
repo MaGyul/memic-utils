@@ -109,6 +109,8 @@ declare interface ArticleListResponse {
 declare class AddonStorage {
     static getStorage(name: string): AddonStorage;
     constructor(name: string);
+    keys(): Promise<string[]>;
+    remove(key: string): Promise<void>;
     get<T>(key: string, defaultValue: T): Promise<T>;
     set<T>(key: string, value: T): Promise<void>;
 }
