@@ -25,7 +25,7 @@ const categoryColors = {
 };
 
 for (const key in categoryColors) {
-    categoryColors[key] = addonStorage.get(key, categoryColors[key]);
+    categoryColors[key] = await addonStorage.get(key, categoryColors[key]);
 }
 
 // Apply post tags color
@@ -119,7 +119,6 @@ function openSettings(modalBody) {
         colorInput.style.marginLeft = '4px';
         colorInput.type = 'color';
         colorInput.value = categoryColors[key];
-        logger.log(`카테고리 ${key}의 색상: ${categoryColors[key]}`);
         colorInputs[key] = colorInput;
 
         const label = document.createElement('label');
