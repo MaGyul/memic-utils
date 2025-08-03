@@ -350,6 +350,7 @@ function createPaginationBar() {
 
     bar.addEventListener('click', async e => {
         if (e.target.tagName === 'BUTTON') {
+            if (e.target.classList.contains('active')) return; // Ignore if already active
             const pageS = e.target.dataset.page;
             if (pageS === 'prev') {
                 if (currentPageGroup == 1) {
