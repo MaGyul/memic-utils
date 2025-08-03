@@ -466,19 +466,18 @@ const removeOriginal = new MutationObserver(muts => {
  */
 function openSettings(modalBody) {
     const settingsHtml = `
-        <div class="settings-container" style="display: flex; flex-direction: row; gap: 16px;">
-            <h2>페이지네이션 설정</h2>
-            <div class="setting-item" style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+        <div class="settings-container" style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="setting-item" style="display: flex; flex-direction: row; gap: 8px; align-items: center;">
                 <label for="article-per-page">
                     페이지당 게시글 수:
-                    <input type="number" id="article-per-page" value="${article_per_page}" min="1" max="100">
+                    <input type="number" id="article-per-page" class="border rounded-sm ml-1" value="${article_per_page}" min="1" max="100">
                 </label>
                 <button class="reset-button" id="reset-article-per-page" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface">초기화</button>
             </div>
-            <div class="setting-item" style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+            <div class="setting-item" style="display: flex; flex-direction: row; gap: 8px; align-items: center;">
                 <label for="max-pages">
                     최대 페이지 수:
-                    <input type="number" id="max-pages" value="${max_pages}" min="1" max="10">
+                    <input type="number" id="max-pages" class="border rounded-sm ml-1" value="${max_pages}" min="1" max="10">
                 </label>
                 <button class="reset-button" id="reset-max-pages" class="flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface">초기화</button>
             </div>
@@ -486,6 +485,52 @@ function openSettings(modalBody) {
     `;
 
     modalBody.innerHTML = settingsHtml;
+
+    const articlePerPageInput = modalBody.querySelector('#article-per-page');
+    articlePerPageInput.addEventListener('input', () => {
+        let value = parseInt(articlePerPageInput.value);
+        if (isNaN(value)) {
+            if (value < articlePerPageInput.min) {
+                value = articlePerPageInput.min; // 최소값 1
+            } else if (value > articlePerPageInput.max) {
+                value = articlePerPageInput.max; // 최대값 100
+            }
+        }
+        articlePerPageInput.value = value;
+    });
+    articlePerPageInput.addEventListener('mousescroll', (e) => {
+        e.preventDefault();
+        let value = parseInt(articlePerPageInput.value);
+        if (e.deltaY < 0) {
+            articlePerPageInput.value = Math.min(value + 1, 100);
+        } else {
+            articlePerPageInput.value = Math.max(value - 1, 1);
+        }
+        articlePerPageInput.dispatchEvent(new Event('input')); // Trigger input event
+    });
+
+    const maxPagesInput = modalBody.querySelector('#max-pages');
+    maxPagesInput.addEventListener('input', () => {
+        let value = parseInt(maxPagesInput.value);
+        if (isNaN(value)) {
+            if (value < maxPagesInput.min) {
+                value = maxPagesInput.min; // 최소값 1
+            } else if (value > maxPagesInput.max) {
+                value = maxPagesInput.max; // 최대값 10
+            }
+        }
+        maxPagesInput.value = value;
+    });
+    maxPagesInput.addEventListener('mousescroll', (e) => {
+        e.preventDefault();
+        let value = parseInt(maxPagesInput.value);
+        if (e.deltaY < 0) {
+            maxPagesInput.value = Math.min(value + 1, 10);
+        } else {
+            maxPagesInput.value = Math.max(value - 1, 1);
+        }
+        maxPagesInput.dispatchEvent(new Event('input')); // Trigger input event
+    });
 
     const resetArticlePerPageBtn = modalBody.querySelector('#reset-article-per-page');
     resetArticlePerPageBtn.addEventListener('click', () => {
