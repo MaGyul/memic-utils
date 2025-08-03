@@ -16,6 +16,7 @@ var max_pages = await addonStorage.get('max-pages', 10);
 /** @type {HTMLDivElement} */
 var container = null, 
     currentPage = 0, 
+    currentPageGroup = 1,
     /** @type {ArticleInfo[]} */
     articleList = [], 
     scrollPosition = 0;
@@ -53,11 +54,11 @@ function getPersonalId(url = currentUrl) {
 
 async function getShelterId(pId = personalId) {
     if (pId === 'articles') return null;
+    if (!isNaN(Number(pId))) return null;
     try {
         const info = await memicUtils.api.personal.getShelter(pId);
         return info.id;
     } catch (error) {
-        logger.error('Shelter ID를 가져오는 데 실패했습니다.', error);
         return null;
     }
 }
@@ -128,6 +129,7 @@ async function fetchArticles(offsetId = null) {
             );
         } else {
             const shelterId = await getShelterId();
+            if (shelterId === null) return [];
             page = await memicUtils.api.articles.getList(
                 shelterId,
                 false,
@@ -306,8 +308,20 @@ function createPaginationBar() {
     bar.setAttribute('data-userscript-generated', 'true');
     bar.classList.add('userscript-pagination');
 
+    let btn, prevBtn, nextBtn;
+
+    prevBtn = document.createElement('button');
+    prevBtn.textContent = '←';
+    prevBtn.disabled = currentPageGroup === 1; // Disable if already at the first group
+    prevBtn.dataset.page = 'prev';
+    bar.appendChild(prevBtn);
+
     for (let i = 0; i < max_pages; i++) {
-        const btn = document.createElement('button');
+        btn = document.createElement('button');
+        btn.id = "page-btn-" + i;
+        if (currentPageGroup > 1) {
+            i = (currentPageGroup - 1) * max_pages + i;
+        }
         btn.textContent = i + 1;
         btn.dataset.page = i;
         if (i === currentPage) {
@@ -316,16 +330,48 @@ function createPaginationBar() {
         bar.appendChild(btn);
     }
 
+    nextBtn = document.createElement('button');
+    nextBtn.textContent = '→';
+    nextBtn.dataset.page = 'next';
+    bar.appendChild(nextBtn);
+
     bar.addEventListener('click', async e => {
         if (e.target.tagName === 'BUTTON') {
-            const idx = parseInt(e.target.dataset.page);
-            if (!isNaN(idx)) {
-                currentPage = idx;
-                const items = await loadPagesSequentially(idx);
-                clearArticles(container);
-                renderArticles(container, items);
-                syncPaginationBars();
+            const pageS = e.target.dataset.page;
+            if (pageS === 'prev') {
+                if (currentPageGroup == 1) {
+                    prevBtn.disabled = true; // Disable if already at the first group
+                } else {
+                    currentPageGroup--;
+                }
+                currentPage = (currentPageGroup - 1) * max_pages; // Reset to the first page of the current group
+            } else if (pageS === 'next') {
+                prevBtn.disabled = false; // Enable previous button
+                currentPageGroup++;
+                currentPage = (currentPageGroup - 1) * max_pages; // Reset to the first page of the next group
             }
+            let idx = parseInt(pageS);
+            if (isNaN(idx)) {
+                for (let i = 0; i < max_pages; i++) {
+                    const btn = bar.querySelector(`#page-btn-${i}`);
+                    if (btn) {
+                        btn.textContent = ((currentPageGroup - 1) * max_pages + i) + 1;
+                        btn.dataset.page = (currentPageGroup - 1) * max_pages + i;
+                    }
+                }
+                idx = (currentPageGroup - 1) * max_pages; // Reset to the first page of the current group
+            }
+            currentPage = idx;
+            const items = await loadPagesSequentially(idx);
+            if (items.length === 0) return;
+            if (currentPageGroup * max_pages >= items.length) {
+                nextBtn.disabled = true; // Disable if no more pages
+            } else {
+                nextBtn.disabled = false;
+            }
+            clearArticles(container);
+            renderArticles(container, items);
+            syncPaginationBars();
         }
     });
     return bar;
@@ -333,7 +379,10 @@ function createPaginationBar() {
 
 function syncPaginationBars() {
     document.querySelectorAll('.userscript-pagination').forEach(bar => {
-        bar.querySelectorAll('button').forEach((btn, idx) => {
+        bar.querySelectorAll('button').forEach((btn) => {
+            const pageS = btn.dataset.page;
+            const idx = parseInt(pageS);
+            if (isNaN(idx)) return; // Skip if not a valid page number
             btn.classList.toggle('active', idx === currentPage);
         });
     });
@@ -376,15 +425,17 @@ function markAllAsRead() {
  * @returns 
  */
 async function onpopstate(e) {
-    logger.log('PopStateEvent 발생:', e);
     if (!container) return;
 
     const savedPage = sessionStorage.getItem('pagination-last-page');
     const savedScroll = sessionStorage.getItem('pagination-last-scroll');
 
     if (savedPage) {
-        currentPage = parseInt(savedPage);
+        const sPage = parseInt(savedPage);
+        if (sPage == currentPage) return;
+        currentPage = sPage;
         const list = await loadPagesSequentially(currentPage);
+        if (list.length === 0) return; // No articles to render
         clearArticles(container);
         renderArticles(container, list);
 
@@ -453,6 +504,7 @@ const removeOriginal = new MutationObserver(muts => {
     if (hasBoardIdInUrl()) {
         currentPage = 0; // Reset current page if boardId is present
         loadPagesSequentially(currentPage).then(list => {
+            if (list.length === 0) return; // No articles to render
             clearArticles(container);
             renderArticles(container, list);
         });
@@ -586,8 +638,10 @@ async function onenable() {
     }
 
     const list = await loadPagesSequentially(currentPage);
-    clearArticles(container);
-    renderArticles(container, list);
+    if (list.length > 0) {
+        clearArticles(container);
+        renderArticles(container, list);
+    }
 
     clearPaginationBars();
     const top = createPaginationBar();
