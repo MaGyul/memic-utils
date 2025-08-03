@@ -163,12 +163,9 @@ function openSettings(modalBody) {
     sizeInput.max = 300;
 
     sizeInput.addEventListener("change", () => {
-        if (sizeInput.value < sizeInput.min) {
-            sizeInput.value = sizeInput.min;
-        }
-        if (sizeInput.value > sizeInput.max) {
-            sizeInput.value = sizeInput.max;
-        }
+        let value = parseInt(sizeInput.value, 10);
+        value = Math.min(sizeInput.max, Math.max(sizeInput.min, value));
+        sizeInput.value = value;
     });
     sizeInput.addEventListener("wheel", (event) => {
         event.preventDefault();
