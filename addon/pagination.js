@@ -232,7 +232,8 @@ function renderArticles(container, articles) {
                 <div class="areaTitle flex w-full items-center truncate">
                     <span class="text-on-surface-variant bg-surface typo-body-sm mr-2 flex items-center rounded-sm px-1.5 py-0.5 whitespace-nowrap ng-star-inserted" style="color: ${headerColor}">${headerText}</span>
                     <span itemprop="name" class="text-on-surface mr-1 truncate typo-body-md ng-star-inserted">${article.title}</span>
-                    <span itemprop="commentCount" class="typo-label-sm text-primary mr-2 ng-star-inserted" content="${article.commentCount}"> [${article.commentCount}] </span>
+                    ${article.commentCount > 0 ? `
+                    <span itemprop="commentCount" class="typo-label-sm text-primary mr-2 ng-star-inserted" content="${article.commentCount}"> [${article.commentCount}] </span>` : ''}
                     ${isArticleToday(article) ? `
                     <app-new-icon class="items-center justify-center mr-1 inline-flex ng-star-inserted">
                         <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14" class="block">
