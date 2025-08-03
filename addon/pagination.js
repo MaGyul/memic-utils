@@ -16,8 +16,8 @@ var article_per_page = await addonStorage.get('article-per-page', 100);
 var max_pages = await addonStorage.get('max-pages', 10);
 /** @type {HTMLDivElement} */
 var container = null, 
-    currentPage = Number(sessionStorage.getItem('current-page') || 0),
-    currentPageGroup = Number(sessionStorage.getItem('current-page-group') || 1),
+    currentPage = 0,//Number(sessionStorage.getItem('current-page') || 0),
+    currentPageGroup = 1,//Number(sessionStorage.getItem('current-page-group') || 1),
     /** @type {ArticleInfo[]} */
     articleList = [], 
     scrollPosition = 0;
