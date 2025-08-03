@@ -292,18 +292,18 @@ function ondocumentClick(event) {
     }
 }
 
-function onaddonsLoaded(event) {
-    /** @type {Addon[]} */
-    const addons = event.detail;
+function onaddonsLoaded() {
     const content = controlPanel.querySelector('#addon-content');
 
-    for (const addon of addons) {
-        if (controlPanel.querySelector(`#${addon.addonKey}-control`)) {
+    for (const addonKey in memicUtils.addons) {
+        if (content.querySelector(`#${addonKey}-control`)) {
             // 이미 추가된 애드온은 건너뜀
+            logger.warn(`애드온 ${addonKey}은(는) 이미 추가되었습니다.`);
             continue;
         }
-        const addonElement = createAddonElement(addon);
+        const addonElement = createAddonElement(memicUtils.addons[addonKey]);
         content.appendChild(addonElement);
+        logger.log(`애드온 ${addonKey}이(가) 추가되었습니다.`);
     }
 }
 
