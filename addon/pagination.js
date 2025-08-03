@@ -304,8 +304,10 @@ function clearArticles(c) {
 }
 
 function cloneBarEvents(bar, clone) {
-    clone.addEventListener('click', async e => {
+    clone.addEventListener('click', e => {
         if (e.target.tagName === 'BUTTON') {
+            logger.log(`클론된 페이지네이션 바에서 버튼 클릭: ${e.target.id}`);
+            logger.log(bar.querySelector(e.target.id));
             bar.querySelector(e.target.id)?.click(); // Trigger the same button click on the original bar
         }
     });
@@ -461,7 +463,7 @@ async function onpopstate(e) {
 
         if (container.parentElement) {
             container.parentElement.insertBefore(bar, container);
-            let clone = bar.cloneNode();
+            let clone = bar.cloneNode(true);
             clone.id = 'clone-pagination-bar';
             cloneBarEvents(bar, clone);
             container.parentElement.appendChild(clone);
@@ -667,7 +669,7 @@ async function onenable() {
 
     if (container.parentElement) {
         container.parentElement.insertBefore(bar, container);
-        let clone = bar.cloneNode();
+        let clone = bar.cloneNode(true);
         clone.id = 'clone-pagination-bar';
         cloneBarEvents(bar, clone);
         container.parentElement.appendChild(clone);
