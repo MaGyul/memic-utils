@@ -10,6 +10,7 @@ const shelter_id_pattern = /shelter\.id\/([^?]+)/;
 const memic_at_pattern = /memic\.at\/([^?]+)/;
 
 var isBoard = '';
+var currentType = '';
 var currentUrl = location.href;
 var personalId = getPersonalId();
 var article_per_page = await addonStorage.get('article-per-page', 100);
@@ -74,6 +75,14 @@ async function getShelterId(pId = personalId) {
     } catch (error) {
         return null;
     }
+}
+
+function getTypeFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('type')) {
+        return urlParams.get('type');
+    }
+    return '';
 }
 
 // boardId parameter check in url
@@ -567,6 +576,14 @@ const removeOriginal = new MutationObserver(muts => {
             }
         });
     }
+
+    if (currentType !== getTypeFromUrl()) {
+        currentType = getTypeFromUrl();
+        if (currentType === 'community') {
+            apply();
+        }
+    }
+
     if (hasBoardIdInUrl()) {
         const currentBoardId = getBoardIdFromUrl();
         if (isBoard != currentBoardId) {
@@ -726,14 +743,7 @@ function openSettings(modalBody) {
     };
 }
 
-async function onenable() {
-    container = await findContainer();
-    if (!container) {
-        logger.error('컨테이너를 찾을 수 없습니다. 페이지네이션을 활성화할 수 없습니다.');
-        memicUtils.disableAddon(addonKey);
-        return;
-    }
-
+async function apply() {
     const list = await loadPagesSequentially(currentPage);
     if (list.length > 0) {
         clearArticles(container);
@@ -750,6 +760,18 @@ async function onenable() {
         cloneBarEvents(bar, clone);
         container.parentElement.appendChild(clone);
     }
+}
+
+async function onenable() {
+    container = await findContainer();
+    if (!container) {
+        logger.error('컨테이너를 찾을 수 없습니다. 페이지네이션을 활성화할 수 없습니다.');
+        memicUtils.disableAddon(addonKey);
+        return;
+    }
+
+    currentType = getTypeFromUrl();
+    apply();
 
     removeOriginal.observe(document.body, { childList: true, subtree: true });
 
