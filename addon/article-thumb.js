@@ -1,7 +1,7 @@
 const addonInfo = {
     name: "미밐 글 썸네일 미리보기",
     description: "미밐 글의 썸네일을 마우스 오버시 미리보기로 표시합니다.",
-    author: "isnoa",
+    author: "raws6633",
     version: "1.0.0",
     link: "https://github.com/isnoa/memic-utils"
 }
