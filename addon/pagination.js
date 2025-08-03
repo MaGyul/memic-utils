@@ -371,7 +371,12 @@ function markAllAsRead() {
     location.reload();
 }
 
-async function onpopstate() {
+/**
+ * @param {PopStateEvent} e 
+ * @returns 
+ */
+async function onpopstate(e) {
+    logger.log('PopStateEvent 발생:', e);
     if (!container) return;
 
     const savedPage = sessionStorage.getItem('pagination-last-page');
