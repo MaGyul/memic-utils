@@ -535,6 +535,7 @@ function openSettings(modalBody) {
     });
 
     const resetArticlePerPageBtn = modalBody.querySelector('#reset-article-per-page');
+    resetArticlePerPageBtn.className = 'flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface';
     resetArticlePerPageBtn.addEventListener('click', () => {
         const defaultArticlePerPage = 100;
         modalBody.querySelector('#article-per-page').value = defaultArticlePerPage;
@@ -542,6 +543,7 @@ function openSettings(modalBody) {
     });
 
     const resetMaxPagesBtn = modalBody.querySelector('#reset-max-pages');
+    resetMaxPagesBtn.className = 'flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface';
     resetMaxPagesBtn.addEventListener('click', () => {
         const defaultMaxPages = 10;
         modalBody.querySelector('#max-pages').value = defaultMaxPages;
