@@ -360,6 +360,12 @@ function createPaginationBar() {
                     }
                 }
                 idx = (currentPageGroup - 1) * max_pages; // Reset to the first page of the current group
+                if (container.parentElement) {
+                    container.parentElement.querySelector('#clone-pagination-bar')?.remove(); // Remove cloned pagination bar if exists
+                    const clone = bar.cloneNode(true);
+                    clone.id = 'clone-pagination-bar';
+                    container.parentElement.appendChild(clone);
+                }
             }
             currentPage = idx;
             const items = await loadPagesSequentially(idx);
@@ -444,7 +450,9 @@ async function onpopstate(e) {
 
         if (container.parentElement) {
             container.parentElement.insertBefore(bar, container);
-            container.parentElement.appendChild(bar);
+            let clone = bar.cloneNode();
+            clone.id = 'clone-pagination-bar';
+            container.parentElement.appendChild(clone);
         }
 
         if (savedScroll) {
@@ -647,7 +655,9 @@ async function onenable() {
 
     if (container.parentElement) {
         container.parentElement.insertBefore(bar, container);
-        container.parentElement.appendChild(bar);
+        let clone = bar.cloneNode();
+        clone.id = 'clone-pagination-bar';
+        container.parentElement.appendChild(clone);
     }
 
     removeOriginal.observe(document.body, { childList: true, subtree: true });
