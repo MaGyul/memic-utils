@@ -581,6 +581,8 @@ const observer = new MutationObserver(muts => {
         currentType = getTypeFromUrl();
         if (currentType === 'community') {
             findContainer().then(c => {
+                if (!c) return;
+                if (container == c) return; // 이미 컨테이너가 설정되어 있다면 중복 설정 방지
                 container = c;
                 apply().then(() => {
                     logger.log('커뮤니티 페이지네이션 적용 완료');
@@ -767,19 +769,13 @@ async function apply() {
         cloneBarEvents(bar, clone);
         container.parentElement.appendChild(clone);
     }
+
+    captureRefrashButton();
 }
 
 async function onenable() {
     currentType = getTypeFromUrl();
     observer.observe(document.body, { childList: true, subtree: true });
-
-    container = await findContainer();
-    if (!container) {
-        logger.error('컨테이너를 찾을 수 없습니다.');
-        return;
-    }
-
-    await apply();
 
     const savedScroll = sessionStorage.getItem('pagination-last-scroll');
     if (savedScroll) {
@@ -792,7 +788,10 @@ async function onenable() {
     document.addEventListener('keydown', onkeydown);
     window.addEventListener('pageshow', onpageshow);
 
-    captureRefrashButton();
+    container = await findContainer();
+    if (!container) return;
+
+    await apply();
 }
 
 function ondisable() {
