@@ -303,6 +303,14 @@ function clearArticles(c) {
     });
 }
 
+function cloneBarEvents(bar, clone) {
+    clone.addEventListener('click', async e => {
+        if (e.target.tagName === 'BUTTON') {
+            bar.querySelector(e.target.id)?.click(); // Trigger the same button click on the original bar
+        }
+    });
+}
+
 function createPaginationBar() {
     const bar = document.createElement('div');
     bar.setAttribute('data-userscript-generated', 'true');
@@ -313,6 +321,7 @@ function createPaginationBar() {
     prevBtn = document.createElement('button');
     prevBtn.textContent = '←';
     prevBtn.disabled = currentPageGroup === 1; // Disable if already at the first group
+    prevBtn.id = 'prev-page-btn';
     prevBtn.dataset.page = 'prev';
     bar.appendChild(prevBtn);
 
@@ -333,6 +342,7 @@ function createPaginationBar() {
     nextBtn = document.createElement('button');
     nextBtn.textContent = '→';
     nextBtn.dataset.page = 'next';
+    nextBtn.id = 'next-page-btn';
     bar.appendChild(nextBtn);
 
     bar.addEventListener('click', async e => {
@@ -364,6 +374,7 @@ function createPaginationBar() {
                     container.parentElement.querySelector('#clone-pagination-bar')?.remove(); // Remove cloned pagination bar if exists
                     const clone = bar.cloneNode(true);
                     clone.id = 'clone-pagination-bar';
+                    cloneBarEvents(bar, clone);
                     container.parentElement.appendChild(clone);
                 }
             }
@@ -452,6 +463,7 @@ async function onpopstate(e) {
             container.parentElement.insertBefore(bar, container);
             let clone = bar.cloneNode();
             clone.id = 'clone-pagination-bar';
+            cloneBarEvents(bar, clone);
             container.parentElement.appendChild(clone);
         }
 
@@ -657,6 +669,7 @@ async function onenable() {
         container.parentElement.insertBefore(bar, container);
         let clone = bar.cloneNode();
         clone.id = 'clone-pagination-bar';
+        cloneBarEvents(bar, clone);
         container.parentElement.appendChild(clone);
     }
 
