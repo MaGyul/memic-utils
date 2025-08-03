@@ -1,8 +1,8 @@
 const addonInfo = {
-    name: "미밐 페이지네이션",
+    name: "미밐 페이지네이션 - Beta",
     description: "미밐 게시판에 페이지 기능을 추가합니다.",
     author: "NoonDaL, MaGyul",
-    version: "1.0.0",
+    version: "1.0.0-beta",
     link: "https://github.com/NoonDaL/memic-utils"
 }
 
