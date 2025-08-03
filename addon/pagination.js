@@ -313,7 +313,7 @@ function createPaginationBar() {
     bar.setAttribute('data-userscript-generated', 'true');
     bar.classList.add('userscript-pagination');
 
-    for (let i = 0; i < MAX_PAGES; i++) {
+    for (let i = 0; i < max_pages; i++) {
         const btn = document.createElement('button');
         btn.textContent = i + 1;
         btn.dataset.page = i;
@@ -560,6 +560,10 @@ function openSettings(modalBody) {
 
             addonStorage.set('article-per-page', article_per_page);
             addonStorage.set('max-pages', max_pages);
+
+            // 변경 사항 적용을 위해 애드온 재활성화
+            ondisable();
+            onenable();
         }
     };
 }
