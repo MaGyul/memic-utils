@@ -119,12 +119,12 @@ const observer = new MutationObserver((mutations) => {
     });
 
     if (shouldUpdate) {
-        setTimeout(updateTimestamps, 100);
+        setTimeout(updateTimestamps, 50);
     }
 });
 
 function onfocus() {
-    setTimeout(updateTimestamps, 500);
+    setTimeout(updateTimestamps, 100);
 }
 
 function refreshRender() {
@@ -179,12 +179,12 @@ function openSettings(modalBody) {
     return () => {
         const selectedFormat = settingsContent.querySelector('#time-format').value;
         addonStorage.set('timeFormat', selectedFormat);
-        setTimeout(refreshRender, 500);
+        setTimeout(refreshRender, 100);
     };
 }
 
 function onenable() {
-    setTimeout(updateTimestamps, 500);
+    setTimeout(updateTimestamps, 100);
 
     observer.observe(document.body, {
         childList: true,
