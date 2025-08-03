@@ -294,7 +294,7 @@ function ondocumentClick(event) {
     const inModalPanel = modalPanel.classList.contains('show') && 
                     modalPanel.querySelector('#modal-panel').contains(event.target);
     // 모달 패널이 열려있고, 모달 패널 내부 클릭이 아닌 경우
-    if (!inModalPanel) {
+    if (!inModalPanel && !isInsideModal) {
         // 모달 패널 외부 클릭 시 모달 닫기
         closeModal();
     }
