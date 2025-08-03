@@ -16,11 +16,18 @@ var article_per_page = await addonStorage.get('article-per-page', 100);
 var max_pages = await addonStorage.get('max-pages', 10);
 /** @type {HTMLDivElement} */
 var container = null, 
-    currentPage = sessionStorage.getItem('current-page') || 0,
-    currentPageGroup = sessionStorage.getItem('current-page-group') || 1,
+    currentPage = Number(sessionStorage.getItem('current-page') || 0),
+    currentPageGroup = Number(sessionStorage.getItem('current-page-group') || 1),
     /** @type {ArticleInfo[]} */
     articleList = [], 
     scrollPosition = 0;
+
+if (isNaN(currentPage) || currentPage < 0) {
+    currentPage = 0;
+}
+if (isNaN(currentPageGroup) || currentPageGroup < 1) {
+    currentPageGroup = 1;
+}
 
 addStyle();
 
@@ -342,7 +349,6 @@ function createPaginationBar() {
         }
         btn.textContent = i + 1;
         btn.dataset.page = i;
-        logger.log(currentPage, currentPageGroup, i);
         if (i === currentPage) {
             btn.classList.add('active');
         }
