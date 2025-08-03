@@ -20,20 +20,6 @@ var container = null,
     articleList = [], 
     scrollPosition = 0;
 
-function clickRefreshButton() {
-    const btn =
-        document.querySelector(
-            "button.flex.items-center.justify-center.size-6.ng-star-inserted[style='']"
-        ) ||
-        document.querySelectorAll(
-            "button.flex.items-center.justify-center.size-6.ng-star-inserted[style='']"
-        )[0];
-
-    if (btn) {
-        btn.click();
-    }
-}
-
 addStyle();
 
 function addStyle() {
@@ -207,8 +193,6 @@ function renderArticles(container, articles) {
     articleList = articles;
     container.innerHTML = ''; // Clear existing articles
 
-    logger.log(`Rendering ${articles.length} articles on page ${currentPage + 1}`);
-
     articles.forEach(async article => {
         const boardName = article.board?.name;
         const headerText = boardName || 'N/A';
@@ -247,7 +231,7 @@ function renderArticles(container, articles) {
                     <app-user-thumbnail size="xxs" class="inline-flex items-center mr-1">
                         <div class="relative flex items-center justify-center">
                             <div class="profile-circle min-size-4.5 size-4.5 border-1 p-0.25">
-                                <img alt="userThumbnail" itemprop="image" width="18" height="18" loading="lazy" fetchpriority="auto" ng-img="true" src="${article.owner.image.url}" class="ng-star-inserted">
+                                <img alt="userThumbnail" itemprop="image" width="18" height="18" loading="lazy" fetchpriority="auto" ng-img="true" src="${article.owner.image?.url || 'https://cdn.memic.at/assets/defaultProfile.avif'}" class="ng-star-inserted">
                             </div>
                         </div>
                     </app-user-thumbnail>
@@ -455,14 +439,22 @@ const removeOriginal = new MutationObserver(muts => {
             }
         });
     }
+    if (hasBoardIdInUrl()) {
+        currentPage = 0; // Reset current page if boardId is present
+        loadPagesSequentially(currentPage).then(list => {
+            clearArticles(container);
+            renderArticles(container, list);
+        });
+    }
 
     muts.forEach(m => {
         if (m.addedNodes.length && container) {
             // Remove only the original post elements (except those created by the user script)
-            const originalPosts = container.querySelectorAll('.app-article-list-item:not([data-userscript-generated])');
-            logger.log(`Removing ${originalPosts.length} original posts from the container.`);
-            logger.log(originalPosts);
-            originalPosts.forEach(el => el.remove());
+            const originalPosts = container.querySelectorAll('app-article-list-item:not([data-userscript-generated])');
+            originalPosts.forEach(el => {
+                if (el.querySelector('.ri-megaphone-fill')) return; // Skip if it's a notification item
+                el.remove();
+            });
         }
     });
 });
