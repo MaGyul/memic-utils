@@ -148,13 +148,15 @@ function openSettings(modalBody) {
     const settingsContainer = document.createElement("div");
     settingsContainer.className = "settings-container";
     settingsContainer.style.display = "flex";
-    settingsContainer.style.flexDirection = "column";
+    settingsContainer.style.flexDirection = "row";
+    settingsContainer.style.alignItems = "center";
     settingsContainer.style.gap = "8px";
 
     const sizeLabel = document.createElement("label");
     sizeLabel.textContent = "썸네일 크기 (px):";
     const sizeInput = document.createElement("input");
     sizeInput.style.marginLeft = "8px";
+    sizeInput.classList.add('border');
     sizeInput.type = "number";
     sizeInput.value = imgSize;
     sizeInput.min = 50;
