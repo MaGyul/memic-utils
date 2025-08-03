@@ -212,6 +212,8 @@ function renderArticles(container, articles) {
     articleList = articles;
     container.innerHTML = ''; // Clear existing articles
 
+    logger.log(`Rendering ${articles.length} articles on page ${currentPage + 1}`);
+
     articles.forEach(async article => {
         const boardName = article.board?.name;
         const headerText = boardName || 'N/A';
@@ -266,7 +268,7 @@ function renderArticles(container, articles) {
                     <i class="ri-thumb-up-line icon-md text-on-surface-variant2 min-size-4 -translate-y-px"></i>
                     <span itemprop="userInteractionCount" class="typo-body-sm dd:typo-body-md text-on-surface-variant" content="${article.likeCount}">${article.likeCount}</span>
                 </div>
-                <time itemprop="dateCreated" class="areaDate typo-body-sm dd:typo-body-md text-on-surface-variant flex items-center justify-end leading-none whitespace-nowrap ng-star-inserted fixed-time-format" datetime="${articleDate.toISOString()}">${created}</time>
+                <time itemprop="dateCreated" class="areaDate typo-body-sm dd:typo-body-md text-on-surface-variant flex items-center justify-end leading-none whitespace-nowrap ng-star-inserted fixed-time-format" datetime="${article.createDate}">${created}</time>
             </div>
         </a>
         `;
@@ -457,7 +459,10 @@ const removeOriginal = new MutationObserver(muts => {
     muts.forEach(m => {
         if (m.addedNodes.length && container) {
             // Remove only the original post elements (except those created by the user script)
-            container.querySelectorAll('.app-article-list-item:not([data-userscript-generated])').forEach(el => el.remove());
+            const originalPosts = container.querySelectorAll('.app-article-list-item:not([data-userscript-generated])');
+            logger.log(`Removing ${originalPosts.length} original posts from the container.`);
+            logger.log(originalPosts);
+            originalPosts.forEach(el => el.remove());
         }
     });
 });
