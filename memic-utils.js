@@ -322,7 +322,7 @@
         /** @type {{ [key: any]: Addon }} */
         addons = {};
         enabledAddons = [];
-        logger = Logger.getLogger('스크립트 관리자');
+        logger = Logger.getLogger('script-manager');
 
         get errorAddons() {
             return this.#errorAddons;
