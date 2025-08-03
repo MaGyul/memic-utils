@@ -117,6 +117,7 @@ function restoreOriginalPage() {
 }
 
 async function fetchArticles(offsetId = null) {
+    logger.error(new Error());
     try {
         let page;
         if (hasBoardIdInUrl()) {
@@ -521,7 +522,13 @@ const removeOriginal = new MutationObserver(muts => {
         });
     }
     if (hasBoardIdInUrl()) {
-        clearPaginationBars();
+        currentPage = 0;
+        loadPagesSequentially(currentPage).then(list => {
+            if (list.length === 0) return; // No articles to render
+            clearArticles(container);
+            renderArticles(container, list);
+        });
+        //clearPaginationBars();
         return;
     }
 
