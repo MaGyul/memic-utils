@@ -304,6 +304,7 @@ function clearPaginationBars() {
 
 function clearArticles(c) {
     c.querySelectorAll('app-article-list-item, div[data-userscript-generated]').forEach(item => {
+        if (item.querySelector('.ri-megaphone-fill')) return; // Skip if it's a notification item
         item.remove();
     });
 }
