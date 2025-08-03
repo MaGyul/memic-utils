@@ -257,6 +257,14 @@ function openModal(title, size = 'medium') {
     modalPanel.querySelector('#modal-title').textContent = title;
     modalPanel.querySelector('#modal-panel').className = `modal ${size}`;
     modalPanel.classList.add('show');
+
+    modalPanel.onclick = (event) => {
+        const mPanel = modalPanel.querySelector('#modal-panel');
+        if (!mPanel.contains(event.target)) {
+            // 모달 패널 외부 클릭 시 모달 닫기
+            closeModal();
+        }
+    }
 }
 
 function closeModal() {
@@ -289,14 +297,6 @@ function ondocumentClick(event) {
     if (!isButton && !isInsidePanel && !isInsideModal) {
         // 패널 외부 클릭 시 닫기
         closeControlPanel();
-    }
-
-    const inModalPanel = modalPanel.classList.contains('show') && 
-                    modalPanel.querySelector('#modal-panel').contains(event.target);
-    // 모달 패널이 열려있고, 모달 패널 내부 클릭이 아닌 경우
-    if (!inModalPanel && !isInsideModal) {
-        // 모달 패널 외부 클릭 시 모달 닫기
-        closeModal();
     }
 }
 
