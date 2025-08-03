@@ -521,12 +521,8 @@ const removeOriginal = new MutationObserver(muts => {
         });
     }
     if (hasBoardIdInUrl()) {
-        currentPage = 0; // Reset current page if boardId is present
-        loadPagesSequentially(currentPage).then(list => {
-            if (list.length === 0) return; // No articles to render
-            clearArticles(container);
-            renderArticles(container, list);
-        });
+        clearPaginationBars();
+        return;
     }
 
     muts.forEach(m => {
