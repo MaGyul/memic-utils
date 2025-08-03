@@ -2,7 +2,8 @@ const addonInfo = {
     name: "미밐 글 편집기 버튼",
     description: "글 편집기에서 하단에 존재하는 사진, 동영상, 링크 버튼을 상단으로 이동시킵니다.",
     author: "MaGyul",
-    version: "1.0.0"
+    version: "1.0.0",
+    link: "https://github.com/MaGyul/memic-utils"
 }
 
 function movingButtons() {
