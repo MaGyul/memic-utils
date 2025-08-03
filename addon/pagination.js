@@ -531,6 +531,7 @@ const removeOriginal = new MutationObserver(muts => {
             currentPage = 0;
             currentPageGroup = 1;
             document.querySelectorAll('div.data-userscript-generated > .page-btn').forEach(btn => {
+                btn.textContent = btn.id.replace('page-btn-', '');
                 btn.classList.remove('active');
             });
             document.querySelectorAll('#page-btn-0').forEach(btn => {
@@ -548,6 +549,7 @@ const removeOriginal = new MutationObserver(muts => {
         currentPage = 0;
         currentPageGroup = 1;
         document.querySelectorAll('div.data-userscript-generated > .page-btn').forEach(btn => {
+            btn.textContent = btn.id.replace('page-btn-', '');
             btn.classList.remove('active');
         });
         document.querySelectorAll('#page-btn-0').forEach(btn => {
