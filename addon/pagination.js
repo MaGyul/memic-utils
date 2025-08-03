@@ -10,7 +10,7 @@ addUIStyle();
 function addUIStyle() {
     GM_xmlhttpRequest({
         method: 'GET',
-        url: 'https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/style/pagination.css',
+        url: 'https://mu.magyul.kr/style/pagination.css',
         onload: function(response) {
             if (response.status === 200) {
                 const style = document.createElement('style');

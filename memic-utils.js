@@ -56,7 +56,7 @@
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/addon/addons.json`,
+                url: `https://mu.magyul.kr/addon/addons.json`,
                 onload: function(response) {
                     if (response.status === 200) {
                         resolve(JSON.parse(response.responseText));
@@ -76,7 +76,7 @@
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://raw.githubusercontent.com/MaGyul/memic-utils/refs/heads/main/addon/${name}.js`,
+                url: `https://mu.magyul.kr/addon/${name}.js`,
                 onload: async function(response) {
                     if (response.status === 200) {
                         if (hasGlobalReturnWithBabel(response.responseText)) {
