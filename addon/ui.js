@@ -75,6 +75,7 @@ function removeControlButton(retryCount = 0) {
  */
 function createAddonElement(addon) {
     const div = document.createElement('div');
+    div.id = `${addon.addonKey}-control`;
     div.style.borderBottom = '1px solid var(--color-surface-variant)';
     div.style.paddingBottom = '4px';
     div.innerHTML = `
@@ -288,6 +289,21 @@ function ondocumentClick(event) {
     if (!isButton && !isInsidePanel && !isInsideModal) {
         // 패널 외부 클릭 시 닫기
         closeControlPanel();
+    }
+}
+
+function onaddonLoaded(event) {
+    /** @type {Addon[]} */
+    const addons = event.detail;
+    const content = controlPanel.querySelector('#addon-content');
+
+    for (const addon of addons) {
+        if (controlPanel.querySelector(`#${addon.addonKey}-control`)) {
+            // 이미 추가된 애드온은 건너뜀
+            continue;
+        }
+        const addonElement = createAddonElement(addon);
+        content.appendChild(addonElement);
     }
 }
 
