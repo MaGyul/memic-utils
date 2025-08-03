@@ -92,6 +92,34 @@ function shouldRunPagination() {
     return !hasBoardIdInUrl();
 }
 
+function captureRefrashButton(off = false) {
+    /**
+     * @type {HTMLButtonElement}
+     */
+    const btn =
+        document.querySelector(
+            "button.flex.items-center.justify-center.size-6.ng-star-inserted[style='']"
+        ) ||
+        document.querySelectorAll(
+            "button.flex.items-center.justify-center.size-6.ng-star-inserted[style='']"
+        )[0];
+
+    if (btn) {
+        if (off) {
+            btn.onclick = null;
+            return;
+        }
+        btn.onclick = async function (e) {
+            e.preventDefault();
+            const list = await loadPagesSequentially(currentPage);
+            if (list.length === 0) return; // No articles to render
+            clearArticles(container);
+            renderArticles(container, list);
+            syncPaginationBars();
+        }
+    }
+}
+
 
 // Organize all Page script related elements
 function cleanupPagination() {
@@ -734,6 +762,8 @@ async function onenable() {
     window.addEventListener('popstate', onpopstate);
     document.addEventListener('keydown', onkeydown);
     window.addEventListener('pageshow', onpageshow);
+
+    captureRefrashButton();
 }
 
 function ondisable() {
@@ -742,6 +772,8 @@ function ondisable() {
     window.removeEventListener('popstate', onpopstate);
     document.removeEventListener('keydown', onkeydown);
     window.removeEventListener('pageshow', onpageshow);
+
+    captureRefrashButton(true);
 
     restoreOriginalPage();
 }
