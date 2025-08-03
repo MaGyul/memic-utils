@@ -6,8 +6,7 @@ const addonInfo = {
     link: "https://github.com/NoonDaL/memic-utils"
 };
 
-// Color definition
-const categoryColors = {
+const defaultCategoryColors = {
     '공지': '#FF5C5C',
     '자유': '#4FC3F7',
     '후방주의': '#FF8A80',
@@ -24,8 +23,11 @@ const categoryColors = {
     '이벤트': '#FFD54F'
 };
 
+// Color definition
+const categoryColors = {};
+
 for (const key in categoryColors) {
-    categoryColors[key] = await addonStorage.get(key, categoryColors[key]);
+    categoryColors[key] = await addonStorage.get(key, defaultCategoryColors[key]);
 }
 
 // Apply post tags color
@@ -114,6 +116,11 @@ function openSettings(modalBody) {
     const colorInputs = {};
 
     for (const key in categoryColors) {
+        const colorDiv = document.createElement('div');
+        colorDiv.style.display = 'flex';
+        colorDiv.style.alignItems = 'center';
+        colorDiv.style.flexDirection = 'row';
+
         const colorInput = document.createElement('input');
         colorInput.id = `color-${key}`;
         colorInput.style.marginLeft = '4px';
@@ -124,7 +131,19 @@ function openSettings(modalBody) {
         const label = document.createElement('label');
         label.textContent = key;
         label.appendChild(colorInput);
-        colorsContainer.appendChild(label);
+        colorDiv.appendChild(label);
+
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'flex items-center justify-center gap-1 rounded-full px-4 py-2 whitespace-nowrap border border-on-surface-variant2 text-on-surface';
+        resetBtn.textContent = '초기화';
+        resetBtn.style.marginLeft = '4px';
+        resetBtn.addEventListener('click', () => {
+            colorInput.value = defaultCategoryColors[key];
+            categoryColors[key] = defaultCategoryColors[key];
+        });
+        colorDiv.appendChild(resetBtn);
+
+        colorsContainer.appendChild(colorDiv);
     }
 
     modalBody.appendChild(settingsContent);
@@ -135,6 +154,7 @@ function openSettings(modalBody) {
             categoryColors[key] = colorInputs[key].value;
             addonStorage.set(key, categoryColors[key]);
         }
+
         applyAll();
     }
 }
