@@ -16,8 +16,8 @@ var article_per_page = await addonStorage.get('article-per-page', 100);
 var max_pages = await addonStorage.get('max-pages', 10);
 /** @type {HTMLDivElement} */
 var container = null, 
-    currentPage = 0, 
-    currentPageGroup = 1,
+    currentPage = sessionStorage.getItem('current-page') || 0,
+    currentPageGroup = sessionStorage.getItem('current-page-group') || 1,
     /** @type {ArticleInfo[]} */
     articleList = [], 
     scrollPosition = 0;
@@ -39,6 +39,11 @@ function addStyle() {
             }
         },
     });
+}
+
+function updateData() {
+    sessionStorage.setItem('current-page', currentPage);
+    sessionStorage.setItem('current-page-group', currentPageGroup);
 }
 
 function getPersonalId(url = currentUrl) {
@@ -107,6 +112,7 @@ function cleanupPagination() {
     container = null;
     currentPage = 0;
     articleList = [];
+    updateData();
 
     logger.log('페이지네이션 정리 완료');
 }
@@ -336,6 +342,7 @@ function createPaginationBar() {
         }
         btn.textContent = i + 1;
         btn.dataset.page = i;
+        logger.log(currentPage, currentPageGroup, i);
         if (i === currentPage) {
             btn.classList.add('active');
         }
@@ -358,11 +365,9 @@ function createPaginationBar() {
                 } else {
                     currentPageGroup--;
                 }
-                currentPage = (currentPageGroup - 1) * max_pages; // Reset to the first page of the current group
             } else if (pageS === 'next') {
                 prevBtn.disabled = false; // Enable previous button
                 currentPageGroup++;
-                currentPage = (currentPageGroup - 1) * max_pages; // Reset to the first page of the next group
             }
             let idx = parseInt(pageS);
             if (isNaN(idx)) {
@@ -393,6 +398,7 @@ function createPaginationBar() {
             clearArticles(container);
             renderArticles(container, items);
             syncPaginationBars();
+            updateData();
         }
     });
     return bar;
@@ -459,6 +465,7 @@ async function onpopstate(e) {
         if (list.length === 0) return; // No articles to render
         clearArticles(container);
         renderArticles(container, list);
+        updateData();
 
         clearPaginationBars();
         const bar = createPaginationBar();
@@ -530,6 +537,7 @@ const removeOriginal = new MutationObserver(muts => {
             isBoard = currentBoardId;
             currentPage = 0;
             currentPageGroup = 1;
+            updateData();
             document.querySelectorAll('div.data-userscript-generated > .page-btn').forEach(btn => {
                 btn.textContent = btn.id.replace('page-btn-', '');
                 btn.classList.remove('active');
@@ -548,6 +556,7 @@ const removeOriginal = new MutationObserver(muts => {
         isBoard = '';
         currentPage = 0;
         currentPageGroup = 1;
+        updateData();
         document.querySelectorAll('div.data-userscript-generated > .page-btn').forEach(btn => {
             btn.textContent = btn.id.replace('page-btn-', '');
             btn.classList.remove('active');
