@@ -580,7 +580,9 @@ const removeOriginal = new MutationObserver(muts => {
     if (currentType !== getTypeFromUrl()) {
         currentType = getTypeFromUrl();
         if (currentType === 'community') {
-            apply();
+            apply().then(() => {
+                logger.log('커뮤니티 페이지네이션 적용 완료');
+            });
         }
     }
 
@@ -771,7 +773,7 @@ async function onenable() {
     }
 
     currentType = getTypeFromUrl();
-    apply();
+    await apply();
 
     removeOriginal.observe(document.body, { childList: true, subtree: true });
 
