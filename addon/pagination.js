@@ -565,7 +565,7 @@ function onpageshow(e) {
     }
 }
 
-const removeOriginal = new MutationObserver(muts => {
+const observer = new MutationObserver(muts => {
     if (currentUrl !== location.href) {
         // 현재 URL이 변경되었으므로 personalId와 currentUrl을 업데이트
         const pId = getPersonalId(location.href);
@@ -580,11 +580,16 @@ const removeOriginal = new MutationObserver(muts => {
     if (currentType !== getTypeFromUrl()) {
         currentType = getTypeFromUrl();
         if (currentType === 'community') {
-            apply().then(() => {
-                logger.log('커뮤니티 페이지네이션 적용 완료');
+            findContainer().then(c => {
+                container = c;
+                apply().then(() => {
+                    logger.log('커뮤니티 페이지네이션 적용 완료');
+                });
             });
         }
     }
+
+    if (!container) return;
 
     if (hasBoardIdInUrl()) {
         const currentBoardId = getBoardIdFromUrl();
@@ -765,17 +770,16 @@ async function apply() {
 }
 
 async function onenable() {
+    currentType = getTypeFromUrl();
+    observer.observe(document.body, { childList: true, subtree: true });
+
     container = await findContainer();
     if (!container) {
-        logger.error('컨테이너를 찾을 수 없습니다. 페이지네이션을 활성화할 수 없습니다.');
-        memicUtils.disableAddon(addonKey);
+        logger.error('컨테이너를 찾을 수 없습니다.');
         return;
     }
 
-    currentType = getTypeFromUrl();
     await apply();
-
-    removeOriginal.observe(document.body, { childList: true, subtree: true });
 
     const savedScroll = sessionStorage.getItem('pagination-last-scroll');
     if (savedScroll) {
@@ -793,7 +797,7 @@ async function onenable() {
 
 function ondisable() {
     clearPaginationBars();
-    removeOriginal.disconnect();
+    observer.disconnect();
     window.removeEventListener('popstate', onpopstate);
     document.removeEventListener('keydown', onkeydown);
     window.removeEventListener('pageshow', onpageshow);
