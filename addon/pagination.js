@@ -330,6 +330,7 @@ function createPaginationBar() {
     for (let i = 0; i < max_pages; i++) {
         btn = document.createElement('button');
         btn.id = "page-btn-" + i;
+        btn.classList.add('page-btn');
         if (currentPageGroup > 1) {
             i = (currentPageGroup - 1) * max_pages + i;
         }
@@ -527,6 +528,13 @@ const removeOriginal = new MutationObserver(muts => {
         if (isBoard != currentBoardId) {
             isBoard = currentBoardId;
             currentPage = 0;
+            currentPageGroup = 1;
+            document.querySelectorAll('div.data-userscript-generated > .page-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('#page-btn-0').forEach(btn => {
+                btn.classList.add('active');
+            });
             loadPagesSequentially(currentPage).then(list => {
                 if (list.length === 0) return; // No articles to render
                 clearArticles(container);
@@ -537,6 +545,13 @@ const removeOriginal = new MutationObserver(muts => {
     } else if (isBoard) {
         isBoard = '';
         currentPage = 0;
+        currentPageGroup = 1;
+        document.querySelectorAll('div.data-userscript-generated > .page-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelectorAll('#page-btn-0').forEach(btn => {
+            btn.classList.add('active');
+        });
         loadPagesSequentially(currentPage).then(list => {
             if (list.length === 0) return; // No articles to render
             clearArticles(container);
