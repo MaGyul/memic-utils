@@ -52,6 +52,7 @@ function getPersonalId(url = currentUrl) {
 }
 
 async function getShelterId(pId = personalId) {
+    if (pId === 'articles') return null;
     try {
         const info = await memicUtils.api.personal.getShelter(pId);
         return info.id;
@@ -116,7 +117,6 @@ function restoreOriginalPage() {
 
 async function fetchArticles(offsetId = null) {
     try {
-        const shelterId = await getShelterId();
         let page;
         if (hasBoardIdInUrl()) {
             const boardId = getBoardIdFromUrl();
@@ -127,6 +127,7 @@ async function fetchArticles(offsetId = null) {
                 offsetId
             );
         } else {
+            const shelterId = await getShelterId();
             page = await memicUtils.api.articles.getList(
                 shelterId,
                 false,
@@ -253,7 +254,8 @@ function renderArticles(container, articles) {
         `;
 
         const a = elem.querySelector('& > a');
-        a.addEventListener('click', () => {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
             addonStorage.set(`viewed-${article.id}`, Date.now());
 
             a.classList.add('opacity-60');
@@ -261,6 +263,9 @@ function renderArticles(container, articles) {
             scrollPosition = window.scrollY;
             sessionStorage.setItem('pagination-last-page', currentPage);
             sessionStorage.setItem('pagination-last-scroll', scrollPosition);
+
+            history.pushState(null, '', a.href);
+            window.dispatchEvent(new PopStateEvent('popstate'));
         });
 
         container.appendChild(elem);
