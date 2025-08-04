@@ -102,9 +102,8 @@ function shouldRunPagination() {
 }
 
 function reloadNotion(show = true, empty = false) {
-    if (!container || container.parentElement) return;
+    if (!container || !container.parentElement) return;
     const btn = container.parentElement.querySelector('div.flex > button');
-    logger.log(`리로드 버튼: ${btn}`);
     if (!btn) return;
     btn.textContent = empty ? '게시글이 없습니다.' : '게시글 불러오는 중...';
     if (show) {
