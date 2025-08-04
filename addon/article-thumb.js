@@ -54,13 +54,13 @@ function extractThumbnailUrl(content) {
     return bgMatch?.[1] || null;
 }
 
-function createThumbnailElement(thumbnailUrl) {
+function createThumbnailElement() {
     const thumbItem = document.createElement("div");
     thumbItem.id = "memic-thumbnail-preview";
 
     const img = document.createElement("img");
 
-    img.src = thumbnailUrl;
+    img.src = "#";
     img.alt = "이미지";
     img.loading = "lazy";
 
@@ -88,7 +88,26 @@ function createThumbnailElement(thumbnailUrl) {
     });
 
     thumbItem.appendChild(img);
-    return thumbItem;
+    return { thumbItem, img };
+}
+
+/**
+ * @param {HTMLImageElement} img 
+ * @param {string} id 
+ * @returns 
+ */
+async function loadThumbnail(img, id) {
+    let thumbnailUrl = thumbnailCache.get(id);
+
+    if (!thumbnailUrl) {
+        const data = await memicUtils.api.articles.get(id);
+        thumbnailUrl = extractThumbnailUrl(data.content);
+    }
+
+    if (thumbnailUrl) {
+        img.src = thumbnailUrl;
+        thumbnailCache.set(id, thumbnailUrl);
+    }
 }
 
 async function processArticleItem(item) {
@@ -106,21 +125,7 @@ async function processArticleItem(item) {
     if (!thumb) return;
 
     try {
-        let thumbnailUrl = thumbnailCache.get(id);
-
-        if (!thumbnailUrl) {
-            const data = await memicUtils.api.articles.get(id);
-
-            thumbnailUrl = extractThumbnailUrl(data.content);
-
-            if (thumbnailUrl) {
-                thumbnailCache.set(id, thumbnailUrl);
-            } else {
-                return;
-            }
-        }
-
-        const thumbItem = createThumbnailElement(thumbnailUrl);
+        const { thumbItem, img } = createThumbnailElement();
         item.appendChild(thumbItem);
         item.style.position = "relative";
 
@@ -130,6 +135,7 @@ async function processArticleItem(item) {
             if (!isHovered) {
                 isHovered = true;
                 thumbItem.style.display = "flex";
+                loadThumbnail(img, id);
             }
         });
 
