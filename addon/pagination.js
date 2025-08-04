@@ -181,7 +181,6 @@ function restoreOriginalPage() {
 }
 
 async function fetchArticles(offsetId = null) {
-    logger.error(new Error());
     try {
         let page;
         if (hasBoardIdInUrl()) {
