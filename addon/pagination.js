@@ -451,6 +451,7 @@ function createPaginationBar() {
                 }
             }
             currentPage = idx;
+            syncPaginationBars();
             const items = await loadPagesSequentially(idx);
             if (items.length === 0) return;
             if (currentPageGroup * max_pages >= items.length) {
@@ -459,7 +460,6 @@ function createPaginationBar() {
                 nextBtn.disabled = false;
             }
             renderArticles(container, items);
-            syncPaginationBars();
             updateData();
         }
     });
