@@ -101,6 +101,18 @@ function shouldRunPagination() {
     return !hasBoardIdInUrl();
 }
 
+function reloadNotion(show = true, empty = false) {
+    if (!container || container.parentElement) return;
+    const btn = container.parentElement.querySelector('div.flex > button');
+    if (!btn) return;
+    btn.textContent = empty ? '게시글이 없습니다.' : '게시글 불러오는 중...';
+    if (show) {
+        btn.parentElement.style.display = 'flex';
+    } else {
+        btn.parentElement.style.display = 'none';
+    }
+}
+
 function captureRefrashButton(off = false) {
     /**
      * @type {HTMLButtonElement}
@@ -334,7 +346,8 @@ function renderArticles(container, articles) {
  * @returns {Promise<ArticleInfo[]>}
  */
 async function loadPagesSequentially(idx) {
-    logger.error(new Error());
+    clearArticles(container);
+    reloadNotion(true);
     let last = null, res = [];
     for (let i = 0; i <= idx; i++) {
         const page = await fetchArticles(last);
@@ -342,6 +355,11 @@ async function loadPagesSequentially(idx) {
         res = page;
         last = page.at(-1).id;
     }
+    if (res.length === 0) {
+        reloadNotion(true, true);
+        return [];
+    }
+    reloadNotion(false);
     return res;
 }
 
@@ -440,7 +458,6 @@ function createPaginationBar() {
             } else {
                 nextBtn.disabled = false;
             }
-            clearArticles(container);
             renderArticles(container, items);
             syncPaginationBars();
             updateData();
@@ -508,7 +525,6 @@ async function onpopstate(e) {
         currentPage = sPage;
         const list = await loadPagesSequentially(currentPage);
         if (list.length === 0) return; // No articles to render
-        clearArticles(container);
         renderArticles(container, list);
         updateData();
 
@@ -609,7 +625,6 @@ const observer = new MutationObserver(muts => {
             });
             loadPagesSequentially(currentPage).then(list => {
                 if (list.length === 0) return; // No articles to render
-                clearArticles(container);
                 renderArticles(container, list);
             });
         }
@@ -628,7 +643,6 @@ const observer = new MutationObserver(muts => {
         });
         loadPagesSequentially(currentPage).then(list => {
             if (list.length === 0) return; // No articles to render
-            clearArticles(container);
             renderArticles(container, list);
         });
     }
@@ -755,7 +769,6 @@ function openSettings(modalBody) {
 async function apply() {
     const list = await loadPagesSequentially(currentPage);
     if (list.length > 0) {
-        clearArticles(container);
         renderArticles(container, list);
     }
 
