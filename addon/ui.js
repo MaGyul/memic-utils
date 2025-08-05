@@ -122,10 +122,10 @@ function createAddonElement(addon) {
             modalBody.innerHTML = ''; // 기존 내용 제거
             const confirmFunc = addon.openSettings(modalBody);
             if (typeof confirmFunc === 'function') {
-                modalPanel.querySelector('#modal-confirm').addEventListener('click', () => {
+                modalPanel.querySelector('#modal-confirm').onclick = () => {
                     confirmFunc();
                     closeModal();
-                });
+                };
             }
             openModal(`${addon.addonInfo.name} 설정`, 'medium');
         }
