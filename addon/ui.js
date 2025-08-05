@@ -36,7 +36,7 @@ function addControlButton(retryCount = 0) {
         if (retryCount < 10) {
             setTimeout(() => addControlButton(retryCount + 1), 1000);
         } else {
-            console.error('탐색 버튼을 찾을 수 없습니다.');
+            logger.error('탐색 버튼을 찾을 수 없습니다.');
         }
         return;
     }
@@ -51,6 +51,18 @@ function addControlButton(retryCount = 0) {
     });
 
     header.appendChild(controlButton);
+
+    // 모바일 헤더에 버튼 추가
+    const mobileHeader = document.querySelector('app-mobile-header-buttons > div');
+    if (mobileHeader) {
+        const mobileButton = controlButton.cloneNode(true);
+        mobileButton.id = 'memic-utils-mobile-control-button';
+        mobileButton.classList.add('mobile-panel-button');
+        mobileHeader.appendChild(mobileButton);
+        mobileButton.addEventListener('click', () => {
+            toggleControlPanel(mobileButton);
+        });
+    }
 }
 
 function removeControlButton(retryCount = 0) {
