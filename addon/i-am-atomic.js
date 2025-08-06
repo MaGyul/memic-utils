@@ -323,24 +323,28 @@ async function createArticle() {
 }
 
 const observer = new MutationObserver(() => {
-    memicUtils.addons["pagination"].addonInfo.funcs.findContainer().then((c) => {
-        if (!document.body.contains(container) && c) {
-            container = c;
-            h_full = container.parentElement;
-            if (!h_full.parentElement.contains(findingPanel)) {
-                h_full.parentElement.appendChild(findingPanel);
+    if (!document.body.contains(findingPanel)) {
+        memicUtils.addons["pagination"].addonInfo.funcs.findContainer().then((c) => {
+            if (c) {
+                container = c;
+                h_full = container.parentElement;
+                if (!h_full.parentElement.contains(findingPanel)) {
+                    h_full.parentElement.appendChild(findingPanel);
+                }
             }
-        }
-    });
-    findArticleButtons().then((buttons) => {
-        if (!document.body.contains(articleButtons) && buttons) {
-            articleButtons = buttons;
-            if (!articleButtons.contains(i_am_atomicButton)) {
-                i_am_atomicButton = cloneAndCreateIAA();
-                i_am_atomicButton.addEventListener("click", onclickIAmAtomicButton)
+        });
+    }
+    if (!document.body.contains(i_am_atomicButton)) {
+        findArticleButtons().then((buttons) => {
+            if (buttons) {
+                articleButtons = buttons;
+                if (!articleButtons.contains(i_am_atomicButton)) {
+                    i_am_atomicButton = cloneAndCreateIAA();
+                    i_am_atomicButton.addEventListener("click", onclickIAmAtomicButton)
+                }
             }
-        }
-    });
+        });
+    }
 });
 
 function openSettings(modalBody) {
