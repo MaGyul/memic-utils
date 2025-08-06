@@ -34,7 +34,7 @@ addonStorage.get("atomic-template", atomicTemplate).then((template) => {
         atomicTemplate.content = template.content || defaultAtomicTemplate.content;
     }
 });
-addonsStorage.get("find-max-page", findMaxPage).then((maxPage) => {
+addonStorage.get("find-max-page", findMaxPage).then((maxPage) => {
     if (maxPage) {
         findMaxPage = maxPage;
     }
