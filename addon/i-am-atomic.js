@@ -207,7 +207,7 @@ async function processIAA(find) {
                         if (articleLink) {
                             articleLink.parentElement.scrollIntoView({ behavior: "smooth", block: "center" });
                         }
-                        break;
+                        return;
                     }
                 }
             }
