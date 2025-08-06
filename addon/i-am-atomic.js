@@ -136,9 +136,11 @@ function onclickIAmAtomicButton() {
     const findLabel = document.createElement("label");
     findLabel.textContent = "I AM ATOMIC 게시글 찾기";
     findLabel.className = "ml-2";
+    findLabel.for = "find-atomic";
     const findInput = document.createElement("input");
     findInput.type = "radio";
     findInput.checked = true; // 기본값으로 찾기 선택
+    findInput.id = "find-atomic";
     findInput.addEventListener("change", () => {
         if (findInput.checked) {
             createInput.checked = false; // 찾기 선택 시 만들기 해제
@@ -152,9 +154,11 @@ function onclickIAmAtomicButton() {
     const createLabel = document.createElement("label");
     createLabel.textContent = "I AM ATOMIC 게시글 만들기";
     createLabel.className = "ml-2";
+    createLabel.for = "create-atomic";
     const createInput = document.createElement("input");
     createInput.type = "radio";
     createInput.checked = false; // 기본값으로 만들기 해제
+    createInput.id = "create-atomic";
     createInput.addEventListener("change", () => {
         if (createInput.checked) {
             findInput.checked = false; // 만들기 선택 시 찾기 해제
