@@ -137,7 +137,7 @@ function onclickIAmAtomicButton() {
     const findLabel = document.createElement("label");
     findLabel.textContent = "I AM ATOMIC 게시글 찾기";
     findLabel.className = "ml-2";
-    findLabel.for = "find-atomic";
+    findLabel.setAttribute("for", "find-atomic");
     const findInput = document.createElement("input");
     findInput.type = "radio";
     findInput.checked = true; // 기본값으로 찾기 선택
@@ -155,7 +155,7 @@ function onclickIAmAtomicButton() {
     const createLabel = document.createElement("label");
     createLabel.textContent = "I AM ATOMIC 게시글 만들기";
     createLabel.className = "ml-2";
-    createLabel.for = "create-atomic";
+    createLabel.setAttribute("for", "create-atomic");
     const createInput = document.createElement("input");
     createInput.type = "radio";
     createInput.checked = false; // 기본값으로 만들기 해제
@@ -286,7 +286,7 @@ async function processIAA(find) {
  * @returns {Promise<ArticleInfo>}
  */
 async function createArticle() {
-    const shelterId = getShelterId();
+    const shelterId = await getShelterId();
     if (!shelterId) {
         logger.error("I AM ATOMIC 게시글을 만들기 위해서는 개인 페이지가 필요합니다.");
         return Promise.reject(new Error("개인 페이지가 필요합니다."));
