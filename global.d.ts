@@ -132,6 +132,7 @@ declare class MemicAPI {
         getList(shelterId: string, isNotice?: boolean, size?: number, offsetId?: string): Promise<ArticleListResponse>;
         getListByBoard(boardId: string, isNotice?: boolean, size?: number, offsetId?: string): Promise<ArticleListResponse>;
         get(articleId: string): Promise<ArticleInfo>;
+        create(shelterId: string, title: string, content: string, isNotice?: boolean): Promise<ArticleInfo>;
     }
 
     shelters: {
@@ -175,6 +176,7 @@ declare interface Addon {
         version: string;
         author: string;
         link?: string;
+        funcs?: Record<string, Function>;
     }
     openSettings: (modalBody: HTMLDivElement) => () => void;
     onenable: () => void;
