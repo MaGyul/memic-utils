@@ -127,6 +127,7 @@ function cloneAndCreateIAA() {
 function onclickIAmAtomicButton() {
     const modalPanel = document.querySelector('#modal-panel');
     const modalBody = modalPanel.querySelector('#modal-body');
+    modalBody.innerHTML = ""; // 기존 내용 제거
 
     const optionsContainer = document.createElement("div");
     optionsContainer.className = "flex flex-col gap-2";
@@ -136,9 +137,11 @@ function onclickIAmAtomicButton() {
     const findLabel = document.createElement("label");
     findLabel.textContent = "I AM ATOMIC 게시글 찾기";
     findLabel.className = "ml-2";
+    findLabel.for = "find-atomic";
     const findInput = document.createElement("input");
     findInput.type = "radio";
     findInput.checked = true; // 기본값으로 찾기 선택
+    findInput.id = "find-atomic";
     findInput.addEventListener("change", () => {
         if (findInput.checked) {
             createInput.checked = false; // 찾기 선택 시 만들기 해제
@@ -152,9 +155,11 @@ function onclickIAmAtomicButton() {
     const createLabel = document.createElement("label");
     createLabel.textContent = "I AM ATOMIC 게시글 만들기";
     createLabel.className = "ml-2";
+    createLabel.for = "create-atomic";
     const createInput = document.createElement("input");
     createInput.type = "radio";
     createInput.checked = false; // 기본값으로 만들기 해제
+    createInput.id = "create-atomic";
     createInput.addEventListener("change", () => {
         if (createInput.checked) {
             findInput.checked = false; // 만들기 선택 시 찾기 해제
@@ -198,16 +203,25 @@ async function processIAA(find) {
                 /** @type {ArticleInfo[]} */
                 const articles = (await funcs.loadPagesSequentially(i));
                 for (const article of articles) {
-                    if (article.owner.name === ownerName && 
-                        isAllDashes(article.title) &&
-                        article.content.includes(atomicTemplate.content)) {
-                        // 게시글을 찾았으니 처리
-                        funcs.reloadNotion(false);
-                        funcs.setPage(i, articles);
-                        const articleLink = container.querySelector(`a[href="/articles/${article.id}"]`);
-                        if (articleLink) {
-                            articleLink.parentElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                    if (article.owner.name === ownerName && isAllDashes(article.title)) {
+                        function findIt() {
+                            // 게시글을 찾았으니 처리
+                            funcs.reloadNotion(false);
+                            funcs.setPage(i, articles);
+                            const articleLink = container.querySelector(`a[href="/articles/${article.id}"]`);
+                            if (articleLink) {
+                                articleLink.parentElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                            }
                         }
+                        memicUtils.api.articles.get(article.id).then((data) => {
+                            if (data.content.includes(atomicTemplate.content)) {
+                                findIt();
+                            }
+                        }).catch((error) => {
+                            logger.error("게시글을 찾는 중 오류가 발생했습니다:", error);
+                            // 오류가 발생했으므로 내용 검사를 하지 않고 그냥 해당 게시글로 이동
+                            findIt();
+                        });
                         return;
                     }
                 }
@@ -227,18 +241,19 @@ async function processIAA(find) {
                                     const link = node.querySelector('a');
                                     const href = link.getAttribute('href');
                                     const id = href.split('/').pop(); // 게시글 ID 추출
+                                    function findIt() {
+                                        h_full.style.display = ""; // 전체 게시글 보이기
+                                        findingPanel.style.display = "none"; // 찾는 중 패널 숨기기
+                                        node.scrollIntoView({ behavior: "smooth", block: "center" }); // 해당 게시글로 스크롤 이동
+                                    }
                                     memicUtils.api.articles.get(id).then((data) => {
                                         if (data.content.includes(atomicTemplate.content)) {
-                                            h_full.style.display = ""; // 전체 게시글 보이기
-                                            findingPanel.style.display = "none"; // 찾는 중 패널 숨기기
-                                            node.scrollIntoView({ behavior: "smooth", block: "center" }); // 해당 게시글로 스크롤 이동
+                                            findIt();
                                         }
                                     }).catch((error) => {
                                         logger.error("게시글을 찾는 중 오류가 발생했습니다:", error);
                                         // 오류가 발생했으므로 내용 검사를 하지 않고 그냥 해당 게시글로 이동
-                                        h_full.style.display = ""; // 전체 게시글 보이기
-                                        findingPanel.style.display = "none"; // 찾는 중 패널 숨기기
-                                        node.scrollIntoView({ behavior: "smooth", block: "center" }); // 해당 게시글로 스크롤 이동
+                                        findIt();
                                     });
                                     return;
                                 }
