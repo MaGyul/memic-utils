@@ -233,6 +233,7 @@ async function processIAA(find) {
             const btn = container.parentElement.querySelector('div.flex > button');
             if (btn) {
                 async function find(node) {
+                    if (node.tagName !== "APP-ARTICLE-LIST-ITEM") return false; // 올바른 노드가 아니면 무시
                     const title = node.querySelector('span[itemprop="name"]');
                     const owner = node.querySelector('.areaOwner > span');
                     if (owner.textContent.trim() === ownerName && isAllDashes(title.textContent.trim())) {
@@ -259,11 +260,11 @@ async function processIAA(find) {
                     }
                     return false;
                 }
-                const observer = new MutationObserver((mutations) => {
+                const observer = new MutationObserver(async (mutations) => {
                     for (const mutation of mutations) {
                         for (const node of mutation.addedNodes) {
-                            if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === "APP-ARTICLE-LIST-ITEM") {
-                                if (find(node)) {
+                            if (node.nodeType === Node.ELEMENT_NODE) {
+                                if (await find(node)) {
                                     return; // 게시글을 찾았으니 더 이상 관찰하지 않음
                                 }
                             }
@@ -274,7 +275,7 @@ async function processIAA(find) {
                 h_full.style.display = "none"; // 전체 게시글 숨기기
                 findingPanel.style.display = "flex"; // 찾는 중 패널 보이기
                 for (const node of container.children) {
-                    if (find(node)) {
+                    if (await find(node)) {
                         return; // 게시글을 찾았으니 더 이상 관찰하지 않음
                     }
                 }
