@@ -268,7 +268,31 @@
             // 게시글 상세 조회
             get: async (articleId) => {
                 return this.request(`/articles/${articleId}`);
-            }
+            },
+
+            // 게시글 작성
+            create: async (shelterId, title, content, isNotice = false) => {
+                const body = {
+                    title: title,
+                    content: content,
+                    isHaveImage: false,
+                    isHaveVideo: false,
+                    isNotice: isNotice,
+                    isOnlyAdult: false,
+                    isSecret: false,
+                    thumbnail: null,
+                    images: [],
+                    mentionList: []
+                };
+                return this.request(`/shelters/${shelterId}/articles`, {
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        accept: 'application/json',
+                    }
+                });
+            },
         };
 
         // 🏠 쉘터 관련 API

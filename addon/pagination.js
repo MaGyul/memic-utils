@@ -3,7 +3,34 @@ const addonInfo = {
     description: "미밐 게시판에 페이지 기능을 추가합니다.",
     author: "NoonDaL, MaGyul",
     version: "1.0.0-beta",
-    link: "https://github.com/NoonDaL/memic-utils"
+    link: "https://github.com/NoonDaL/memic-utils",
+    funcs: {
+        reloadNotion,
+        findContainer,
+        getPageGroupAndIndex,
+        loadPagesSequentially: async (idx) => {
+            let last = null, res = [];
+            for (let i = 0; i <= idx; i++) {
+                const page = await fetchArticles(last);
+                if (!page.length) break;
+                res = page;
+                last = page.at(-1).id;
+            }
+            return res;
+        },
+        clearArticles: () => {
+            clearArticles(container);
+        },
+        setPage: (page, articles) => {
+            const { setPageGroup, setPage } = updateButtonsForGroup(page);
+            currentPageGroup = setPageGroup;
+            currentPage = setPage;
+            updateData();
+            articleList = articles;
+            renderArticles(container, articles);
+            syncPaginationBars();
+        }
+    }
 }
 
 const shelter_id_pattern = /shelter\.id\/([^?]+)/;
@@ -54,6 +81,55 @@ function updateData() {
     sessionStorage.setItem('current-page-group', currentPageGroup);
 }
 
+function getPageGroupAndIndex(displayPage) {
+    // displayPage는 1부터 시작하는 화면 표시 번호
+    const pageIndex = displayPage - 1; // 0-based 인덱스로 변환
+    
+    const pageGroup = Math.floor(pageIndex / max_pages) + 1;
+    const indexInGroup = pageIndex % max_pages;
+    
+    return {
+        group: pageGroup,
+        indexInGroup: indexInGroup,
+        actualPageIndex: pageIndex  // dataset.page에 들어갈 값 (0-based)
+    };
+}
+
+function updateButtonsForGroup(displayPage) {
+    // 1. displayPage로부터 그룹 계산
+    const pageIndex = displayPage - 1; // 0-based
+    const currentPageGroup = Math.floor(pageIndex / max_pages) + 1;
+    
+    // 2. 각 버튼의 page 값 업데이트
+    for (let i = 0; i < max_pages; i++) {
+        const btn = document.getElementById(`page-btn-${i}`);
+        if (btn) {
+            let pageValue = i;
+            
+            // 원본 로직과 동일: 그룹이 1보다 크면 오프셋 적용
+            if (currentPageGroup > 1) {
+                pageValue = (currentPageGroup - 1) * max_pages + i;
+            }
+            
+            // 버튼 업데이트
+            btn.dataset.page = pageValue;
+            btn.textContent = pageValue + 1; // 화면 표시용 (1-based)
+            
+            // 현재 페이지면 active 클래스 추가
+            if (pageValue === pageIndex) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+    }
+
+    return {
+        setPageGroup: currentPageGroup,
+        setPage: pageIndex
+    }
+}
+
 function getPersonalId(url = currentUrl) {
     let match = url.match(shelter_id_pattern);
     if (match) {
@@ -101,11 +177,20 @@ function shouldRunPagination() {
     return !hasBoardIdInUrl();
 }
 
+/**
+ * @param {boolean} show
+ * @param {boolean | string} empty
+ * @returns 
+ */
 function reloadNotion(show = true, empty = false) {
     if (!container || !container.parentElement) return;
     const btn = container.parentElement.querySelector('div.flex > button');
     if (!btn) return;
-    btn.textContent = empty ? '게시글이 없습니다.' : '게시글 불러오는 중...';
+    if (typeof empty !== 'boolean') {
+        btn.textContent = `${empty}`;
+    } else {
+        btn.textContent = empty ? '게시글이 없습니다.' : '게시글 불러오는 중...';
+    }
     if (show) {
         btn.parentElement.style.display = 'flex';
     } else {

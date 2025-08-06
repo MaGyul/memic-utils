@@ -2,7 +2,11 @@ const addonInfo = {
     name: '미밐 유저 스크립트 관리자 UI',
     description: '미밐 유저 스크립트 관리자를 컨트롤 할 수 있도록 UI를 생성합니다.',
     version: '1.0.0',
-    author: 'MaGyul'
+    author: 'MaGyul',
+    funcs: {
+        openModal,
+        closeModal,
+    }
 };
 
 /** @type {HTMLDivElement} */
