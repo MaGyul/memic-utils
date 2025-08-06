@@ -100,7 +100,7 @@ function createFindingPanel() {
 }
 
 async function findArticleButtons(retryCount = 0) {
-    const refreshBtn = document.querySelector('app-refresh-button');
+    const refreshBtn = document.querySelector('app-shelter-board-page div.flex > app-refresh-button');
     if (!refreshBtn) {
         if (retryCount < 10) {
             await new Promise(resolve => setTimeout(resolve, 1000));
