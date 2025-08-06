@@ -112,7 +112,7 @@ async function findArticleButtons(retryCount = 0) {
 }
 
 function cloneAndCreateIAA() {
-    const selectArticleButton = articleButtons.querySelector('& > button');
+    const selectArticleButton = articleButtons.querySelector('& > button') || articleButtons.lastChild;
     const iaaButton = selectArticleButton.cloneNode(true);
     iaaButton.textContent = "I AM ATOMIC";
     iaaButton.id = "i-am-atomic-button";
@@ -354,7 +354,7 @@ function openSettings(modalBody) {
     contentInput.value = atomicTemplate.content;
     const contentContainer = document.createElement("div");
     contentContainer.style.display = "flex";
-    contentContainer.style.flexDirection = "column";
+    contentContainer.style.flexDirection = "row";
     contentContainer.style.alignItems = "center";
     contentContainer.style.gap = "8px";
     contentContainer.appendChild(contentLabel);
