@@ -232,32 +232,39 @@ async function processIAA(find) {
             // 페이지네이션이 비활성화되어 있다면
             const btn = container.parentElement.querySelector('div.flex > button');
             if (btn) {
+                async function find(node) {
+                    const title = node.querySelector('span[itemprop="name"]');
+                    const owner = node.querySelector('.areaOwner > span');
+                    if (owner.textContent.trim() === ownerName && isAllDashes(title.textContent.trim())) {
+                        observer.disconnect(); // 찾았으니 관찰 중지
+                        const link = node.querySelector('a');
+                        const href = link.getAttribute('href');
+                        const id = href.split('/').pop(); // 게시글 ID 추출
+                        function findIt() {
+                            h_full.style.display = ""; // 전체 게시글 보이기
+                            findingPanel.style.display = "none"; // 찾는 중 패널 숨기기
+                            node.scrollIntoView({ behavior: "smooth", block: "center" }); // 해당 게시글로 스크롤 이동
+                        }
+                        try {
+                        const article = await memicUtils.api.articles.get(id);
+                        if (article.content.includes(atomicTemplate.content)) {
+                            findIt();
+                        }
+                        } catch (error) {
+                            logger.error("게시글을 찾는 중 오류가 발생했습니다:", error);
+                            // 오류가 발생했으므로 내용 검사를 하지 않고 그냥 해당 게시글로 이동
+                            findIt();
+                        }
+                        return true;
+                    }
+                    return false;
+                }
                 const observer = new MutationObserver((mutations) => {
                     for (const mutation of mutations) {
                         for (const node of mutation.addedNodes) {
                             if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === "APP-ARTICLE-LIST-ITEM") {
-                                const title = node.querySelector('span[itemprop="name"]');
-                                const owner = node.querySelector('.areaOwner > span');
-                                if (owner.textContent.trim() === ownerName && isAllDashes(title.textContent.trim())) {
-                                    observer.disconnect(); // 찾았으니 관찰 중지
-                                    const link = node.querySelector('a');
-                                    const href = link.getAttribute('href');
-                                    const id = href.split('/').pop(); // 게시글 ID 추출
-                                    function findIt() {
-                                        h_full.style.display = ""; // 전체 게시글 보이기
-                                        findingPanel.style.display = "none"; // 찾는 중 패널 숨기기
-                                        node.scrollIntoView({ behavior: "smooth", block: "center" }); // 해당 게시글로 스크롤 이동
-                                    }
-                                    memicUtils.api.articles.get(id).then((data) => {
-                                        if (data.content.includes(atomicTemplate.content)) {
-                                            findIt();
-                                        }
-                                    }).catch((error) => {
-                                        logger.error("게시글을 찾는 중 오류가 발생했습니다:", error);
-                                        // 오류가 발생했으므로 내용 검사를 하지 않고 그냥 해당 게시글로 이동
-                                        findIt();
-                                    });
-                                    return;
+                                if (find(node)) {
+                                    return; // 게시글을 찾았으니 더 이상 관찰하지 않음
                                 }
                             }
                         }
@@ -266,6 +273,11 @@ async function processIAA(find) {
                 });
                 h_full.style.display = "none"; // 전체 게시글 숨기기
                 findingPanel.style.display = "flex"; // 찾는 중 패널 보이기
+                for (const node of container.children) {
+                    if (find(node)) {
+                        return; // 게시글을 찾았으니 더 이상 관찰하지 않음
+                    }
+                }
                 observer.observe(h_full, { childList: true, subtree: true });
                 btn.click(); // 게시글 더보기 버튼 클릭
             }

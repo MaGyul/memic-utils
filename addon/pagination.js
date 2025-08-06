@@ -569,7 +569,6 @@ async function findContainer(retryCount = 0) {
         await new Promise(resolve => setTimeout(resolve, 1000));
         return findContainer(retryCount + 1);
     } else {
-        logger.error('컨테이너를 찾을 수 없습니다.');
         return null;
     }
 
