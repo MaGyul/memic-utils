@@ -208,10 +208,12 @@ async function processIAA(find) {
                             // 게시글을 찾았으니 처리
                             funcs.reloadNotion(false);
                             funcs.setPage(i, articles);
-                            const articleLink = container.querySelector(`a[href="/articles/${article.id}"]`);
-                            if (articleLink) {
-                                articleLink.parentElement.scrollIntoView({ behavior: "smooth", block: "center" });
-                            }
+                            setTimeout(() => {
+                                const articleLink = container.querySelector(`a[href="/articles/${article.id}"]`);
+                                if (articleLink) {
+                                    articleLink.parentElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                                }
+                            }, 500); // 스크롤 이동을 위해 약간의 시간 지연
                         }
                         memicUtils.api.articles.get(article.id).then((data) => {
                             if (data.content.includes(atomicTemplate.content)) {
