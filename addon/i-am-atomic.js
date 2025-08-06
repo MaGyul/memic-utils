@@ -113,11 +113,12 @@ async function findArticleButtons(retryCount = 0) {
 
 function cloneAndCreateIAA() {
     const selectArticleButton = articleButtons.querySelector('& > button') || articleButtons.lastChild;
-    const iaaButton = selectArticleButton.cloneNode(true);
-    iaaButton.textContent = "I AM ATOMIC";
+    const iaaButton = document.createElement("button");
+    iaaButton.type = "button";
+    iaaButton.dataset.tooltip = "I AM ATOMIC";
+    iaaButton.className = "bg-on-background-variant2 text-on-surface-variant dd:flex hidden items-center justify-center gap-1 rounded-lg px-2 py-1 whitespace-nowrap ng-star-inserted";
+    iaaButton.innerHTML = '<i class="ri-tools-line icon-lg"></i><span class="typo-label-md">I AM ATOMIC</span>';
     iaaButton.id = "i-am-atomic-button";
-    iaaButton.querySelector('span').textContent = "I AM ATOMIC";
-    iaaButton.querySelector('i').className = 'ri-tools-line icon-lg';
     articleButtons.insertBefore(iaaButton, selectArticleButton);
 
     return iaaButton;

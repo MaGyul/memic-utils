@@ -1,8 +1,8 @@
 const addonInfo = {
     name: "미밐 글 썸네일 미리보기",
     description: "미밐 글의 썸네일을 마우스 오버시 미리보기로 표시합니다.",
-    author: "raws6633",
-    version: "1.0.0",
+    author: "isnoa, raws6633",
+    version: "1.0.1",
     link: "https://github.com/isnoa/memic-utils"
 }
 
@@ -101,6 +101,8 @@ async function loadThumbnail(img, id) {
 
     if (!thumbnailUrl) {
         const data = await memicUtils.api.articles.get(id);
+        if (data.board.name === "후방주의" || data.isOnlyAdult === true) return;
+
         thumbnailUrl = extractThumbnailUrl(data.content);
     }
 
