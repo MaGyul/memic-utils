@@ -101,6 +101,8 @@ async function loadThumbnail(img, id) {
 
     if (!thumbnailUrl) {
         const data = await memicUtils.api.articles.get(id);
+        if (data.board.name === "후방주의" || data.isOnlyAdult === true) return;
+
         thumbnailUrl = extractThumbnailUrl(data.content);
     }
 
