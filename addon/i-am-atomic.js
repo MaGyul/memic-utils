@@ -137,6 +137,7 @@ function onclickIAmAtomicButton() {
     const findLabel = document.createElement("label");
     findLabel.textContent = "I AM ATOMIC 게시글 찾기";
     findLabel.className = "ml-2";
+    findLabel.setAttribute("for", "find-atomic");
     const findInput = document.createElement("input");
     findInput.type = "radio";
     findInput.checked = true; // 기본값으로 찾기 선택
@@ -148,13 +149,13 @@ function onclickIAmAtomicButton() {
     });
     findContainer.appendChild(findInput);
     findContainer.appendChild(findLabel);
-    findLabel.setAttribute("for", "find-atomic");
 
     const createContainer = document.createElement("div");
     createContainer.dataset.tooltip = "I AM ATOMIC 게시글을 만듭니다.\n게시글 제목과 내용은 설정에서 변경할 수 있습니다.";
     const createLabel = document.createElement("label");
     createLabel.textContent = "I AM ATOMIC 게시글 만들기";
     createLabel.className = "ml-2";
+    createLabel.setAttribute("for", "create-atomic");
     const createInput = document.createElement("input");
     createInput.type = "radio";
     createInput.checked = false; // 기본값으로 만들기 해제
@@ -166,7 +167,6 @@ function onclickIAmAtomicButton() {
     });
     createContainer.appendChild(createInput);
     createContainer.appendChild(createLabel);
-    createLabel.setAttribute("for", "create-atomic");
 
     optionsContainer.appendChild(findContainer);
     optionsContainer.appendChild(createContainer);
