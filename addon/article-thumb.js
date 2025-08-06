@@ -101,9 +101,11 @@ async function loadThumbnail(img, id) {
 
     if (!thumbnailUrl) {
         const data = await memicUtils.api.articles.get(id);
-        if (data.board.name === "후방주의" || data.isOnlyAdult === true) return;
-
-        thumbnailUrl = extractThumbnailUrl(data.content);
+        if (data.board.name === "후방주의" || data.isOnlyAdult === true) {
+            thumbnailUrl = "https://imgproxy.shelter.id/sig/Z3M6Ly9zaGVsdGVyLW1lZGlhL3UvNDRaQ0xFRmFUblR2QTVranZJN2F3Z3EyRXhwMS9pbWFnZXMvMTc1MzY3NjQ5OTMxN19iZTA2Y2IzYy1hOTYxLTRmMDktODNiZC1iNmRiZWU5N2I4MzEucG5n";
+        } else {
+            thumbnailUrl = extractThumbnailUrl(data.content);
+        }
     }
 
     if (thumbnailUrl) {
