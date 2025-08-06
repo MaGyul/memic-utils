@@ -208,10 +208,12 @@ async function processIAA(find) {
                             // 게시글을 찾았으니 처리
                             funcs.reloadNotion(false);
                             funcs.setPage(i, articles);
-                            const articleLink = container.querySelector(`a[href="/articles/${article.id}"]`);
-                            if (articleLink) {
-                                articleLink.parentElement.scrollIntoView({ behavior: "smooth", block: "center" });
-                            }
+                            setTimeout(() => {
+                                const articleLink = container.querySelector(`a[href="/articles/${article.id}"]`);
+                                if (articleLink) {
+                                    articleLink.parentElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                                }
+                            }, 500); // 스크롤 이동을 위해 약간의 시간 지연
                         }
                         memicUtils.api.articles.get(article.id).then((data) => {
                             if (data.content.includes(atomicTemplate.content)) {
@@ -322,7 +324,7 @@ async function createArticle() {
 
 const observer = new MutationObserver(() => {
     memicUtils.addons["pagination"].addonInfo.funcs.findContainer().then((c) => {
-        if (container !== c) {
+        if (!document.body.contains(container) && c) {
             container = c;
             h_full = container.parentElement;
             if (!h_full.parentElement.contains(findingPanel)) {
@@ -331,7 +333,7 @@ const observer = new MutationObserver(() => {
         }
     });
     findArticleButtons().then((buttons) => {
-        if (articleButtons !== buttons) {
+        if (!document.body.contains(articleButtons) && buttons) {
             articleButtons = buttons;
             if (!articleButtons.contains(i_am_atomicButton)) {
                 i_am_atomicButton = cloneAndCreateIAA();
