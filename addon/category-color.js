@@ -43,7 +43,9 @@ function colorizePostPrefixes(off = false) {
         let color = categoryColors[text];
         if (color) {
             if (applyMemicColor) {
-                prefix.dataset.memicColor = prefix.style.backgroundColor;
+                if (!prefix.dataset.memicColor) {
+                    prefix.dataset.memicColor = prefix.style.backgroundColor;
+                }
                 if (off) {
                     prefix.style.backgroundColor = prefix.dataset.memicColor || '';
                     prefix.dataset.memicColor = '';
@@ -52,10 +54,8 @@ function colorizePostPrefixes(off = false) {
                     prefix.style.backgroundColor = '';
                 }
             } else {
-                if (off) {
-                    prefix.style.backgroundColor = prefix.dataset.memicColor || '';
-                    prefix.dataset.memicColor = '';
-                }
+                prefix.style.backgroundColor = prefix.dataset.memicColor || '';
+                prefix.dataset.memicColor = '';
             }
             if (off) {
                 prefix.style.color = '';
