@@ -118,7 +118,7 @@ function openSettings(modalBody) {
     const settingsContent = document.createElement('div');
     settingsContent.innerHTML = `
         <label for="category-colors" style="margin-bottom: 4px;">카테고리 색상 설정</label>
-        <div style="display: flex; align-items: center; margin-bottom: 8px; gap: 8px;">
+        <div style="display: flex; align-items: center; margin-bottom: 8px; gap: 8px;" data-tooltip="미밐에서 적용하는 카테고리 색상을 사용합니다.">
             <span class="switch_label">미밐 색상 적용</span>
             <div class="switch-wrapper">
                 <input type="checkbox" id="apply-memic-color-switch" class="switch_input">
