@@ -40,28 +40,19 @@ function colorizePostPrefixes(off = false) {
         if (!prefix) return;
 
         const text = prefix.textContent.trim();
-        let color = categoryColors[text];
+        const color = categoryColors[text];
         if (color) {
-            if (applyMemicColor) {
-                if (!prefix.dataset.memicColor) {
-                    prefix.dataset.memicColor = prefix.style.backgroundColor;
-                }
-                if (off) {
-                    prefix.style.backgroundColor = prefix.dataset.memicColor || '';
-                    prefix.dataset.memicColor = '';
-                } else {
-                    color = prefix.style.backgroundColor || color;
-                    prefix.style.backgroundColor = '';
-                }
-            } else {
-                prefix.style.backgroundColor = prefix.dataset.memicColor || '';
-                prefix.dataset.memicColor = '';
+            if (!prefix.dataset.memicColor) {
+                prefix.dataset.memicColor = prefix.style.backgroundColor;
             }
             if (off) {
+                prefix.style.backgroundColor = prefix.dataset.memicColor || '';
                 prefix.style.color = '';
                 prefix.style.fontWeight = '';
             } else {
-                prefix.style.color = color;
+                prefix.style.backgroundColor = '';
+                prefix.style.color = applyMemicColor ? 
+                    prefix.dataset.memicColor || color : color;
                 prefix.style.fontWeight = 'bold';
             }
         }
