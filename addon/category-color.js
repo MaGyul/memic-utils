@@ -46,9 +46,15 @@ function colorizePostPrefixes(off = false) {
                 prefix.dataset.memicColor = prefix.style.backgroundColor;
                 if (off) {
                     prefix.style.backgroundColor = prefix.dataset.memicColor || '';
+                    prefix.dataset.memicColor = '';
                 } else {
                     color = prefix.style.backgroundColor || color;
                     prefix.style.backgroundColor = '';
+                }
+            } else {
+                if (off) {
+                    prefix.style.backgroundColor = prefix.dataset.memicColor || '';
+                    prefix.dataset.memicColor = '';
                 }
             }
             if (off) {
