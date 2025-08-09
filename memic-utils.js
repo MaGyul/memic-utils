@@ -532,6 +532,7 @@
 
     const safeWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
+    safeWindow.AddonStorage = AddonStorage;
     safeWindow.Logger = Logger;
     safeWindow.memicUtils = new MemicUtils();
 })();
