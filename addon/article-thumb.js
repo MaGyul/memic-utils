@@ -239,11 +239,14 @@ function createSwitch(id, label, tooltip, initialValue) {
 
 function openSettings(modalBody) {
     const settingsContainer = document.createElement("div");
-    settingsContainer.className = "settings-container";
-    settingsContainer.style.display = "flex";
-    settingsContainer.style.flexDirection = "row";
-    settingsContainer.style.alignItems = "center";
-    settingsContainer.style.gap = "8px";
+    settingsContainer.className = 'flex flex-col gap-4';
+
+    const sizeContainer = document.createElement("div");
+    sizeContainer.className = 'size-container';
+    sizeContainer.style.display = "flex";
+    sizeContainer.style.flexDirection = "row";
+    sizeContainer.style.alignItems = "center";
+    sizeContainer.style.gap = "8px";
 
     const sizeLabel = document.createElement("label");
     sizeLabel.textContent = "썸네일 크기 (px):";
@@ -273,9 +276,11 @@ function openSettings(modalBody) {
         sizeInput.value = 120;
     });
 
-    settingsContainer.appendChild(sizeLabel);
-    settingsContainer.appendChild(sizeInput);
-    settingsContainer.appendChild(resetButton);
+    sizeContainer.appendChild(sizeLabel);
+    sizeContainer.appendChild(sizeInput);
+    sizeContainer.appendChild(resetButton);
+
+    settingsContainer.appendChild(sizeContainer);
 
     const { input: adultSwitch, container: adultContainer } = createSwitch(
         "adult", "성인 콘텐츠", "성인 콘텐츠 미리보기를 가립니다.", adult
