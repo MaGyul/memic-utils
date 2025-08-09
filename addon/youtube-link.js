@@ -11,6 +11,8 @@ var autoplay = await addonStorage.get("autoplay", true);
 var loop = await addonStorage.get("loop", false);
 var nocookie = await addonStorage.get("nocookie", true);
 
+logger.info(`${autoplay ? '자동 재생' : '자동 재생 안함'} | ${loop ? '자동 반복' : '자동 반복 안함'} | ${nocookie ? '쿠키 사용 안함' : '쿠키 사용함'}`);
+
 const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
