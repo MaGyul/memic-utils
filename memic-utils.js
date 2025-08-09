@@ -152,8 +152,11 @@
                 return value;
             } else {
                 const value = await this.#store.getItem(key);
-                if (!value) return defaultValue;
-                return value;
+                try {
+                    return value ?? defaultValue;
+                } catch {
+                    return value == null ? defaultValue : value;
+                }
             }
         }
 
@@ -529,6 +532,7 @@
 
     const safeWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
+    safeWindow.AddonStorage = AddonStorage;
     safeWindow.Logger = Logger;
     safeWindow.memicUtils = new MemicUtils();
 })();
