@@ -13,7 +13,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=memic.at
 // @require      https://unpkg.com/@babel/standalone@7.28.2/babel.min.js
 // @require      https://unpkg.com/localforage@1.10.0/dist/localforage.min.js
-// @require      https://mu.magyul.kr/memic-utils.js
+// @require      https://mu.magyul.kr/memic-utils.js?v=1
 // @updateURL    https://mu.magyul.kr/main.user.js
 // @downloadURL  https://mu.magyul.kr/main.user.js
 // @connect      mu.magyul.kr
