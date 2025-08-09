@@ -94,7 +94,7 @@ function createYoutubeEmbed(originalUrl) {
  */
 function processATag(a) {
     const originalHref = a.href;
-    if (originalHref.match(youtubeReg)) {
+    if (originalHref.includes('youtu') && originalHref.match(youtubeReg)) {
         a.dataset.originalHref = originalHref;
         a.dataset.scriptApply = '';
         a.onclick = (e) => {
@@ -114,7 +114,7 @@ function processATag(a) {
 function processIFrame(iframe) {
     if (nocookie) {
         const originalSrc = iframe.src;
-        if (originalSrc.match(youtubeReg)) {
+        if (originalSrc.includes('youtu') && originalSrc.match(youtubeReg)) {
             iframe.dataset.originalSrc = originalSrc;
             iframe.src = createYoutubeLink(originalSrc, false, loop, nocookie);
             iframe.dataset.scriptApply = '';
