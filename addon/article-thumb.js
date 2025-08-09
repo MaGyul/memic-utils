@@ -123,17 +123,20 @@ function createThumbnailElement() {
  */
 async function loadThumbnail(img, id) {
     let thumbnailUrl = thumbnailCache.get(id);
+    let saveToCache = true;
 
     if (!thumbnailUrl) {
         const data = await memicUtils.api.articles.get(id);
         if (data.board.name === "후방주의" || data.isOnlyAdult === true) {
             if (adult) {
-                thumbnailUrl = "https://mu.magyul.kr/assets/img/adult.avif"
+                thumbnailUrl = "https://mu.magyul.kr/assets/img/adult.avif";
+                saveToCache = false;
             }
         }
         if (data.board.name === "스포/유출") {
             if (spoiler) {
-                thumbnailUrl = "https://mu.magyul.kr/assets/img/spoiler-alert.png"
+                thumbnailUrl = "https://mu.magyul.kr/assets/img/spoiler-alert.png";
+                saveToCache = false;
             }
         }
         if (!thumbnailUrl) {
@@ -143,8 +146,10 @@ async function loadThumbnail(img, id) {
 
     if (thumbnailUrl) {
         img.src = thumbnailUrl;
-        thumbnailCache.set(id, thumbnailUrl);
-        addonStorage.set("thumbnail-cache", mapToJson(thumbnailCache));
+        if (saveToCache) {
+            thumbnailCache.set(id, thumbnailUrl);
+            addonStorage.set("thumbnail-cache", mapToJson(thumbnailCache));
+        }
     }
 }
 
