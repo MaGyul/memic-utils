@@ -20,6 +20,13 @@ const observer = new MutationObserver((mutations) => {
                 processATag(node);
             } else if (node.tagName === 'IFRAME' && checkHtmlViewer(node)) {
                 processIFrame(node);
+            } else {
+                node.querySelectorAll("iframe").forEach(iframe => {
+                    if (iframe.dataset.scriptApply != undefined) return; // 이미 처리된 노드
+                    if (checkHtmlViewer(iframe)) {
+                        processIFrame(iframe);
+                    }
+                });
             }
         }
     }
