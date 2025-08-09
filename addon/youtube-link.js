@@ -2,7 +2,8 @@ const addonInfo = {
     name: "미밐 글 유튜브 링크",
     description: "미밐 글 유튜브에 연결된 링크 클릭시 유튜브 임베드 생성",
     author: "MaGyul",
-    version: "1.0.0"
+    version: "1.0.0",
+    link: "https://github.com/MaGyul/memic-utils"
 }
 
 const youtubeReg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/|live\/|playlist)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
@@ -10,6 +11,8 @@ const youtubeReg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/|live\
 var autoplay = await addonStorage.get("autoplay", true);
 var loop = await addonStorage.get("loop", false);
 var nocookie = await addonStorage.get("nocookie", true);
+
+logger.info(`${autoplay ? '자동 재생' : '자동 재생 안함'} | ${loop ? '자동 반복' : '자동 반복 안함'} | ${nocookie ? '쿠키 사용 안함' : '쿠키 사용함'}`);
 
 const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
