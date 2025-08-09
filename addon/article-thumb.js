@@ -7,9 +7,34 @@ const addonInfo = {
 }
 
 var imgSize = await addonStorage.get("img-size", 120);
+var adult = await addonStorage.get("adult", true);
+var spoiler = await addonStorage.get("spoiler", true);
 
 const processedItems = new WeakSet();
 const thumbnailCache = new Map();
+
+addonStorage.get("thumbnail-cache").then((cache) => {
+    if (cache) {
+        try {
+            const parsedCache = jsonToMap(cache);
+            parsedCache.forEach((value, key) => {
+                thumbnailCache.set(key, value);
+            });
+        } catch (e) {
+            logger.error("썸네일 캐시를 불러오는 중 오류가 발생했습니다.", e);
+        }
+    }
+});
+
+// Map → JSON
+function mapToJson(map) {
+    return JSON.stringify(Array.from(map.entries()));
+}
+
+// JSON → Map
+function jsonToMap(jsonStr) {
+    return new Map(JSON.parse(jsonStr));
+}
 
 const observer = new MutationObserver((mutations) => {
     const newItems = [];
@@ -98,19 +123,33 @@ function createThumbnailElement() {
  */
 async function loadThumbnail(img, id) {
     let thumbnailUrl = thumbnailCache.get(id);
+    let saveToCache = true;
 
     if (!thumbnailUrl) {
         const data = await memicUtils.api.articles.get(id);
         if (data.board.name === "후방주의" || data.isOnlyAdult === true) {
-            thumbnailUrl = "https://imgproxy.shelter.id/sig/Z3M6Ly9zaGVsdGVyLW1lZGlhL3UvNDRaQ0xFRmFUblR2QTVranZJN2F3Z3EyRXhwMS9pbWFnZXMvMTc1MzY3NjQ5OTMxN19iZTA2Y2IzYy1hOTYxLTRmMDktODNiZC1iNmRiZWU5N2I4MzEucG5n";
-        } else {
+            if (adult) {
+                thumbnailUrl = "https://mu.magyul.kr/assets/img/adult.avif";
+                saveToCache = false;
+            }
+        }
+        if (data.board.name === "스포/유출") {
+            if (spoiler) {
+                thumbnailUrl = "https://mu.magyul.kr/assets/img/spoiler-alert.png";
+                saveToCache = false;
+            }
+        }
+        if (!thumbnailUrl) {
             thumbnailUrl = extractThumbnailUrl(data.content);
         }
     }
 
     if (thumbnailUrl) {
         img.src = thumbnailUrl;
-        thumbnailCache.set(id, thumbnailUrl);
+        if (saveToCache) {
+            thumbnailCache.set(id, thumbnailUrl);
+            addonStorage.set("thumbnail-cache", mapToJson(thumbnailCache));
+        }
     }
 }
 
@@ -154,6 +193,50 @@ async function processArticleItem(item) {
     }
 }
 
+function createSwitch(id, label, tooltip, initialValue) {
+    // 메인 컨테이너 div 생성
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    container.style.marginTop = '8px';
+    container.style.gap = '8px';
+    container.setAttribute('data-tooltip', tooltip);
+
+    // 라벨 span 생성
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'switch_label';
+    labelSpan.textContent = label;
+
+    // 스위치 래퍼 div 생성
+    const switchWrapper = document.createElement('div');
+    switchWrapper.className = 'switch-wrapper';
+
+    // 체크박스 input 생성
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = `${id}-switch`;
+    input.className = 'switch_input';
+    input.checked = initialValue;
+
+    // 라벨 요소 생성
+    const label = document.createElement('label');
+    label.setAttribute('for', `${id}-switch`);
+    label.className = 'switch_label';
+
+    // 라벨 내부 span 생성
+    const onOffBtn = document.createElement('span');
+    onOffBtn.className = 'onf_btn';
+
+    // 요소들을 조립
+    label.appendChild(onOffBtn);
+    switchWrapper.appendChild(input);
+    switchWrapper.appendChild(label);
+    container.appendChild(labelSpan);
+    container.appendChild(switchWrapper);
+
+    return {input, container};
+}
+
 function openSettings(modalBody) {
     const settingsContainer = document.createElement("div");
     settingsContainer.className = "settings-container";
@@ -193,11 +276,26 @@ function openSettings(modalBody) {
     settingsContainer.appendChild(sizeLabel);
     settingsContainer.appendChild(sizeInput);
     settingsContainer.appendChild(resetButton);
+
+    const { input: adultSwitch, container: adultContainer } = createSwitch(
+        "adult", "성인 콘텐츠", "성인 콘텐츠 미리보기를 가립니다.", adult
+    );
+    const { input: spoilerSwitch, container: spoilerContainer } = createSwitch(
+        "spoiler", "스포일러 콘텐츠", "스포일러 콘텐츠 미리보기를 가립니다.", spoiler
+    );
+
+    settingsContainer.appendChild(adultContainer);
+    settingsContainer.appendChild(spoilerContainer);
+
     modalBody.appendChild(settingsContainer);
 
     return () => {
         imgSize = parseInt(sizeInput.value, 10);
         addonStorage.set("img-size", imgSize);
+        adult = adultSwitch.checked;
+        addonStorage.set("adult", adult);
+        spoiler = spoilerSwitch.checked;
+        addonStorage.set("spoiler", spoiler);
         document.querySelectorAll("#memic-thumbnail-preview").forEach((preview) => {
             preview.style.width = `${imgSize + 10}px`;
             preview.style.height = `${imgSize + 10}px`;
