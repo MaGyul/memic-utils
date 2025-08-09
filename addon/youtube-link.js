@@ -2,7 +2,8 @@ const addonInfo = {
     name: "미밐 글 유튜브 링크",
     description: "미밐 글 유튜브에 연결된 링크 클릭시 유튜브 임베드 생성",
     author: "MaGyul",
-    version: "1.0.0"
+    version: "1.0.0",
+    link: "https://github.com/MaGyul/memic-utils"
 }
 
 const youtubeReg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/|live\/|playlist)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
