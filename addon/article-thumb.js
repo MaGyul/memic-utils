@@ -128,15 +128,15 @@ async function loadThumbnail(img, id) {
     if (!thumbnailUrl) {
         const data = await memicUtils.api.articles.get(id);
         if (data.board.name === "후방주의" || data.isOnlyAdult === true) {
+            saveToCache = false;
             if (adult) {
                 thumbnailUrl = "https://mu.magyul.kr/assets/img/adult.avif";
-                saveToCache = false;
             }
         }
         if (data.board.name === "스포/유출") {
+            saveToCache = false;
             if (spoiler) {
                 thumbnailUrl = "https://mu.magyul.kr/assets/img/spoiler-alert.png";
-                saveToCache = false;
             }
         }
         if (!thumbnailUrl) {
