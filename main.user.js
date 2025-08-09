@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         미밐 유저 스크립트 관리자
 // @namespace    https://mu.magyul.kr/
-// @version      1.0.0
+// @version      1.0.1
 // @description  미밐의 불편함을 유저 스크립트로 제작해서 관리하던걸 하나로 통합
 // @author       MaGyul
 // @author       isnoa
