@@ -57,7 +57,9 @@ function addControlButton(retryCount = 0) {
     controlButton.className = 'relative flex h-8 w-8 items-center justify-center panel-button';
     controlButton.id = 'memic-utils-control-button';
     controlButton.innerHTML = '<i class="ri-edit-box-line icon-2xl"></i>';
-    controlButton.setAttribute('data-tooltip', '미밐 유저 스크립트 컨트롤 패널');
+    if (!mobileAndTabletCheck()) { // 모바일 및 태블릿에서는 툴팁을 사용하지 않음
+        controlButton.setAttribute('data-tooltip', '미밐 유저 스크립트 컨트롤 패널');
+    }
     controlButton.addEventListener('click', () => {
         toggleControlPanel(controlButton);
     });
