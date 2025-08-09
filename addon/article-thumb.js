@@ -219,18 +219,18 @@ function createSwitch(id, label, tooltip, initialValue) {
     input.checked = initialValue;
 
     // 라벨 요소 생성
-    const label = document.createElement('label');
-    label.setAttribute('for', `${id}-switch`);
-    label.className = 'switch_label';
+    const switch_label = document.createElement('label');
+    switch_label.setAttribute('for', `${id}-switch`);
+    switch_label.className = 'switch_label';
 
     // 라벨 내부 span 생성
     const onOffBtn = document.createElement('span');
     onOffBtn.className = 'onf_btn';
 
     // 요소들을 조립
-    label.appendChild(onOffBtn);
+    switch_label.appendChild(onOffBtn);
     switchWrapper.appendChild(input);
-    switchWrapper.appendChild(label);
+    switchWrapper.appendChild(switch_label);
     container.appendChild(labelSpan);
     container.appendChild(switchWrapper);
 
