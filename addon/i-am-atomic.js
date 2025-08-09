@@ -352,7 +352,9 @@ const observer = new MutationObserver(() => {
             if (buttons) {
                 articleButtons = buttons;
                 if (!articleButtons.contains(i_am_atomicButton)) {
-                    i_am_atomicButton.remove(); // 기존 버튼 제거
+                    try {
+                        i_am_atomicButton.remove(); // 기존 버튼 제거
+                    } catch {}
                     i_am_atomicButton = cloneAndCreateIAA();
                     i_am_atomicButton.addEventListener("click", onclickIAmAtomicButton)
                 }
