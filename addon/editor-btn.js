@@ -35,9 +35,16 @@ function addStyle() {
 
 function movingButtons() {
     const editorHeader = document.querySelector('div[id^="editor_"]');
+    const toolbar = editorHeader.querySelector('& > div');
     const froalaEditor = document.querySelector('#froalaEditor');
 
-    if (!editorHeader || !froalaEditor) return;
+    if (!editorHeader || !froalaEditor || !toolbar) return;
+
+    if (toolbar.firstChild.classList.contains('script-moved')) {
+        // 이미 버튼이 이동 됬지만 맨 앞에 있는 경우, 맨 뒤로 이동
+        toolbar.appendChild(toolbar.firstChild);
+        return;
+    }
 
     if (editorHeader.querySelector('.script-moved')) {
         // 이미 버튼이 이동된 경우, 다시 이동하지 않음
@@ -47,7 +54,7 @@ function movingButtons() {
     if (froalaEditor.parentElement) {
         const btnElem = froalaEditor.parentElement.querySelector('& > div:nth-child(2) > div');
         if (btnElem) {
-            editorHeader.querySelector('& > div').appendChild(btnElem);
+            editorHeader.querySelector('& > div')?.appendChild(btnElem);
             btnElem.classList.add('script-moved');
         }
     }
