@@ -20,14 +20,6 @@ function addStyle() {
         border-radius: 20px;
         border: 1px solid var(--color-on-background);
     }
-
-    app-vote-form.script-moved {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 99;
-        min-width: 500px;
-    }
     `;
     style.id = 'addon-editor-btn-style';
     document.head.appendChild(style);
@@ -74,13 +66,8 @@ const observer = new MutationObserver(mutations => {
                         node.classList.add('script-moved');
                     }
                     if (node.nodeName === 'APP-VOTE-FORM') {
-                        const froalaEditor = document.querySelector('#froalaEditor');
-                        if (froalaEditor && froalaEditor.parentElement) {
-                            // 투표 폼이 추가된 경우, 스타일을 적용
-                            node.classList.add('script-moved');
-                            // 투표 폼을 에디터 안으로 이동
-                            froalaEditor.parentElement.appendChild(node);
-                        }
+                        // 투표 폼이 추가된 경우, 해당 노드로 스크롤
+                        node.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 }
             }
