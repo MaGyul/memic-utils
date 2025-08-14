@@ -6,6 +6,33 @@ const addonInfo = {
     link: "https://github.com/MaGyul/memic-utils"
 }
 
+addStyle();
+
+function addStyle() {
+    const style = document.createElement('style');
+    style.textContent = `
+    app-emoticon-popup.script-moved {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 99;
+        background-color: var(--color-background);
+        border-radius: 20px;
+        border: 1px solid var(--color-on-background);
+    }
+
+    app-vote-form.script-moved {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 99;
+        min-width: 500px;
+    }
+    `;
+    style.id = 'addon-editor-btn-style';
+    document.head.appendChild(style);
+}
+
 function movingButtons() {
     const editorHeader = document.querySelector('div[id^="editor_"]');
     const froalaEditor = document.querySelector('#froalaEditor');
@@ -19,9 +46,8 @@ function movingButtons() {
 
     if (froalaEditor.parentElement) {
         const btnElem = froalaEditor.parentElement.querySelector('& > div:nth-child(2) > div');
-        const btnLast = editorHeader.querySelector('div:nth-child(5)');
-        if (btnElem && btnLast) {
-            editorHeader.querySelector('& > div').insertBefore(btnElem, btnLast);
+        if (btnElem) {
+            editorHeader.querySelector('& > div').appendChild(btnElem);
             btnElem.classList.add('script-moved');
         }
     }
@@ -30,6 +56,27 @@ function movingButtons() {
 const observer = new MutationObserver(mutations => {
     for (const mutation of mutations) {
         if (mutation.type === 'childList') {
+            for (const node of mutation.addedNodes) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    if (node.classList.contains('script-moved')) {
+                        // 이미 스타일이 적용된 노드는 무시
+                        continue;
+                    }
+                    if (node.nodeName === 'APP-EMOTICON-POPUP') {
+                        // 이모티콘 팝업이 추가된 경우, 스타일을 적용
+                        node.classList.add('script-moved');
+                    }
+                    if (node.nodeName === 'APP-VOTE-FORM') {
+                        const froalaEditor = document.querySelector('#froalaEditor');
+                        if (froalaEditor && froalaEditor.parentElement) {
+                            // 투표 폼이 추가된 경우, 스타일을 적용
+                            node.classList.add('script-moved');
+                            // 투표 폼을 에디터 안으로 이동
+                            froalaEditor.parentElement.appendChild(node);
+                        }
+                    }
+                }
+            }
             movingButtons();
         }
     }
