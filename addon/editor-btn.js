@@ -54,7 +54,7 @@ function movingButtons() {
     if (froalaEditor.parentElement) {
         const btnElem = froalaEditor.parentElement.querySelector('& > div:nth-child(2) > div');
         if (btnElem) {
-            editorHeader.querySelector('& > div')?.appendChild(btnElem);
+            toolbar.appendChild(btnElem);
             btnElem.classList.add('script-moved');
         }
     }
