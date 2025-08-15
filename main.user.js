@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         ¹Ì“H À¯Àú ½ºÅ©¸³Æ® °ü¸®ÀÚ
+// @name         ë¯¸ë° ìœ ì € ìŠ¤í¬ë¦½íŠ¸ ê´€ë¦¬ì
 // @namespace    https://mu.magyul.kr/
-// @version      1.0.1
-// @description  ¹Ì“HÀÇ ºÒÆíÇÔÀ» À¯Àú ½ºÅ©¸³Æ®·Î Á¦ÀÛÇØ¼­ °ü¸®ÇÏ´ø°É ÇÏ³ª·Î ÅëÇÕ
+// @version      1.1.0
+// @description  ë¯¸ë°ì˜ ë¶ˆí¸í•¨ì„ ìœ ì € ìŠ¤í¬ë¦½íŠ¸ë¡œ ì œì‘í•´ì„œ ê´€ë¦¬í•˜ë˜ê±¸ í•˜ë‚˜ë¡œ í†µí•©
 // @author       MaGyul
 // @author       isnoa
 // @author       NoonDaL
@@ -23,14 +23,14 @@
 (function() {
     'use strict';
     
-    // WScript·Î ½ÇÇàÇßÀ» ¶§, ºê¶ó¿ìÀú·Î ¸®´ÙÀÌ·ºÆ®
+    // WScriptë¡œ ì‹¤í–‰í–ˆì„ ë•Œ, ë¸Œë¼ìš°ì €ë¡œ ë¦¬ë‹¤ì´ë ‰íŠ¸
     if (typeof WScript !== 'undefined') {
         try {
             var shell = new ActiveXObject("WScript.Shell");
             shell.Run("https://mu.magyul.kr", 1, false);
         } catch(e) {
-            // ActiveXObject ½ÇÆĞ½Ã
-            WScript.Echo("°æ°í: ÀÌ ÆÄÀÏÀº À¯Àú ½ºÅ©¸³Æ®ÀÔ´Ï´Ù!\n\n¿Ã¹Ù¸¥ ¼³Ä¡ ¹æ¹ıÀº ºê¶ó¿ìÀú¿¡¼­ https://mu.magyul.kr/À» ¹æ¹®ÇÏ¼¼¿ä.");
+            // ActiveXObject ì‹¤íŒ¨ì‹œ
+            WScript.Echo("\uACBD\uACE0: \uC774 \uD30C\uC77C\uC740 \uC720\uC800 \uC2A4\uD06C\uB9BD\uD2B8\uC785\uB2C8\uB2E4!\n\n\uC62C\uBC14\uB978 \uC124\uCE58 \uBC29\uBC95\uC740 \uBE0C\uB77C\uC6B0\uC800\uC5D0\uC11C https://mu.magyul.kr/\uC744 \uBC29\uBB38\uD558\uC138\uC694.");
         }
         WScript.Quit(1);
         return;
