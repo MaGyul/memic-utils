@@ -27,10 +27,12 @@ function addStyle() {
 
 function movingButtons() {
     const editorHeader = document.querySelector('div[id^="editor_"]');
-    const toolbar = editorHeader.querySelector('& > div');
     const froalaEditor = document.querySelector('#froalaEditor');
 
-    if (!editorHeader || !froalaEditor || !toolbar) return;
+    if (!editorHeader || !froalaEditor) return;
+
+    const toolbar = editorHeader.querySelector('& > div');
+    if (!toolbar) return;
 
     if (toolbar.firstChild.classList.contains('script-moved')) {
         // 이미 버튼이 이동 됬지만 맨 앞에 있는 경우, 맨 뒤로 이동
