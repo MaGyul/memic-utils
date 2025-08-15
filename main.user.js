@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         ë¯¸ë° ìœ ì € ìŠ¤í¬ë¦½íŠ¸ ê´€ë¦¬ì
+// @name         ¹Ì“H À¯Àú ½ºÅ©¸³Æ® °ü¸®ÀÚ
 // @namespace    https://mu.magyul.kr/
 // @version      1.0.1
-// @description  ë¯¸ë°ì˜ ë¶ˆí¸í•¨ì„ ìœ ì € ìŠ¤í¬ë¦½íŠ¸ë¡œ ì œì‘í•´ì„œ ê´€ë¦¬í•˜ë˜ê±¸ í•˜ë‚˜ë¡œ í†µí•©
+// @description  ¹Ì“HÀÇ ºÒÆíÇÔÀ» À¯Àú ½ºÅ©¸³Æ®·Î Á¦ÀÛÇØ¼­ °ü¸®ÇÏ´ø°É ÇÏ³ª·Î ÅëÇÕ
 // @author       MaGyul
 // @author       isnoa
 // @author       NoonDaL
@@ -22,11 +22,26 @@
 
 (function() {
     'use strict';
+    
+    // WScript·Î ½ÇÇàÇßÀ» ¶§, ºê¶ó¿ìÀú·Î ¸®´ÙÀÌ·ºÆ®
+    if (typeof WScript !== 'undefined') {
+        try {
+            var shell = new ActiveXObject("WScript.Shell");
+            shell.Run("https://mu.magyul.kr", 1, false);
+        } catch(e) {
+            // ActiveXObject ½ÇÆĞ½Ã
+            WScript.Echo("°æ°í: ÀÌ ÆÄÀÏÀº À¯Àú ½ºÅ©¸³Æ®ÀÔ´Ï´Ù!\n\n¿Ã¹Ù¸¥ ¼³Ä¡ ¹æ¹ıÀº ºê¶ó¿ìÀú¿¡¼­ https://mu.magyul.kr/À» ¹æ¹®ÇÏ¼¼¿ä.");
+        }
+        WScript.Quit(1);
+        return;
+    }
 
     document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
-    async function init() {
-        await memicUtils.loadUIAddon();
-        await memicUtils.loadAddons();
-        memicUtils.enableAddons();
+    function init() {
+        memicUtils.loadUIAddon().then(function() {
+            memicUtils.loadAddons().then(function() {
+                memicUtils.enableAddons();
+            });
+        });
     }
 })();
