@@ -11,7 +11,7 @@
 - Firefox: [Firefox 애드온 링크](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
 
 ### 2단계: 스크립트 설치
-1. **브라우저에서** main.user.js 파일을 엽니다
+1. **브라우저에서** [main.user.js](https://mu.magyul.kr/main.user.js) 파일을 엽니다
    - 브라우저로 파일을 드래그하거나
    - 브라우저에서 Ctrl+O를 눌러 파일을 선택
 2. Tampermonkey 설치 페이지가 자동으로 열립니다
