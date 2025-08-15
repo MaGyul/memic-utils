@@ -13,7 +13,7 @@ function addStyle() {
     style.textContent = `
     app-emoticon-popup.script-moved {
         position: absolute;
-        top: 0;
+        top: 55px;
         right: 0;
         z-index: 99;
         background-color: var(--color-background);
@@ -62,8 +62,11 @@ const observer = new MutationObserver(mutations => {
                         continue;
                     }
                     if (node.nodeName === 'APP-EMOTICON-POPUP') {
+                        const editorHeader = document.querySelector('div[id^="editor_"]');
+                        if (!editorHeader) continue;
                         // 이모티콘 팝업이 추가된 경우, 스타일을 적용
                         node.classList.add('script-moved');
+                        editorHeader.appendChild(node);
                     }
                     if (node.nodeName === 'APP-VOTE-FORM') {
                         // 투표 폼이 추가된 경우, 해당 노드로 스크롤
