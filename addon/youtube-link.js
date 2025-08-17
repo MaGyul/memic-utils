@@ -95,16 +95,25 @@ function createYoutubeEmbed(originalUrl) {
 function processATag(a) {
     const originalHref = a.href;
     if (originalHref.includes('youtu') && originalHref.match(youtubeReg)) {
-        a.dataset.originalHref = originalHref;
-        a.dataset.scriptApply = '';
-        a.onclick = (e) => {
-            const iframe = createYoutubeEmbed(originalHref);
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            a.parentElement.appendChild(iframe);
-            a.remove();
-        };
+        const cloneA = a.cloneNode(true);
+        cloneA.dataset.originalHref = originalHref;
+        cloneA.dataset.scriptApply = '';
+        a.parentElement.replaceChild(cloneA, a);
+        a.remove();
+        cloneA.addEventListener('click', (e) => {
+            try {
+                const iframe = createYoutubeEmbed(originalHref);
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                cloneA.parentElement.appendChild(iframe);
+            } catch (error) {
+                logger.error("유튜브 링크 처리 중 오류 발생:", error);
+                // 오류 발생 시 원래 링크로 이동
+                a.click();
+            }
+            cloneA.remove();
+        });
     }
 }
 
