@@ -3,128 +3,923 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>미밐 유저 스크립트 설치</title>
+    <title>미밐 유저 스크립트 관리자 - 설치 가이드</title>
+    <!-- GLightbox CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.2.0/css/glightbox.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-secondary: #666666;
+            --border-color: #e0e0e0;
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #ffffff;
+            --text-secondary: #cccccc;
+            --border-color: #404040;
+            --primary-color: #0d6efd;
+            --primary-hover: #0b5ed7;
+            --success-color: #198754;
+            --warning-color: #fd7e14;
+            --danger-color: #dc3545;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            transition: all 0.3s ease;
+            padding-top: 60px; /* 고정 진행률 바를 위한 여백 */
+        }
+
+        /* 상단 고정 진행률 바 */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--border-color);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* 테마 토글 버튼 */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 999;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .container {
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
-            background: #f5f5f5;
         }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+
         .header {
-            text-align: center;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
             margin-bottom: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
         }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+        }
+
         .warning {
-            background: #fff3cd;
+            background-color: #fff3cd;
             border: 1px solid #ffeaa7;
-            border-radius: 5px;
-            padding: 15px;
+            color: #856404;
+            border-radius: 8px;
+            padding: 20px;
             margin: 20px 0;
+            box-shadow: var(--shadow);
         }
-        .install-button {
+
+        [data-theme="dark"] .warning {
+            background-color: #664d03;
+            border-color: #c69500;
+            color: #ffecb5;
+        }
+
+        .warning::before {
+            content: "⚠️";
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .section h2 {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .success-check ol {
+            padding-left: 2em;
+        }
+
+        .step {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
             display: inline-block;
-            background: #007bff;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .browser-detection {
+            background-color: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .browser-detection {
+            background-color: #0c4a6e;
+            border-color: #075985;
+            color: #bae6fd;
+        }
+
+        .browser-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .browser-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .browser-card h4 {
+            color: var(--text-color);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .install-link {
+            display: inline-block;
+            background-color: var(--primary-color);
             color: white;
             padding: 15px 30px;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 18px;
-            margin: 10px;
-            transition: background 0.3s;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            box-shadow: var(--shadow);
         }
-        .install-button:hover {
-            background: #0056b3;
+
+        .install-link:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
         }
-        .step {
-            background: #e9ecef;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border-left: 4px solid #007bff;
+
+        .main-install-button {
+            display: inline-block;
+            background-color: var(--success-color);
+            color: white;
+            padding: 20px 40px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            margin: 20px 10px;
+            box-shadow: var(--shadow);
         }
-        .download-info {
+
+        .main-install-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+            filter: brightness(1.1);
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .method-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .method-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .method-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .method-card ol {
+            padding-left: 2em;
+        }
+
+        .image-placeholder {
+            background-color: #f8f9fa;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
             text-align: center;
             margin: 20px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .image-placeholder:hover {
+            background-color: #e9ecef;
+            border-color: var(--primary-color);
+            transform: scale(1.02);
+        }
+
+        [data-theme="dark"] .image-placeholder {
+            background-color: #343a40;
+        }
+
+        [data-theme="dark"] .image-placeholder:hover {
+            background-color: #495057;
+        }
+
+        /* 이미지 스타일링 개선 */
+        .screenshot-container {
+            display: block;
+            margin: 20px 0;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .screenshot-container:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .screenshot-container:hover img {
+            border-color: var(--primary-color);
+        }
+
+        .image-caption {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .troubleshooting {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        [data-theme="dark"] .troubleshooting {
+            background-color: #721c24;
+            border-color: #a94442;
+            color: #f8d7da;
+        }
+
+        .troubleshooting h4 {
+            color: var(--danger-color);
+            margin-bottom: 15px;
+        }
+
+        .troubleshooting ul {
+            list-style-type: disc;
+            padding-left: 2em;
+        }
+
+        .success-check {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        [data-theme="dark"] .success-check {
+            background-color: #155724;
+            border-color: #28a745;
+            color: #d4edda;
+        }
+
+        .success-check h4 {
+            color: var(--success-color);
+            margin-bottom: 15px;
+        }
+
+        .success-check ul {
+            list-style-type: disc;
+            padding-left: 2em;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+
+        .footer {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- 상단 고정 진행률 바 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 테마 토글 버튼 -->
+    <button class="theme-toggle" id="themeToggle">🌙</button>
+
     <div class="container">
+        <!-- 헤더 섹션 -->
         <div class="header">
             <h1>🛠️ 미밐 유저 스크립트 관리자</h1>
             <p>미밐의 불편함을 해결하는 통합 유저 스크립트</p>
         </div>
 
-        <div class="warning">
-            ⚠️ <strong>중요:</strong> 이 스크립트는 유저 스크립트 매니저가 필요합니다!<br>
-            파일을 직접 실행하면 작동하지 않습니다.
+        <!-- 1단계: Tampermonkey 설치 -->
+        <div class="section" id="step1">
+            <div class="step">1단계: Tampermonkey 확장 프로그램 설치</div>
+            
+            <div class="browser-detection" id="browserDetection">
+                <p>브라우저를 감지하고 있습니다...</p>
+            </div>
+            
+            <div id="browserInstall">
+                <!-- 브라우저별 설치 안내가 여기에 표시됩니다 -->
+            </div>
+
+            <div class="success-check">
+                <h4>✅ 설치 확인</h4>
+                <p>Tampermonkey가 정상적으로 설치되면 브라우저 상단 도구 모음에 Tampermonkey 아이콘이 나타납니다.</p>
+                <a href="./assets/img/extensions.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="확장 프로그램에 표시된 Tampermonkey 아이콘">
+                    <img src="./assets/img/extensions.png" alt="Tampermonkey 아이콘" style="max-width: 100%; height: auto;">
+                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                </a>
+            </div>
+
+            <div class="warning">
+                <strong>중요한 추가 설정이 필요합니다!</strong><br>
+                Tampermonkey 설치 후 반드시 아래 설정들을 확인해주세요.<br>
+                <strong>특히 Chrome/Edge 사용자는 개발자 모드 활성화가 필수입니다.</strong>
+            </div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4>⚙️ 개발자 모드 활성화 (Chrome/Edge 필수)</h4>
+                    <p><strong>Chrome 기반 브라우저에서 Tampermonkey 사용 시 필수 설정입니다.</strong></p>
+                    <ol>
+                        <li>브라우저 주소창에 <code>chrome://extensions</code> 또는 <code>edge://extensions</code> 입력</li>
+                        <li>페이지 우측 상단의 <strong>"개발자 모드"</strong> 토글 버튼 활성화</li>
+                        <li>이 설정은 Manifest V3 업데이트로 인해 userScripts API 사용에 필요합니다</li>
+                    </ol>
+                    <a href="./assets/img/developer-mode.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Chrome/Edge에서 개발자 모드 활성화">
+                        <img src="./assets/img/developer-mode.png" alt="개발자 모드 활성화" style="max-width: 100%; height: auto;">
+                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <h2>📋 설치 방법</h2>
-        
-        <div class="step">
-            <h3>1단계: Tampermonkey 설치</h3>
-            <p>브라우저에 Tampermonkey 확장 프로그램을 먼저 설치하세요:</p>
-            <div class="download-info">
-                <a href="https://tampermonkey.net/" class="install-button" target="_blank">
-                    🔧 Tampermonkey 다운로드
+        <!-- 2단계: 유저 스크립트 설치 -->
+        <div class="section" id="step2">
+            <div class="step">2단계: 유저 스크립트 설치</div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4>방법 1: 직접 다운로드 (추천)</h4>
+                    <ol>
+                        <li><strong><a href="https://mu.magyul.kr/main.user.js" target="_blank">main.user.js</a></strong> 링크를 클릭</li>
+                        <li>Tampermonkey 설치 페이지가 자동으로 열립니다</li>
+                        <li><strong>"설치(Install)"</strong> 버튼을 클릭</li>
+                    </ol>
+                    <a href="./assets/img/install-default.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Tampermonkey 스크립트 설치 화면">
+                        <img src="./assets/img/install-default.png" alt="유저 스크립트 설치 화면" style="max-width: 100%; height: auto;">
+                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    </a>
+                </div>
+                
+                <div class="method-card">
+                    <h4>방법 2: 대시보드에서 설치</h4>
+                    <ol>
+                        <li>Tampermonkey 아이콘 클릭 → <strong>"대시보드"</strong> 선택</li>
+                        <li><strong>"도구"</strong> 탭 클릭</li>
+                        <li><strong>"URL에서 설치"</strong>에 URL 입력 (https://mu.magyul.kr/main.user.js)</li>
+                        <li><strong>"설치"</strong> 버튼 클릭</li>
+                    </ol>
+                    <a href="./assets/img/install-url.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="URL에서 스크립트 설치">
+                        <img src="./assets/img/install-url.png" alt="URL에서 설치" style="max-width: 100%; height: auto;">
+                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3단계: 설치 확인 -->
+        <div class="section" id="step3">
+            <div class="step">3단계: 설치 확인 및 활성화 확인</div>
+            
+            <div class="success-check">
+                <h4>✅ 설치 확인 방법</h4>
+                <ol>
+                    <li><strong>Tampermonkey 아이콘</strong>을 클릭</li>
+                    <li><strong>"대시보드"</strong> 선택</li>
+                    <li>설치된 스크립트 목록에서 <strong>"미밐 유저 스크립트 관리자"</strong> 확인</li>
+                </ol>
+                <a href="./assets/img/tampermonkey-dashboard.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Tampermonkey 대시보드에서 설치된 스크립트 확인">
+                    <img src="./assets/img/tampermonkey-dashboard.png" alt="Tampermonkey 대시보드" style="max-width: 100%; height: auto;">
+                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                </a>
+            </div>
+
+            <div class="success-check">
+                <h4>🔄 활성화 상태 확인</h4>
+                <p>스크립트 이름 왼쪽에 표시되는 상태를 확인하세요:</p>
+                <ul>
+                    <li>🟢 <strong>녹색</strong>: 활성화됨 (정상)</li>
+                    <li>⚪️ <strong>회색</strong>: 비활성화됨 (클릭하여 활성화)</li>
+                </ul>
+                <a href="./assets/img/check-script.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="스크립트 활성화 상태 확인">
+                    <img src="./assets/img/check-script.png" alt="스크립트 활성화 상태" style="max-width: 100%; height: auto;">
+                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                </a>
+            </div>
+
+            <div class="success-check">
+                <h4>🌐 실제 사이트에서 작동 확인</h4>
+                <ol>
+                    <li><strong><a href="https://memic.at" target="_blank">미밐</a></strong> 사이트 방문</li>
+                    <li>Tampermonkey 아이콘에 <strong>숫자 표시</strong>가 나타나면 정상 작동</li>
+                    <li>아이콘을 클릭하여 <strong>"미밐 유저 스크립트 관리자"</strong>가 활성화되어 있는지 확인</li>
+                </ol>
+                <a href="./assets/img/memic.at-check.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="미밐 사이트에서 스크립트 작동 확인">
+                    <img src="./assets/img/memic.at-check.png" alt="미밐 사이트에서 작동 확인" style="max-width: 100%; height: auto;">
+                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
                 </a>
             </div>
         </div>
 
-        <div class="step">
-            <h3>2단계: 스크립트 설치</h3>
-            <p>Tampermonkey 설치 후 아래 버튼을 클릭하여 스크립트를 설치하세요:</p>
-            <div class="download-info">
-                <a href="main.user.js" class="install-button">
-                    📥 유저 스크립트 설치
-                </a>
+        <!-- 문제 해결 섹션 -->
+        <div class="section">
+            <h2>🔧 문제 해결</h2>
+            
+            <div class="troubleshooting">
+                <h4>❌ 스크립트가 작동하지 않는 경우</h4>
+                <p><strong>1. Tampermonkey 확장 프로그램 상태 확인</strong></p>
+                <ul>
+                    <li>브라우저 설정 → 확장 프로그램에서 Tampermonkey가 <strong>활성화</strong>되어 있는지 확인</li>
+                    <li>확장 프로그램이 비활성화되어 있다면 토글 버튼을 클릭하여 활성화</li>
+                </ul>
+                
+                <p><strong>2. 개발자 모드 활성화 (Chrome/Edge 필수)</strong></p>
+                <ul>
+                    <li>Chrome/Edge 브라우저에서는 <strong>개발자 모드</strong>가 반드시 활성화되어 있어야 함</li>
+                    <li><code>chrome://extensions</code> 또는 <code>edge://extensions</code>에서 우측 상단 개발자 모드 토글 확인</li>
+                    <li>이는 Manifest V3 업데이트로 인한 필수 요구사항</li>
+                </ul>
+                
+                <p><strong>3. 스크립트 활성화 상태 확인</strong></p>
+                <ul>
+                    <li>Tampermonkey 대시보드에서 <strong>"미밐 유저 스크립트 관리자"</strong>가 활성화(녹색 점)되어 있는지 확인</li>
+                    <li>비활성화 상태라면 스크립트명을 클릭하여 활성화</li>
+                </ul>
+                
+                <p><strong>4. 기타 해결 방법</strong></p>
+                <ul>
+                    <li><strong>강제 새로고침:</strong> Ctrl+F5 (Windows) 또는 Cmd+Shift+R (Mac)</li>
+                    <li><strong>브라우저 재시작:</strong> 브라우저를 완전히 종료 후 다시 실행</li>
+                    <li><strong>스크립트 재설치:</strong> 기존 스크립트 삭제 후 다시 설치</li>
+                </ul>
+            </div>
+
+            <div class="troubleshooting">
+                <h4>🔧 개발자 모드 관련 오류</h4>
+                <p><strong>Chrome 기반 브라우저에서 개발자 모드가 필요한 이유:</strong></p>
+                <ul>
+                    <li><strong>Manifest V3 정책:</strong> Google의 새로운 확장 프로그램 정책으로 인해 userScripts API 사용 시 개발자 모드 필수</li>
+                    <li><strong>2단계 인증:</strong> userScripts 권한과 개발자 모드 옵션의 이중 보안 체계</li>
+                    <li><strong>사용자 보호:</strong> 사용자가 스크립트 실행에 대해 충분히 인지하도록 하기 위한 Google의 의도</li>
+                </ul>
+                
+                <p><strong>모바일 브라우저에서의 개발자 모드:</strong></p>
+                <ul>
+                    <li><strong>Microsoft Edge Android:</strong> 확장 프로그램 페이지에서 개발자 모드 토글 활성화</li>
+                    <li><strong>Kiwi Browser:</strong> 확장 프로그램 관리에서 개발자 모드 설정</li>
+                </ul>
+            </div>
+
+            <div class="troubleshooting">
+                <h4>📱 모바일에서 사용하려는 경우</h4>
+                <p><strong>모바일 브라우저에서는 제한적으로 지원됩니다.</strong></p>
+                <ul>
+                    <li><strong>Android:</strong> Kiwi Browser 또는 Firefox + Tampermonkey 사용</li>
+                    <li><strong>iOS:</strong> Safari + Stay 2 앱 사용 (Tampermonkey 대안)</li>
+                    <li><strong>권장:</strong> 데스크톱 브라우저 사용</li>
+                </ul>
+            </div>
+
+            <div class="success-check">
+                <h4>📞 추가 지원</h4>
+                <p>문제가 계속 발생하면 다음을 확인하세요:</p>
+                <ul>
+                    <li><strong>브라우저 콘솔:</strong> F12 → Console 탭에서 오류 메시지 확인</li>
+                    <li><strong>Tampermonkey 로그:</strong> 대시보드에서 오류 로그 확인</li>
+                    <li><strong>브라우저 호환성:</strong> Chrome, Firefox, Edge 최신 버전 권장</li>
+                    <li><strong>문의하기:</strong> <a href="https://mu.magyul.kr/issues" target="_blank">https://mu.magyul.kr/issues</a></li>
+                </ul>
             </div>
         </div>
 
-        <div class="step">
-            <h3>3단계: 설치 확인</h3>
-            <p>Tampermonkey 대시보드에서 "미밐 유저 스크립트 관리자"가 설치되었는지 확인하세요.</p>
+        <!-- 지원 정보 -->
+        <div class="section">
+            <h2>📊 스크립트 작동 사이트</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>🌐 memic.at</strong><br>
+                    미밐 커뮤니티
+                </div>
+                <div class="feature-item">
+                    <strong>🌐 shelter.id</strong><br>
+                    미밐 전 쉘터 커뮤니티 (현재는 미밐으로 접속)
+                </div>
+            </div>
         </div>
 
-        <h2>❓ 문제 해결</h2>
-        <ul>
-            <li><strong>스크립트가 작동하지 않는 경우:</strong> Tampermonkey가 올바르게 설치되었는지 확인</li>
-            <li><strong>설치 버튼이 작동하지 않는 경우:</strong> 브라우저에서 팝업을 허용했는지 확인</li>
-            <li><strong>기타 문제:</strong> <a href="https://github.com/MaGyul/memic-utils/issues">깃헙 이슈 페이지</a> 방문</li>
-        </ul>
+        <!-- 업데이트 정보 -->
+        <div class="section">
+            <h2>📝 업데이트</h2>
+            <p>스크립트는 자동으로 업데이트됩니다. 수동 업데이트가 필요한 경우:</p>
+            <ol style="padding-left: 2em;">
+                <li>Tampermonkey 대시보드 접속</li>
+                <li>스크립트 옆 <strong>"마지막 업데이트"</strong> 컬럼의 <strong>"지금 확인"</strong> 클릭</li>
+            </ol>
+            <a href="./assets/img/check-update.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Tampermonkey에서 업데이트 확인하는 방법">
+                <img src="./assets/img/check-update.png" alt="업데이트 확인" style="max-width: 100%; height: auto;">
+                <div class="image-caption">📸 클릭하여 이미지 확대</div>
+            </a>
+        </div>
 
-        <div class="warning">
-            <strong>주의사항:</strong><br>
-            • 파일을 직접 더블클릭하여 실행하지 마세요<br>
-            • 반드시 브라우저에서 설치 버튼을 통해 설치하세요<br>
-            • Windows Script Host 오류가 발생하면 위 방법을 따라주세요
+        <!-- 푸터 -->
+        <div class="footer">
+            <h3>👥 제작진</h3>
+            <p><strong>MaGyul</strong> - 메인 개발자 | <strong>isnoa</strong> - 공동 개발자 | <strong>NoonDaL</strong> - 공동 개발자</p>
+            <br>
+            <p>📄 <strong>라이선스:</strong> GPL-3.0</p>
+            <p>📞 <strong>문의:</strong> <a href="https://mu.magyul.kr/issues" target="_blank">https://mu.magyul.kr/issues</a></p>
+            <br>
+            <p>Copyright © 2025 MaGyul. All rights reserved.</p>
         </div>
     </div>
 
+    <!-- GLightbox JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.2.0/js/glightbox.min.js"></script>
     <script>
-        // 사용자가 파일을 직접 다운로드하려는 경우 경고
-        document.addEventListener('DOMContentLoaded', function() {
-            const installLink = document.querySelector('a[href="main.user.js"]');
-            installLink.addEventListener('click', function(e) {
-                if (!navigator.userAgent.includes('Tampermonkey')) {
+        // 테마 관리 (메모리 기반)
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        let currentTheme = 'light'; // 기본 테마
+
+        // 저장된 테마 불러오기 (localStorage 대신 메모리 사용)
+        try {
+            const savedTheme = localStorage?.getItem('theme') || 'light';
+            currentTheme = savedTheme;
+        } catch (e) {
+            // localStorage 사용 불가능한 환경에서는 기본값 사용
+            currentTheme = 'light';
+        }
+
+        body.setAttribute('data-theme', currentTheme);
+        themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            currentTheme = newTheme;
+            
+            body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            
+            // localStorage가 사용 가능한 환경에서만 저장
+            try {
+                localStorage?.setItem('theme', newTheme);
+            } catch (e) {
+                // localStorage 사용 불가능해도 계속 진행
+                console.log('테마 저장 기능을 사용할 수 없습니다.');
+            }
+        });
+
+        // 스크롤 진행률 계산
+        function updateProgress() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        }
+
+        window.addEventListener('scroll', updateProgress);
+
+        // 브라우저 감지 및 설치 안내
+        function detectBrowser() {
+            const userAgent = navigator.userAgent;
+            let browser = '';
+            let installUrl = '';
+            let icon = '';
+            let screenshot = '';
+
+            if (userAgent.indexOf('Chrome') > -1 && userAgent.indexOf('Edg') === -1) {
+                browser = 'Chrome';
+                installUrl = 'https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo';
+                icon = '🌐';
+                screenshot = './assets/img/chrome-install.png';
+            } else if (userAgent.indexOf('Firefox') > -1) {
+                browser = 'Firefox';
+                installUrl = 'https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/';
+                icon = '🦊';
+                screenshot = './assets/img/firefox-install.png';
+            } else if (userAgent.indexOf('Edg') > -1) {
+                browser = 'Microsoft Edge';
+                installUrl = 'https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd';
+                icon = '🔷';
+                screenshot = './assets/img/edge-install.png';
+            } else if (userAgent.indexOf('Safari') > -1) {
+                browser = 'Safari';
+                installUrl = 'https://apps.apple.com/us/app/tampermonkey/id1482490089';
+                icon = '🧭';
+                screenshot = './assets/img/safari-install.png';
+            } else {
+                browser = '알 수 없는 브라우저';
+                installUrl = 'https://tampermonkey.net/';
+                icon = '🌍';
+                screenshot = './assets/img/default-install.png';
+            }
+
+            return { browser, installUrl, icon, screenshot };
+        }
+
+        // 브라우저별 설치 안내 표시
+        function showBrowserInstall() {
+            const { browser, installUrl, icon, screenshot } = detectBrowser();
+            const detectionEl = document.getElementById('browserDetection');
+            const installEl = document.getElementById('browserInstall');
+
+            detectionEl.innerHTML = `
+                <p><strong>${icon} ${browser}</strong>가 감지되었습니다!</p>
+                <p>아래 버튼을 클릭하여 Tampermonkey를 설치하세요.</p>
+            `;
+
+            let installSteps = '';
+            let additionalInfo = '';
+            
+            if (browser === 'Chrome') {
+                installSteps = `
+                    <p>1. "Chrome에 추가" 버튼 클릭<br>
+                    2. 확인 팝업에서 "확장 프로그램 추가" 클릭<br>
+                    3. 설치 후 확장 프로그램 관리에서 활성화 확인</p>
+                `;
+            } else if (browser === 'Firefox') {
+                installSteps = `
+                    <p>1. "Firefox에 추가" 버튼 클릭<br>
+                    2. 확인 팝업에서 "추가" 클릭<br>
+                    3. 설치 후 부가 기능 관리에서 활성화 확인</p>
+                `;
+            } else if (browser === 'Microsoft Edge') {
+                installSteps = `
+                    <p>1. "받기" 버튼 클릭<br>
+                    2. 확인 팝업에서 "확장 추가" 클릭<br>
+                    3. 설치 후 확장 관리에서 활성화 확인</p>
+                `;
+            } else if (browser === 'Safari') {
+                installSteps = `
+                    <p><strong>주의:</strong> Safari용 Tampermonkey는 유료입니다 ($2.99)<br>
+                    1. App Store에서 Tampermonkey 앱 구매<br>
+                    2. Safari → 환경설정 → 확장에서 Tampermonkey 활성화<br>
+                    3. 또는 무료 대안인 "Stay 2" 앱 사용</p>
+                `;
+                additionalInfo = `
+                    <div style="margin-top: 15px; padding: 15px; background-color: #e8f4fd; border-radius: 8px;">
+                        <strong>💰 무료 대안:</strong> Stay 2 앱을 사용하면 무료로 유저 스크립트를 사용할 수 있습니다.<br>
+                        <a href="https://apps.apple.com/app/stay-for-safari/id1591620171" target="_blank" style="color: #007bff;">Stay 2 다운로드</a>
+                    </div>
+                `;
+            } else {
+                installSteps = `
+                    <p>브라우저에 맞는 Tampermonkey 버전을 다운로드하세요.<br>
+                    설치 후 브라우저 확장 프로그램 관리에서 활성화 확인이 필요합니다.</p>
+                `;
+            }
+
+            installEl.innerHTML = `
+                <div class="browser-card">
+                    <h4>${icon} ${browser}</h4>
+                    ${installSteps}
+                    <a href="${installUrl}" class="install-link" target="_blank">${browser}에서 설치</a>
+                    ${additionalInfo}
+                    <a href="${screenshot}" class="glightbox screenshot-container" data-gallery="install-guide" data-title="${browser} Tampermonkey 설치 페이지">
+                        <img src="${screenshot}" alt="${browser} 설치 화면" style="max-width: 100%; border-radius: 8px;">
+                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    </a>
+                </div>
+            `;
+        }
+
+        // GLightbox 초기화
+        function initLightbox() {
+            const lightbox = GLightbox({
+                selector: '.glightbox',
+                touchNavigation: true,
+                loop: true,
+                autoplayVideos: false,
+                descPosition: 'bottom',
+                openEffect: 'fade',
+                closeEffect: 'fade',
+                slideEffect: 'slide',
+                moreText: '더보기',
+                moreLength: 60,
+                lightboxHTML: '<div id="glightbox-body" class="glightbox-container"><div class="gloader visible"></div><div class="goverlay"></div><div class="gcontainer"><div id="glightbox-slider" class="gslider"></div><button class="gnext gbtn" tabindex="0" aria-label="Next" data-customattribute="example">{nextSVG}</button><button class="gprev gbtn" tabindex="1" aria-label="Previous">{prevSVG}</button><button class="gclose gbtn" tabindex="2" aria-label="Close">{closeSVG}</button></div></div>',
+            });
+        }
+
+        // 페이지 로드 시 브라우저 감지 및 GLightbox 초기화
+        window.addEventListener('load', () => {
+            showBrowserInstall();
+            // GLightbox 초기화를 약간 지연시켜 모든 이미지가 로드된 후 실행
+            setTimeout(initLightbox, 500);
+        });
+
+        // 설치 버튼 클릭 추적
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.install-link, .main-install-button')) {
+                if (e.target.href && e.target.href.includes('main.user.js')) {
                     const confirmed = confirm(
                         'Tampermonkey가 설치되어 있나요?\n\n' +
-                        '아니오를 클릭하면 Tampermonkey 다운로드 페이지로 이동합니다.\n' +
-                        '예를 클릭하면 스크립트 설치를 진행합니다.'
+                        '❌ 아니오: Tampermonkey 다운로드 페이지로 이동\n' +
+                        '✅ 예: 스크립트 설치 진행'
                     );
+
                     if (!confirmed) {
                         e.preventDefault();
                         window.open('https://tampermonkey.net/', '_blank');
                     }
+                }
+            }
+        });
+
+        // 부드러운 스크롤 효과
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
         });
