@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>미밐 유저 스크립트 관리자 - 설치 가이드</title>
+    <!-- GLightbox CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.2.0/css/glightbox.min.css">
     <style>
         * {
             margin: 0;
@@ -295,10 +297,55 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .image-placeholder:hover {
+            background-color: #e9ecef;
+            border-color: var(--primary-color);
+            transform: scale(1.02);
         }
 
         [data-theme="dark"] .image-placeholder {
             background-color: #343a40;
+        }
+
+        [data-theme="dark"] .image-placeholder:hover {
+            background-color: #495057;
+        }
+
+        /* 이미지 스타일링 개선 */
+        .screenshot-container {
+            display: block;
+            margin: 20px 0;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .screenshot-container:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .screenshot-container:hover img {
+            border-color: var(--primary-color);
+        }
+
+        .image-caption {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-style: italic;
         }
 
         .troubleshooting {
@@ -451,9 +498,10 @@
             <div class="success-check">
                 <h4>✅ 설치 확인</h4>
                 <p>Tampermonkey가 정상적으로 설치되면 브라우저 상단 도구 모음에 Tampermonkey 아이콘이 나타납니다.</p>
-                <div class="image-placeholder">
+                <a href="./assets/img/extensions.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="확장 프로그램에 표시된 Tampermonkey 아이콘">
                     <img src="./assets/img/extensions.png" alt="Tampermonkey 아이콘" style="max-width: 100%; height: auto;">
-                </div>
+                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                </a>
             </div>
 
             <div class="warning">
@@ -471,9 +519,10 @@
                         <li>페이지 우측 상단의 <strong>"개발자 모드"</strong> 토글 버튼 활성화</li>
                         <li>이 설정은 Manifest V3 업데이트로 인해 userScripts API 사용에 필요합니다</li>
                     </ol>
-                    <div class="image-placeholder">
+                    <a href="./assets/img/developer-mode.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Chrome/Edge에서 개발자 모드 활성화">
                         <img src="./assets/img/developer-mode.png" alt="개발자 모드 활성화" style="max-width: 100%; height: auto;">
-                    </div>
+                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -490,9 +539,10 @@
                         <li>Tampermonkey 설치 페이지가 자동으로 열립니다</li>
                         <li><strong>"설치(Install)"</strong> 버튼을 클릭</li>
                     </ol>
-                    <div class="image-placeholder">
+                    <a href="./assets/img/install-default.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Tampermonkey 스크립트 설치 화면">
                         <img src="./assets/img/install-default.png" alt="유저 스크립트 설치 화면" style="max-width: 100%; height: auto;">
-                    </div>
+                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    </a>
                 </div>
                 
                 <div class="method-card">
@@ -503,9 +553,10 @@
                         <li><strong>"URL에서 설치"</strong>에 URL 입력 (https://mu.magyul.kr/main.user.js)</li>
                         <li><strong>"설치"</strong> 버튼 클릭</li>
                     </ol>
-                    <div class="image-placeholder">
+                    <a href="./assets/img/install-url.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="URL에서 스크립트 설치">
                         <img src="./assets/img/install-url.png" alt="URL에서 설치" style="max-width: 100%; height: auto;">
-                    </div>
+                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -521,9 +572,10 @@
                     <li><strong>"대시보드"</strong> 선택</li>
                     <li>설치된 스크립트 목록에서 <strong>"미밐 유저 스크립트 관리자"</strong> 확인</li>
                 </ol>
-                <div class="image-placeholder">
+                <a href="./assets/img/tampermonkey-dashboard.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Tampermonkey 대시보드에서 설치된 스크립트 확인">
                     <img src="./assets/img/tampermonkey-dashboard.png" alt="Tampermonkey 대시보드" style="max-width: 100%; height: auto;">
-                </div>
+                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                </a>
             </div>
 
             <div class="success-check">
@@ -533,9 +585,10 @@
                     <li>🟢 <strong>녹색</strong>: 활성화됨 (정상)</li>
                     <li>⚪️ <strong>회색</strong>: 비활성화됨 (클릭하여 활성화)</li>
                 </ul>
-                <div class="image-placeholder">
+                <a href="./assets/img/check-script.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="스크립트 활성화 상태 확인">
                     <img src="./assets/img/check-script.png" alt="스크립트 활성화 상태" style="max-width: 100%; height: auto;">
-                </div>
+                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                </a>
             </div>
 
             <div class="success-check">
@@ -545,9 +598,10 @@
                     <li>Tampermonkey 아이콘에 <strong>숫자 표시</strong>가 나타나면 정상 작동</li>
                     <li>아이콘을 클릭하여 <strong>"미밐 유저 스크립트 관리자"</strong>가 활성화되어 있는지 확인</li>
                 </ol>
-                <div class="image-placeholder">
+                <a href="./assets/img/memic.at-check.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="미밐 사이트에서 스크립트 작동 확인">
                     <img src="./assets/img/memic.at-check.png" alt="미밐 사이트에서 작동 확인" style="max-width: 100%; height: auto;">
-                </div>
+                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                </a>
             </div>
         </div>
 
@@ -641,13 +695,14 @@
         <div class="section">
             <h2>📝 업데이트</h2>
             <p>스크립트는 자동으로 업데이트됩니다. 수동 업데이트가 필요한 경우:</p>
-            <ol">
+            <ol style="padding-left: 2em;">
                 <li>Tampermonkey 대시보드 접속</li>
                 <li>스크립트 옆 <strong>"마지막 업데이트"</strong> 컬럼의 <strong>"지금 확인"</strong> 클릭</li>
             </ol>
-            <div class="image-placeholder">
+            <a href="./assets/img/check-update.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Tampermonkey에서 업데이트 확인하는 방법">
                 <img src="./assets/img/check-update.png" alt="업데이트 확인" style="max-width: 100%; height: auto;">
-            </div>
+                <div class="image-caption">📸 클릭하여 이미지 확대</div>
+            </a>
         </div>
 
         <!-- 푸터 -->
@@ -662,6 +717,8 @@
         </div>
     </div>
 
+    <!-- GLightbox JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.2.0/js/glightbox.min.js"></script>
     <script>
         // 테마 관리 (메모리 기반)
         const themeToggle = document.getElementById('themeToggle');
@@ -719,27 +776,27 @@
                 browser = 'Chrome';
                 installUrl = 'https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo';
                 icon = '🌐';
-                screenshot = './assets/img/chrome-install.png'; // Chrome 설치 스크린샷 URL
+                screenshot = './assets/img/chrome-install.png';
             } else if (userAgent.indexOf('Firefox') > -1) {
                 browser = 'Firefox';
                 installUrl = 'https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/';
                 icon = '🦊';
-                screenshot = './assets/img/firefox-install.png'; // Firefox 설치 스크린샷 URL
+                screenshot = './assets/img/firefox-install.png';
             } else if (userAgent.indexOf('Edg') > -1) {
                 browser = 'Microsoft Edge';
                 installUrl = 'https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd';
                 icon = '🔷';
-                screenshot = './assets/img/edge-install.png'; // Edge 설치 스크린샷 URL
+                screenshot = './assets/img/edge-install.png';
             } else if (userAgent.indexOf('Safari') > -1) {
                 browser = 'Safari';
                 installUrl = 'https://apps.apple.com/us/app/tampermonkey/id1482490089';
                 icon = '🧭';
-                screenshot = './assets/img/safari-install.png'; // Safari 설치 스크린샷 URL
+                screenshot = './assets/img/safari-install.png';
             } else {
                 browser = '알 수 없는 브라우저';
                 installUrl = 'https://tampermonkey.net/';
                 icon = '🌍';
-                screenshot = './assets/img/default-install.png'; // 기본 설치 스크린샷 URL
+                screenshot = './assets/img/default-install.png';
             }
 
             return { browser, installUrl, icon, screenshot };
@@ -803,16 +860,36 @@
                     ${installSteps}
                     <a href="${installUrl}" class="install-link" target="_blank">${browser}에서 설치</a>
                     ${additionalInfo}
-                    <div class="image-placeholder">
+                    <a href="${screenshot}" class="glightbox screenshot-container" data-gallery="install-guide" data-title="${browser} Tampermonkey 설치 페이지">
                         <img src="${screenshot}" alt="${browser} 설치 화면" style="max-width: 100%; border-radius: 8px;">
-                    </div>
+                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    </a>
                 </div>
             `;
         }
 
-        // 페이지 로드 시 브라우저 감지
+        // GLightbox 초기화
+        function initLightbox() {
+            const lightbox = GLightbox({
+                selector: '.glightbox',
+                touchNavigation: true,
+                loop: true,
+                autoplayVideos: false,
+                descPosition: 'bottom',
+                openEffect: 'fade',
+                closeEffect: 'fade',
+                slideEffect: 'slide',
+                moreText: '더보기',
+                moreLength: 60,
+                lightboxHTML: '<div id="glightbox-body" class="glightbox-container"><div class="gloader visible"></div><div class="goverlay"></div><div class="gcontainer"><div id="glightbox-slider" class="gslider"></div><button class="gnext gbtn" tabindex="0" aria-label="Next" data-customattribute="example">{nextSVG}</button><button class="gprev gbtn" tabindex="1" aria-label="Previous">{prevSVG}</button><button class="gclose gbtn" tabindex="2" aria-label="Close">{closeSVG}</button></div></div>',
+            });
+        }
+
+        // 페이지 로드 시 브라우저 감지 및 GLightbox 초기화
         window.addEventListener('load', () => {
             showBrowserInstall();
+            // GLightbox 초기화를 약간 지연시켜 모든 이미지가 로드된 후 실행
+            setTimeout(initLightbox, 500);
         });
 
         // 설치 버튼 클릭 추적
