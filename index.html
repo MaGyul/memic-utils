@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>미밐 유저 스크립트 관리자 - 설치 가이드</title>
+    <title>미덕 유저 스크립트 관리자 - 설치 가이드</title>
     <!-- GLightbox CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.2.0/css/glightbox.min.css">
+    <!-- Remix Icon CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css">
     <style>
         * {
             margin: 0;
@@ -111,6 +113,10 @@
             font-size: 2.5em;
             margin-bottom: 10px;
             color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
 
         .header p {
@@ -126,6 +132,9 @@
             padding: 20px;
             margin: 20px 0;
             box-shadow: var(--shadow);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
         }
 
         [data-theme="dark"] .warning {
@@ -134,10 +143,10 @@
             color: #ffecb5;
         }
 
-        .warning::before {
-            content: "⚠️";
+        .warning .ri-alert-line {
             font-size: 1.5em;
-            margin-right: 10px;
+            color: var(--warning-color);
+            margin-top: 2px;
         }
 
         .section {
@@ -160,6 +169,9 @@
             font-size: 1.8em;
             border-bottom: 3px solid var(--primary-color);
             padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .success-check ol {
@@ -212,6 +224,10 @@
             color: var(--text-color);
             margin-bottom: 15px;
             font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .install-link {
@@ -278,6 +294,9 @@
             color: var(--primary-color);
             margin-bottom: 15px;
             font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .method-card ol {
@@ -346,6 +365,10 @@
             font-size: 0.9em;
             color: var(--text-secondary);
             font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
 
         .troubleshooting {
@@ -365,6 +388,9 @@
         .troubleshooting h4 {
             color: var(--danger-color);
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .troubleshooting ul {
@@ -389,6 +415,9 @@
         .success-check h4 {
             color: var(--success-color);
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .success-check ul {
@@ -428,6 +457,14 @@
             box-shadow: var(--shadow);
         }
 
+        .footer h3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
         .footer a {
             color: var(--primary-color);
             text-decoration: none;
@@ -435,6 +472,24 @@
 
         .footer a:hover {
             text-decoration: underline;
+        }
+
+        /* Status indicators */
+        .status-active {
+            color: var(--success-color);
+        }
+
+        .status-inactive {
+            color: var(--text-secondary);
+        }
+
+        /* Remix icon styling */
+        .ri-checkbox-circle-fill.status-active {
+            color: var(--success-color);
+        }
+
+        .ri-checkbox-blank-circle-line.status-inactive {
+            color: var(--text-secondary);
         }
 
         @media (max-width: 768px) {
@@ -448,6 +503,8 @@
             
             .header h1 {
                 font-size: 2em;
+                flex-direction: column;
+                gap: 10px;
             }
             
             .section {
@@ -464,6 +521,11 @@
                 padding: 8px 12px;
                 font-size: 14px;
             }
+
+            .browser-card h4 {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
@@ -474,13 +536,13 @@
     </div>
 
     <!-- 테마 토글 버튼 -->
-    <button class="theme-toggle" id="themeToggle">🌙</button>
+    <button class="theme-toggle" id="themeToggle"><i class="ri-moon-line"></i></button>
 
     <div class="container">
         <!-- 헤더 섹션 -->
         <div class="header">
-            <h1>🛠️ 미밐 유저 스크립트 관리자</h1>
-            <p>미밐의 불편함을 해결하는 통합 유저 스크립트</p>
+            <h1><i class="ri-tools-line"></i> 미덕 유저 스크립트 관리자</h1>
+            <p>미덕의 불편함을 해결하는 통합 유저 스크립트</p>
         </div>
 
         <!-- 1단계: Tampermonkey 설치 -->
@@ -496,23 +558,26 @@
             </div>
 
             <div class="success-check">
-                <h4>✅ 설치 확인</h4>
+                <h4><i class="ri-checkbox-circle-line"></i> 설치 확인</h4>
                 <p>Tampermonkey가 정상적으로 설치되면 브라우저 상단 도구 모음에 Tampermonkey 아이콘이 나타납니다.</p>
                 <a href="./assets/img/extensions.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="확장 프로그램에 표시된 Tampermonkey 아이콘">
                     <img src="./assets/img/extensions.png" alt="Tampermonkey 아이콘" style="max-width: 100%; height: auto;">
-                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    <div class="image-caption"><i class="ri-camera-line"></i> 클릭하여 이미지 확대</div>
                 </a>
             </div>
 
             <div class="warning">
-                <strong>중요한 추가 설정이 필요합니다!</strong><br>
-                Tampermonkey 설치 후 반드시 아래 설정들을 확인해주세요.<br>
-                <strong>특히 Chrome/Edge 사용자는 개발자 모드 활성화가 필수입니다.</strong>
+                <i class="ri-alert-line"></i>
+                <div>
+                    <strong>중요한 추가 설정이 필요합니다!</strong><br>
+                    Tampermonkey 설치 후 반드시 아래 설정들을 확인해주세요.<br>
+                    <strong>특히 Chrome/Edge 사용자는 개발자 모드 활성화가 필수입니다.</strong>
+                </div>
             </div>
 
             <div class="method-grid">
                 <div class="method-card">
-                    <h4>⚙️ 개발자 모드 활성화 (Chrome/Edge 필수)</h4>
+                    <h4><i class="ri-settings-line"></i> 개발자 모드 활성화 (Chrome/Edge 필수)</h4>
                     <p><strong>Chrome 기반 브라우저에서 Tampermonkey 사용 시 필수 설정입니다.</strong></p>
                     <ol>
                         <li>브라우저 주소창에 <code>chrome://extensions</code> 또는 <code>edge://extensions</code> 입력</li>
@@ -521,7 +586,7 @@
                     </ol>
                     <a href="./assets/img/developer-mode.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Chrome/Edge에서 개발자 모드 활성화">
                         <img src="./assets/img/developer-mode.png" alt="개발자 모드 활성화" style="max-width: 100%; height: auto;">
-                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                        <div class="image-caption"><i class="ri-camera-line"></i> 클릭하여 이미지 확대</div>
                     </a>
                 </div>
             </div>
@@ -541,7 +606,7 @@
                     </ol>
                     <a href="./assets/img/install-default.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Tampermonkey 스크립트 설치 화면">
                         <img src="./assets/img/install-default.png" alt="유저 스크립트 설치 화면" style="max-width: 100%; height: auto;">
-                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                        <div class="image-caption"><i class="ri-camera-line"></i> 클릭하여 이미지 확대</div>
                     </a>
                 </div>
                 
@@ -555,7 +620,7 @@
                     </ol>
                     <a href="./assets/img/install-url.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="URL에서 스크립트 설치">
                         <img src="./assets/img/install-url.png" alt="URL에서 설치" style="max-width: 100%; height: auto;">
-                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                        <div class="image-caption"><i class="ri-camera-line"></i> 클릭하여 이미지 확대</div>
                     </a>
                 </div>
             </div>
@@ -566,51 +631,51 @@
             <div class="step">3단계: 설치 확인 및 활성화 확인</div>
             
             <div class="success-check">
-                <h4>✅ 설치 확인 방법</h4>
+                <h4><i class="ri-checkbox-circle-line"></i> 설치 확인 방법</h4>
                 <ol>
                     <li><strong>Tampermonkey 아이콘</strong>을 클릭</li>
                     <li><strong>"대시보드"</strong> 선택</li>
-                    <li>설치된 스크립트 목록에서 <strong>"미밐 유저 스크립트 관리자"</strong> 확인</li>
+                    <li>설치된 스크립트 목록에서 <strong>"미덕 유저 스크립트 관리자"</strong> 확인</li>
                 </ol>
                 <a href="./assets/img/tampermonkey-dashboard.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Tampermonkey 대시보드에서 설치된 스크립트 확인">
                     <img src="./assets/img/tampermonkey-dashboard.png" alt="Tampermonkey 대시보드" style="max-width: 100%; height: auto;">
-                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    <div class="image-caption"><i class="ri-camera-line"></i> 클릭하여 이미지 확대</div>
                 </a>
             </div>
 
             <div class="success-check">
-                <h4>🔄 활성화 상태 확인</h4>
+                <h4><i class="ri-refresh-line"></i> 활성화 상태 확인</h4>
                 <p>스크립트 이름 왼쪽에 표시되는 상태를 확인하세요:</p>
                 <ul>
-                    <li>🟢 <strong>녹색</strong>: 활성화됨 (정상)</li>
-                    <li>⚪️ <strong>회색</strong>: 비활성화됨 (클릭하여 활성화)</li>
+                    <li><i class="ri-checkbox-circle-fill status-active"></i> <strong>녹색</strong>: 활성화됨 (정상)</li>
+                    <li><i class="ri-checkbox-blank-circle-line status-inactive"></i> <strong>회색</strong>: 비활성화됨 (클릭하여 활성화)</li>
                 </ul>
                 <a href="./assets/img/check-script.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="스크립트 활성화 상태 확인">
                     <img src="./assets/img/check-script.png" alt="스크립트 활성화 상태" style="max-width: 100%; height: auto;">
-                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                    <div class="image-caption"><i class="ri-camera-line"></i> 클릭하여 이미지 확대</div>
                 </a>
             </div>
 
             <div class="success-check">
-                <h4>🌐 실제 사이트에서 작동 확인</h4>
+                <h4><i class="ri-global-line"></i> 실제 사이트에서 작동 확인</h4>
                 <ol>
-                    <li><strong><a href="https://memic.at" target="_blank">미밐</a></strong> 사이트 방문</li>
+                    <li><strong><a href="https://memic.at" target="_blank">미덕</a></strong> 사이트 방문</li>
                     <li>Tampermonkey 아이콘에 <strong>숫자 표시</strong>가 나타나면 정상 작동</li>
-                    <li>아이콘을 클릭하여 <strong>"미밐 유저 스크립트 관리자"</strong>가 활성화되어 있는지 확인</li>
+                    <li>아이콘을 클릭하여 <strong>"미덕 유저 스크립트 관리자"</strong>가 활성화되어 있는지 확인</li>
                 </ol>
-                <a href="./assets/img/memic.at-check.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="미밐 사이트에서 스크립트 작동 확인">
-                    <img src="./assets/img/memic.at-check.png" alt="미밐 사이트에서 작동 확인" style="max-width: 100%; height: auto;">
-                    <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                <a href="./assets/img/memic.at-check.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="미덕 사이트에서 스크립트 작동 확인">
+                    <img src="./assets/img/memic.at-check.png" alt="미덕 사이트에서 작동 확인" style="max-width: 100%; height: auto;">
+                    <div class="image-caption"><i class="ri-camera-line"></i> 클릭하여 이미지 확대</div>
                 </a>
             </div>
         </div>
 
         <!-- 문제 해결 섹션 -->
         <div class="section">
-            <h2>🔧 문제 해결</h2>
+            <h2><i class="ri-tools-line"></i> 문제 해결</h2>
             
             <div class="troubleshooting">
-                <h4>❌ 스크립트가 작동하지 않는 경우</h4>
+                <h4><i class="ri-close-circle-line"></i> 스크립트가 작동하지 않는 경우</h4>
                 <p><strong>1. Tampermonkey 확장 프로그램 상태 확인</strong></p>
                 <ul>
                     <li>브라우저 설정 → 확장 프로그램에서 Tampermonkey가 <strong>활성화</strong>되어 있는지 확인</li>
@@ -626,7 +691,7 @@
                 
                 <p><strong>3. 스크립트 활성화 상태 확인</strong></p>
                 <ul>
-                    <li>Tampermonkey 대시보드에서 <strong>"미밐 유저 스크립트 관리자"</strong>가 활성화(녹색 점)되어 있는지 확인</li>
+                    <li>Tampermonkey 대시보드에서 <strong>"미덕 유저 스크립트 관리자"</strong>가 활성화(녹색 점)되어 있는지 확인</li>
                     <li>비활성화 상태라면 스크립트명을 클릭하여 활성화</li>
                 </ul>
                 
@@ -639,7 +704,7 @@
             </div>
 
             <div class="troubleshooting">
-                <h4>🔧 개발자 모드 관련 오류</h4>
+                <h4><i class="ri-tools-line"></i> 개발자 모드 관련 오류</h4>
                 <p><strong>Chrome 기반 브라우저에서 개발자 모드가 필요한 이유:</strong></p>
                 <ul>
                     <li><strong>Manifest V3 정책:</strong> Google의 새로운 확장 프로그램 정책으로 인해 userScripts API 사용 시 개발자 모드 필수</li>
@@ -655,7 +720,7 @@
             </div>
 
             <div class="troubleshooting">
-                <h4>📱 모바일에서 사용하려는 경우</h4>
+                <h4><i class="ri-smartphone-line"></i> 모바일에서 사용하려는 경우</h4>
                 <p><strong>모바일 브라우저에서는 제한적으로 지원됩니다.</strong></p>
                 <ul>
                     <li><strong>Android:</strong> Kiwi Browser 또는 Firefox + Tampermonkey 사용</li>
@@ -665,7 +730,7 @@
             </div>
 
             <div class="success-check">
-                <h4>📞 추가 지원</h4>
+                <h4><i class="ri-phone-line"></i> 추가 지원</h4>
                 <p>문제가 계속 발생하면 다음을 확인하세요:</p>
                 <ul>
                     <li><strong>브라우저 콘솔:</strong> F12 → Console 탭에서 오류 메시지 확인</li>
@@ -678,22 +743,22 @@
 
         <!-- 지원 정보 -->
         <div class="section">
-            <h2>📊 스크립트 작동 사이트</h2>
+            <h2><i class="ri-bar-chart-line"></i> 스크립트 작동 사이트</h2>
             <div class="feature-list">
                 <div class="feature-item">
-                    <strong>🌐 memic.at</strong><br>
-                    미밐 커뮤니티
+                    <strong><i class="ri-global-line"></i> memic.at</strong><br>
+                    미덕 커뮤니티
                 </div>
                 <div class="feature-item">
-                    <strong>🌐 shelter.id</strong><br>
-                    미밐 전 쉘터 커뮤니티 (현재는 미밐으로 접속)
+                    <strong><i class="ri-global-line"></i> shelter.id</strong><br>
+                    미덕 전 쉘터 커뮤니티 (현재는 미덕으로 접속)
                 </div>
             </div>
         </div>
 
         <!-- 업데이트 정보 -->
         <div class="section">
-            <h2>📝 업데이트</h2>
+            <h2><i class="ri-file-text-line"></i> 업데이트</h2>
             <p>스크립트는 자동으로 업데이트됩니다. 수동 업데이트가 필요한 경우:</p>
             <ol style="padding-left: 2em;">
                 <li>Tampermonkey 대시보드 접속</li>
@@ -701,17 +766,17 @@
             </ol>
             <a href="./assets/img/check-update.png" class="glightbox screenshot-container" data-gallery="install-guide" data-title="Tampermonkey에서 업데이트 확인하는 방법">
                 <img src="./assets/img/check-update.png" alt="업데이트 확인" style="max-width: 100%; height: auto;">
-                <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                <div class="image-caption"><i class="ri-camera-line"></i> 클릭하여 이미지 확대</div>
             </a>
         </div>
 
         <!-- 푸터 -->
         <div class="footer">
-            <h3>👥 제작진</h3>
+            <h3><i class="ri-user-3-line"></i> 제작진</h3>
             <p><strong>MaGyul</strong> - 메인 개발자 | <strong>isnoa</strong> - 공동 개발자 | <strong>NoonDaL</strong> - 공동 개발자</p>
             <br>
-            <p>📄 <strong>라이선스:</strong> GPL-3.0</p>
-            <p>📞 <strong>문의:</strong> <a href="https://mu.magyul.kr/issues" target="_blank">https://mu.magyul.kr/issues</a></p>
+            <p><i class="ri-file-line"></i> <strong>라이선스:</strong> GPL-3.0</p>
+            <p><i class="ri-phone-line"></i> <strong>문의:</strong> <a href="https://mu.magyul.kr/issues" target="_blank">https://mu.magyul.kr/issues</a></p>
             <br>
             <p>Copyright © 2025 MaGyul. All rights reserved.</p>
         </div>
@@ -735,14 +800,14 @@
         }
 
         body.setAttribute('data-theme', currentTheme);
-        themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.innerHTML = currentTheme === 'dark' ? '<i class="ri-sun-line"></i>' : '<i class="ri-moon-line"></i>';
 
         themeToggle.addEventListener('click', () => {
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             currentTheme = newTheme;
             
             body.setAttribute('data-theme', newTheme);
-            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            themeToggle.innerHTML = newTheme === 'dark' ? '<i class="ri-sun-line"></i>' : '<i class="ri-moon-line"></i>';
             
             // localStorage가 사용 가능한 환경에서만 저장
             try {
@@ -775,27 +840,27 @@
             if (userAgent.indexOf('Chrome') > -1 && userAgent.indexOf('Edg') === -1) {
                 browser = 'Chrome';
                 installUrl = 'https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo';
-                icon = '🌐';
+                icon = '<i class="ri-chrome-line"></i>';
                 screenshot = './assets/img/chrome-install.png';
             } else if (userAgent.indexOf('Firefox') > -1) {
                 browser = 'Firefox';
                 installUrl = 'https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/';
-                icon = '🦊';
+                icon = '<i class="ri-firefox-line"></i>';
                 screenshot = './assets/img/firefox-install.png';
             } else if (userAgent.indexOf('Edg') > -1) {
                 browser = 'Microsoft Edge';
                 installUrl = 'https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd';
-                icon = '🔷';
+                icon = '<i class="ri-microsoft-line"></i>';
                 screenshot = './assets/img/edge-install.png';
             } else if (userAgent.indexOf('Safari') > -1) {
                 browser = 'Safari';
                 installUrl = 'https://apps.apple.com/us/app/tampermonkey/id1482490089';
-                icon = '🧭';
+                icon = '<i class="ri-safari-line"></i>';
                 screenshot = './assets/img/safari-install.png';
             } else {
                 browser = '알 수 없는 브라우저';
                 installUrl = 'https://tampermonkey.net/';
-                icon = '🌍';
+                icon = '<i class="ri-global-line"></i>';
                 screenshot = './assets/img/default-install.png';
             }
 
@@ -843,7 +908,7 @@
                 `;
                 additionalInfo = `
                     <div style="margin-top: 15px; padding: 15px; background-color: #e8f4fd; border-radius: 8px;">
-                        <strong>💰 무료 대안:</strong> Stay 2 앱을 사용하면 무료로 유저 스크립트를 사용할 수 있습니다.<br>
+                        <strong><i class="ri-money-dollar-circle-line"></i> 무료 대안:</strong> Stay 2 앱을 사용하면 무료로 유저 스크립트를 사용할 수 있습니다.<br>
                         <a href="https://apps.apple.com/app/stay-for-safari/id1591620171" target="_blank" style="color: #007bff;">Stay 2 다운로드</a>
                     </div>
                 `;
@@ -862,7 +927,7 @@
                     ${additionalInfo}
                     <a href="${screenshot}" class="glightbox screenshot-container" data-gallery="install-guide" data-title="${browser} Tampermonkey 설치 페이지">
                         <img src="${screenshot}" alt="${browser} 설치 화면" style="max-width: 100%; border-radius: 8px;">
-                        <div class="image-caption">📸 클릭하여 이미지 확대</div>
+                        <div class="image-caption"><i class="ri-camera-line"></i> 클릭하여 이미지 확대</div>
                     </a>
                 </div>
             `;
